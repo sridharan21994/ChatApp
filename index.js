@@ -2,6 +2,18 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const config = require('./config');
+var io = require('socket.io')(httpServer);
+ 
+io.on('connection', function (socket) {
+    console.log("Socket Ready");
+ 
+    // broadcast a user's message to other users
+    socket.on('send:mesaage', function (data) {
+        socket.broadcast.emit('send:message', {
+            text: data.text
+        });
+    });
+})
 
 // connect to the database and load models
 require('./server/models').connect(config.dbUri);

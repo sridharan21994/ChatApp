@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import { Card, CardTitle, CardText } from 'material-ui/Card';
-
+import Chatty from './ChatContainer.jsx';
 
 const Dashboard = ({ userData }) => (
   <Card className="container">
@@ -10,6 +10,9 @@ const Dashboard = ({ userData }) => (
     />
 
     {userData && <CardText style={{ fontSize: '16px', color: 'green' }}>{userData}</CardText>}
+
+    <Chatty/>
+    
   </Card>
 );
 

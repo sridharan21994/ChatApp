@@ -34997,11 +34997,11 @@
 
 	var _DashboardPage2 = _interopRequireDefault(_DashboardPage);
 
-	var _LoginPage = __webpack_require__(458);
+	var _LoginPage = __webpack_require__(461);
 
 	var _LoginPage2 = _interopRequireDefault(_LoginPage);
 
-	var _SignUpPage = __webpack_require__(471);
+	var _SignUpPage = __webpack_require__(474);
 
 	var _SignUpPage2 = _interopRequireDefault(_SignUpPage);
 
@@ -40980,6 +40980,10 @@
 
 	var _Card = __webpack_require__(399);
 
+	var _ChatContainer = __webpack_require__(458);
+
+	var _ChatContainer2 = _interopRequireDefault(_ChatContainer);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var Dashboard = function Dashboard(_ref) {
@@ -40995,7 +40999,8 @@
 	      _Card.CardText,
 	      { style: { fontSize: '16px', color: 'green' } },
 	      userData
-	    )
+	    ),
+	    _react2.default.createElement(_ChatContainer2.default, null)
 	  );
 	};
 
@@ -41007,6 +41012,177 @@
 
 /***/ }),
 /* 458 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _MessageList = __webpack_require__(459);
+
+	var _MessageList2 = _interopRequireDefault(_MessageList);
+
+	var _MessageForm = __webpack_require__(460);
+
+	var _MessageForm2 = _interopRequireDefault(_MessageForm);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Chatty = function (_React$Component) {
+	    _inherits(Chatty, _React$Component);
+
+	    function Chatty() {
+	        _classCallCheck(this, Chatty);
+
+	        return _possibleConstructorReturn(this, (Chatty.__proto__ || Object.getPrototypeOf(Chatty)).apply(this, arguments));
+	    }
+
+	    _createClass(Chatty, [{
+	        key: 'getInitialState',
+	        value: function getInitialState() {
+	            socket.on('send:message', this.messageRecieve);
+
+	            return { messages: [], text: '' };
+	        }
+	    }, {
+	        key: 'messageRecieve',
+	        value: function messageRecieve(message) {
+	            this.state.messages.push(message);
+	            this.setState();
+	        }
+	    }, {
+	        key: 'handleMessageSubmit',
+	        value: function handleMessageSubmit(message) {
+	            this.state.messages.push(message);
+	            this.setState();
+
+	            socket.emit('send:message', message);
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            return React.createElement(
+	                'div',
+	                { className: 'chatty' },
+	                React.createElement(Title, { text: 'Chat' }),
+	                React.createElement(_MessageList2.default, { messages: this.state.messages }),
+	                React.createElement(_MessageForm2.default, { submitfnc: this.handleMessageSubmit })
+	            );
+	        }
+	    }]);
+
+	    return Chatty;
+	}(React.Component);
+
+/***/ }),
+/* 459 */
+/***/ (function(module, exports) {
+
+	"use strict";
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var MessageList = function (_React$Component) {
+	    _inherits(MessageList, _React$Component);
+
+	    function MessageList() {
+	        _classCallCheck(this, MessageList);
+
+	        return _possibleConstructorReturn(this, (MessageList.__proto__ || Object.getPrototypeOf(MessageList)).apply(this, arguments));
+	    }
+
+	    _createClass(MessageList, [{
+	        key: "render",
+	        value: function render() {
+	            var renderMessage = function renderMessage(message) {
+	                return React.createElement(Message, { msg: message.text });
+	            };
+	            return React.createElement(
+	                "ul",
+	                { className: "message" },
+	                this.props.messages.map(renderMessage)
+	            );
+	        }
+	    }]);
+
+	    return MessageList;
+	}(React.Component);
+
+/***/ }),
+/* 460 */
+/***/ (function(module, exports) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var MessageForm = function (_React$Component) {
+	    _inherits(MessageForm, _React$Component);
+
+	    function MessageForm() {
+	        _classCallCheck(this, MessageForm);
+
+	        return _possibleConstructorReturn(this, (MessageForm.__proto__ || Object.getPrototypeOf(MessageForm)).apply(this, arguments));
+	    }
+
+	    _createClass(MessageForm, [{
+	        key: 'getInitialState',
+	        value: function getInitialState() {
+	            return { text: '' };
+	        }
+	    }, {
+	        key: 'changeHandler',
+	        value: function changeHandler(e) {
+	            this.setState({ text: e.target.value });
+	        }
+	    }, {
+	        key: 'handleSubmit',
+	        value: function handleSubmit(e) {
+	            e.preventDefault();
+	            var message = {
+	                text: this.state.text
+	            };
+	            this.props.submitfnc(message);
+	            this.setState({ text: '' });
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            return React.createElement(
+	                'div',
+	                { className: 'messageForm' },
+	                React.createElement(
+	                    'form',
+	                    { onSubmit: this.handleSubmit },
+	                    React.createElement('input', { onChange: this.changeHandler, value: this.state.text })
+	                )
+	            );
+	        }
+	    }]);
+
+	    return MessageForm;
+	}(React.Component);
+
+/***/ }),
+/* 461 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -41025,7 +41201,7 @@
 
 	var _Auth2 = _interopRequireDefault(_Auth);
 
-	var _LoginForm = __webpack_require__(459);
+	var _LoginForm = __webpack_require__(462);
 
 	var _LoginForm2 = _interopRequireDefault(_LoginForm);
 
@@ -41170,7 +41346,7 @@
 	exports.default = LoginPage;
 
 /***/ }),
-/* 459 */
+/* 462 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -41187,11 +41363,11 @@
 
 	var _Card = __webpack_require__(399);
 
-	var _RaisedButton = __webpack_require__(460);
+	var _RaisedButton = __webpack_require__(463);
 
 	var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
 
-	var _TextField = __webpack_require__(462);
+	var _TextField = __webpack_require__(465);
 
 	var _TextField2 = _interopRequireDefault(_TextField);
 
@@ -41278,7 +41454,7 @@
 	exports.default = LoginForm;
 
 /***/ }),
-/* 460 */
+/* 463 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -41288,7 +41464,7 @@
 	});
 	exports.default = undefined;
 
-	var _RaisedButton = __webpack_require__(461);
+	var _RaisedButton = __webpack_require__(464);
 
 	var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
 
@@ -41297,7 +41473,7 @@
 	exports.default = _RaisedButton2.default;
 
 /***/ }),
-/* 461 */
+/* 464 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -41777,7 +41953,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
-/* 462 */
+/* 465 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -41787,7 +41963,7 @@
 	});
 	exports.default = undefined;
 
-	var _TextField = __webpack_require__(463);
+	var _TextField = __webpack_require__(466);
 
 	var _TextField2 = _interopRequireDefault(_TextField);
 
@@ -41796,7 +41972,7 @@
 	exports.default = _TextField2.default;
 
 /***/ }),
-/* 463 */
+/* 466 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -41853,19 +42029,19 @@
 
 	var _transitions2 = _interopRequireDefault(_transitions);
 
-	var _EnhancedTextarea = __webpack_require__(464);
+	var _EnhancedTextarea = __webpack_require__(467);
 
 	var _EnhancedTextarea2 = _interopRequireDefault(_EnhancedTextarea);
 
-	var _TextFieldHint = __webpack_require__(468);
+	var _TextFieldHint = __webpack_require__(471);
 
 	var _TextFieldHint2 = _interopRequireDefault(_TextFieldHint);
 
-	var _TextFieldLabel = __webpack_require__(469);
+	var _TextFieldLabel = __webpack_require__(472);
 
 	var _TextFieldLabel2 = _interopRequireDefault(_TextFieldLabel);
 
-	var _TextFieldUnderline = __webpack_require__(470);
+	var _TextFieldUnderline = __webpack_require__(473);
 
 	var _TextFieldUnderline2 = _interopRequireDefault(_TextFieldUnderline);
 
@@ -42377,7 +42553,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
-/* 464 */
+/* 467 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -42422,7 +42598,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactEventListener = __webpack_require__(465);
+	var _reactEventListener = __webpack_require__(468);
 
 	var _reactEventListener2 = _interopRequireDefault(_reactEventListener);
 
@@ -42623,7 +42799,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
-/* 465 */
+/* 468 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -42686,7 +42862,7 @@
 
 	var _warning2 = _interopRequireDefault(_warning);
 
-	var _supports = __webpack_require__(466);
+	var _supports = __webpack_require__(469);
 
 	var supports = _interopRequireWildcard(_supports);
 
@@ -42853,7 +43029,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
-/* 466 */
+/* 469 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -42863,7 +43039,7 @@
 	});
 	exports.passiveOption = exports.detachEvent = exports.attachEvent = exports.removeEventListener = exports.addEventListener = exports.canUseDOM = undefined;
 
-	var _defineProperty = __webpack_require__(467);
+	var _defineProperty = __webpack_require__(470);
 
 	var _defineProperty2 = _interopRequireDefault(_defineProperty);
 
@@ -42906,7 +43082,7 @@
 	}();
 
 /***/ }),
-/* 467 */
+/* 470 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -42930,7 +43106,7 @@
 	}
 
 /***/ }),
-/* 468 */
+/* 471 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -43012,7 +43188,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
-/* 469 */
+/* 472 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -43131,7 +43307,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
-/* 470 */
+/* 473 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -43269,7 +43445,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
-/* 471 */
+/* 474 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -43284,7 +43460,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _SignUpForm = __webpack_require__(472);
+	var _SignUpForm = __webpack_require__(475);
 
 	var _SignUpForm2 = _interopRequireDefault(_SignUpForm);
 
@@ -43420,7 +43596,7 @@
 	exports.default = SignUpPage;
 
 /***/ }),
-/* 472 */
+/* 475 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -43437,11 +43613,11 @@
 
 	var _Card = __webpack_require__(399);
 
-	var _RaisedButton = __webpack_require__(460);
+	var _RaisedButton = __webpack_require__(463);
 
 	var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
 
-	var _TextField = __webpack_require__(462);
+	var _TextField = __webpack_require__(465);
 
 	var _TextField2 = _interopRequireDefault(_TextField);
 

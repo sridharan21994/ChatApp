@@ -30,7 +30,7 @@ const routes = {
         } else {
           callback(null, LoginPage);
         }
-      }    },
+      }  },
 
     {
       path: '/signup',
