@@ -34997,11 +34997,11 @@
 
 	var _DashboardPage2 = _interopRequireDefault(_DashboardPage);
 
-	var _LoginPage = __webpack_require__(461);
+	var _LoginPage = __webpack_require__(462);
 
 	var _LoginPage2 = _interopRequireDefault(_LoginPage);
 
-	var _SignUpPage = __webpack_require__(474);
+	var _SignUpPage = __webpack_require__(475);
 
 	var _SignUpPage2 = _interopRequireDefault(_SignUpPage);
 
@@ -41016,15 +41016,23 @@
 
 	'use strict';
 
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _MessageList = __webpack_require__(459);
+	var _messageList = __webpack_require__(477);
 
-	var _MessageList2 = _interopRequireDefault(_MessageList);
+	var _messageList2 = _interopRequireDefault(_messageList);
 
-	var _MessageForm = __webpack_require__(460);
+	var _messageForm = __webpack_require__(478);
 
-	var _MessageForm2 = _interopRequireDefault(_MessageForm);
+	var _messageForm2 = _interopRequireDefault(_messageForm);
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -41037,56 +41045,72 @@
 	var Chatty = function (_React$Component) {
 	    _inherits(Chatty, _React$Component);
 
-	    function Chatty() {
+	    function Chatty(props) {
 	        _classCallCheck(this, Chatty);
 
-	        return _possibleConstructorReturn(this, (Chatty.__proto__ || Object.getPrototypeOf(Chatty)).apply(this, arguments));
+	        var _this = _possibleConstructorReturn(this, (Chatty.__proto__ || Object.getPrototypeOf(Chatty)).call(this, props));
+
+	        _this.state = { messages: [], text: '' };
+	        socket.on("send:message", _this.messageRecieve);
+	        return _this;
 	    }
 
 	    _createClass(Chatty, [{
-	        key: 'getInitialState',
-	        value: function getInitialState() {
-	            socket.on('send:message', this.messageRecieve);
-
-	            return { messages: [], text: '' };
-	        }
-	    }, {
 	        key: 'messageRecieve',
 	        value: function messageRecieve(message) {
-	            this.state.messages.push(message);
-	            this.setState();
+
+	            var temp = this.state.messages;
+	            temp.push(message);
+	            this.setState({
+	                messages: temp
+	            });
 	        }
 	    }, {
 	        key: 'handleMessageSubmit',
 	        value: function handleMessageSubmit(message) {
-	            this.state.messages.push(message);
-	            this.setState();
+	            var temp = this.state.messages;
+	            temp.push(message);
+	            this.setState({
+	                messages: temp
+	            });
 
 	            socket.emit('send:message', message);
 	        }
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            return React.createElement(
+	            return _react2.default.createElement(
 	                'div',
 	                { className: 'chatty' },
-	                React.createElement(Title, { text: 'Chat' }),
-	                React.createElement(_MessageList2.default, { messages: this.state.messages }),
-	                React.createElement(_MessageForm2.default, { submitfnc: this.handleMessageSubmit })
+	                _react2.default.createElement(_messageList2.default, { messages: this.state.messages }),
+	                _react2.default.createElement(_messageForm2.default, { submitfnc: this.handleMessageSubmit.bind(this) })
 	            );
 	        }
 	    }]);
 
 	    return Chatty;
-	}(React.Component);
+	}(_react2.default.Component);
+
+	exports.default = Chatty;
 
 /***/ }),
-/* 459 */
-/***/ (function(module, exports) {
+/* 459 */,
+/* 460 */
+/***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
 
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -41094,95 +41118,34 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var MessageList = function (_React$Component) {
-	    _inherits(MessageList, _React$Component);
+	var Message = function (_React$Component) {
+	    _inherits(Message, _React$Component);
 
-	    function MessageList() {
-	        _classCallCheck(this, MessageList);
+	    function Message() {
+	        _classCallCheck(this, Message);
 
-	        return _possibleConstructorReturn(this, (MessageList.__proto__ || Object.getPrototypeOf(MessageList)).apply(this, arguments));
+	        return _possibleConstructorReturn(this, (Message.__proto__ || Object.getPrototypeOf(Message)).apply(this, arguments));
 	    }
 
-	    _createClass(MessageList, [{
+	    _createClass(Message, [{
 	        key: "render",
 	        value: function render() {
-	            var renderMessage = function renderMessage(message) {
-	                return React.createElement(Message, { msg: message.text });
-	            };
-	            return React.createElement(
-	                "ul",
+	            return _react2.default.createElement(
+	                "li",
 	                { className: "message" },
-	                this.props.messages.map(renderMessage)
+	                this.props.msg
 	            );
 	        }
 	    }]);
 
-	    return MessageList;
-	}(React.Component);
+	    return Message;
+	}(_react2.default.Component);
+
+	exports.default = Message;
 
 /***/ }),
-/* 460 */
-/***/ (function(module, exports) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var MessageForm = function (_React$Component) {
-	    _inherits(MessageForm, _React$Component);
-
-	    function MessageForm() {
-	        _classCallCheck(this, MessageForm);
-
-	        return _possibleConstructorReturn(this, (MessageForm.__proto__ || Object.getPrototypeOf(MessageForm)).apply(this, arguments));
-	    }
-
-	    _createClass(MessageForm, [{
-	        key: 'getInitialState',
-	        value: function getInitialState() {
-	            return { text: '' };
-	        }
-	    }, {
-	        key: 'changeHandler',
-	        value: function changeHandler(e) {
-	            this.setState({ text: e.target.value });
-	        }
-	    }, {
-	        key: 'handleSubmit',
-	        value: function handleSubmit(e) {
-	            e.preventDefault();
-	            var message = {
-	                text: this.state.text
-	            };
-	            this.props.submitfnc(message);
-	            this.setState({ text: '' });
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            return React.createElement(
-	                'div',
-	                { className: 'messageForm' },
-	                React.createElement(
-	                    'form',
-	                    { onSubmit: this.handleSubmit },
-	                    React.createElement('input', { onChange: this.changeHandler, value: this.state.text })
-	                )
-	            );
-	        }
-	    }]);
-
-	    return MessageForm;
-	}(React.Component);
-
-/***/ }),
-/* 461 */
+/* 461 */,
+/* 462 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -41201,7 +41164,7 @@
 
 	var _Auth2 = _interopRequireDefault(_Auth);
 
-	var _LoginForm = __webpack_require__(462);
+	var _LoginForm = __webpack_require__(463);
 
 	var _LoginForm2 = _interopRequireDefault(_LoginForm);
 
@@ -41346,7 +41309,7 @@
 	exports.default = LoginPage;
 
 /***/ }),
-/* 462 */
+/* 463 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -41363,11 +41326,11 @@
 
 	var _Card = __webpack_require__(399);
 
-	var _RaisedButton = __webpack_require__(463);
+	var _RaisedButton = __webpack_require__(464);
 
 	var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
 
-	var _TextField = __webpack_require__(465);
+	var _TextField = __webpack_require__(466);
 
 	var _TextField2 = _interopRequireDefault(_TextField);
 
@@ -41454,7 +41417,7 @@
 	exports.default = LoginForm;
 
 /***/ }),
-/* 463 */
+/* 464 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -41464,7 +41427,7 @@
 	});
 	exports.default = undefined;
 
-	var _RaisedButton = __webpack_require__(464);
+	var _RaisedButton = __webpack_require__(465);
 
 	var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
 
@@ -41473,7 +41436,7 @@
 	exports.default = _RaisedButton2.default;
 
 /***/ }),
-/* 464 */
+/* 465 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -41953,7 +41916,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
-/* 465 */
+/* 466 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -41963,7 +41926,7 @@
 	});
 	exports.default = undefined;
 
-	var _TextField = __webpack_require__(466);
+	var _TextField = __webpack_require__(467);
 
 	var _TextField2 = _interopRequireDefault(_TextField);
 
@@ -41972,7 +41935,7 @@
 	exports.default = _TextField2.default;
 
 /***/ }),
-/* 466 */
+/* 467 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -42029,19 +41992,19 @@
 
 	var _transitions2 = _interopRequireDefault(_transitions);
 
-	var _EnhancedTextarea = __webpack_require__(467);
+	var _EnhancedTextarea = __webpack_require__(468);
 
 	var _EnhancedTextarea2 = _interopRequireDefault(_EnhancedTextarea);
 
-	var _TextFieldHint = __webpack_require__(471);
+	var _TextFieldHint = __webpack_require__(472);
 
 	var _TextFieldHint2 = _interopRequireDefault(_TextFieldHint);
 
-	var _TextFieldLabel = __webpack_require__(472);
+	var _TextFieldLabel = __webpack_require__(473);
 
 	var _TextFieldLabel2 = _interopRequireDefault(_TextFieldLabel);
 
-	var _TextFieldUnderline = __webpack_require__(473);
+	var _TextFieldUnderline = __webpack_require__(474);
 
 	var _TextFieldUnderline2 = _interopRequireDefault(_TextFieldUnderline);
 
@@ -42553,7 +42516,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
-/* 467 */
+/* 468 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -42598,7 +42561,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactEventListener = __webpack_require__(468);
+	var _reactEventListener = __webpack_require__(469);
 
 	var _reactEventListener2 = _interopRequireDefault(_reactEventListener);
 
@@ -42799,7 +42762,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
-/* 468 */
+/* 469 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -42862,7 +42825,7 @@
 
 	var _warning2 = _interopRequireDefault(_warning);
 
-	var _supports = __webpack_require__(469);
+	var _supports = __webpack_require__(470);
 
 	var supports = _interopRequireWildcard(_supports);
 
@@ -43029,7 +42992,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
-/* 469 */
+/* 470 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -43039,7 +43002,7 @@
 	});
 	exports.passiveOption = exports.detachEvent = exports.attachEvent = exports.removeEventListener = exports.addEventListener = exports.canUseDOM = undefined;
 
-	var _defineProperty = __webpack_require__(470);
+	var _defineProperty = __webpack_require__(471);
 
 	var _defineProperty2 = _interopRequireDefault(_defineProperty);
 
@@ -43082,7 +43045,7 @@
 	}();
 
 /***/ }),
-/* 470 */
+/* 471 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -43106,7 +43069,7 @@
 	}
 
 /***/ }),
-/* 471 */
+/* 472 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -43188,7 +43151,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
-/* 472 */
+/* 473 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -43307,7 +43270,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
-/* 473 */
+/* 474 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -43445,7 +43408,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
-/* 474 */
+/* 475 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -43460,7 +43423,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _SignUpForm = __webpack_require__(475);
+	var _SignUpForm = __webpack_require__(476);
 
 	var _SignUpForm2 = _interopRequireDefault(_SignUpForm);
 
@@ -43596,7 +43559,7 @@
 	exports.default = SignUpPage;
 
 /***/ }),
-/* 475 */
+/* 476 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -43613,11 +43576,11 @@
 
 	var _Card = __webpack_require__(399);
 
-	var _RaisedButton = __webpack_require__(463);
+	var _RaisedButton = __webpack_require__(464);
 
 	var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
 
-	var _TextField = __webpack_require__(465);
+	var _TextField = __webpack_require__(466);
 
 	var _TextField2 = _interopRequireDefault(_TextField);
 
@@ -43705,6 +43668,135 @@
 	};
 
 	exports.default = SignUpForm;
+
+/***/ }),
+/* 477 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _message = __webpack_require__(460);
+
+	var _message2 = _interopRequireDefault(_message);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var MessageList = function (_React$Component) {
+	    _inherits(MessageList, _React$Component);
+
+	    function MessageList() {
+	        _classCallCheck(this, MessageList);
+
+	        return _possibleConstructorReturn(this, (MessageList.__proto__ || Object.getPrototypeOf(MessageList)).apply(this, arguments));
+	    }
+
+	    _createClass(MessageList, [{
+	        key: "render",
+	        value: function render() {
+	            var renderMessage = function renderMessage(message, i) {
+	                return _react2.default.createElement(_message2.default, { key: i, msg: message.text });
+	            };
+	            return _react2.default.createElement(
+	                "ul",
+	                { className: "message" },
+	                this.props.messages.map(renderMessage)
+	            );
+	        }
+	    }]);
+
+	    return MessageList;
+	}(_react2.default.Component);
+
+	exports.default = MessageList;
+
+/***/ }),
+/* 478 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var MessageForm = function (_React$Component) {
+	    _inherits(MessageForm, _React$Component);
+
+	    function MessageForm(props) {
+	        _classCallCheck(this, MessageForm);
+
+	        var _this = _possibleConstructorReturn(this, (MessageForm.__proto__ || Object.getPrototypeOf(MessageForm)).call(this, props));
+
+	        _this.state = { text: '' };
+	        return _this;
+	    }
+
+	    _createClass(MessageForm, [{
+	        key: 'changeHandler',
+	        value: function changeHandler(e) {
+	            this.setState({ text: e.target.value });
+	        }
+	    }, {
+	        key: 'handleSubmit',
+	        value: function handleSubmit(e) {
+	            e.preventDefault();
+	            var message = {
+	                text: this.state.text
+	            };
+	            this.props.submitfnc(message);
+	            socket.emit('send:message', message);
+	            this.setState({ text: '' });
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement(
+	                'div',
+	                { className: 'messageForm' },
+	                _react2.default.createElement(
+	                    'form',
+	                    { onSubmit: this.handleSubmit.bind(this) },
+	                    _react2.default.createElement('input', { onChange: this.changeHandler.bind(this), value: this.state.text }),
+	                    _react2.default.createElement('input', { type: 'button', onClick: this.handleSubmit.bind(this), value: 'send message' })
+	                )
+	            );
+	        }
+	    }]);
+
+	    return MessageForm;
+	}(_react2.default.Component);
+
+	exports.default = MessageForm;
 
 /***/ })
 /******/ ]);
