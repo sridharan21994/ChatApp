@@ -18,7 +18,9 @@ class MessageForm extends React.Component{
             text : this.state.text
         }
         this.props.submitfnc(message);
-        socket.emit('send:message', message);
+
+        //      console.log("emitting socket message: ", message);
+        // socket.emit('send:message', message);
         this.setState({ text: '' });
     }
    

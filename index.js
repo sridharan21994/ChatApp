@@ -9,14 +9,20 @@ var io = require('socket.io')(server);
  
 io.on('connection', function (socket) {
     console.log("Socket Ready");
- 
+   socket.on("user-connected",function(data){
+       console.log(data);
+   });
     // broadcast a user's message to other users
-    socket.on('send:mesaage', function (data) {
+    socket.on('send-message', function (data) {
+        console.log("receving from client");
       console.log(data.text);
-        socket.broadcast.emit('send:message', {
+        io.emit('message', {
             text: data.text
         });
     });
+    socket.on("disconnected",function(){
+        console.log("user disconnected")
+    })
 })
 
 // connect to the database and load models
@@ -53,5 +59,5 @@ res.sendFile(__dirname + '/server/static/index.html')
 
 // start the server
 server.listen(3000, () => {
-  console.log('Server is running on http://localhost:3000 or http://127.0.0.1:3000');
+  console.log('Server is running on http://localhost:3000 or http://192.168.0.108:3000');
 });

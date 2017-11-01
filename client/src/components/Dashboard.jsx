@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import { Card, CardTitle, CardText } from 'material-ui/Card';
-import Chatty from './ChatContainer.jsx';
+import Chatty from './chat/ChatContainer.jsx';
 
 const Dashboard = ({ userData }) => (
   <Card className="container">
