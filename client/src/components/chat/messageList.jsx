@@ -4,7 +4,7 @@ import Message from "./message.jsx";
 class MessageList extends React.Component {
 render() {
         var renderMessage = function(message,i){
-            return <Message key={i} msg={message.text} />
+            return <Message key={i} msg={message} />
         }
         return(
         <ul className="message">

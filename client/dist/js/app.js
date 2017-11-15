@@ -42450,7 +42450,7 @@
 	        key: "render",
 	        value: function render() {
 	            var renderMessage = function renderMessage(message, i) {
-	                return _react2.default.createElement(_message2.default, { key: i, msg: message.text });
+	                return _react2.default.createElement(_message2.default, { key: i, msg: message });
 	            };
 	            return _react2.default.createElement(
 	                "ul",
@@ -98006,7 +98006,7 @@
 
 	        case types.INITIALIZE_USER:
 	            console.log("init reducer ", action.userDetail);
-	            return Object.assign({}, state, { userDetail: action.userDetail });
+	            return Object.assign({}, state, { userDetail: action.userDetail, message: [] });
 
 	        case types.ADD_MESSAGE:
 	            console.log("add message reducer ", action.message);
