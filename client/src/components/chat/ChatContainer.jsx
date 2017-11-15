@@ -44,7 +44,7 @@ class Chatty extends React.Component {
 //         this.setState(prevState => ({
 //   messages: [...prevState.messages, message]
 //              }));
-               this.props.actions.addMessage(message);
+               this.props.actions.addMessage(message.text);
      console.log("emitting socket message: ", message);
         socket.emit('send-message', message);
     }

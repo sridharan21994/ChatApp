@@ -42370,7 +42370,7 @@
 	            //         this.setState(prevState => ({
 	            //   messages: [...prevState.messages, message]
 	            //              }));
-	            this.props.actions.addMessage(message);
+	            this.props.actions.addMessage(message.text);
 	            console.log("emitting socket message: ", message);
 	            socket.emit('send-message', message);
 	        }
@@ -97999,7 +97999,7 @@
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 	function tempReducer() {
-	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { message: [] };
+	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 	    var action = arguments[1];
 
 	    switch (action.type) {
@@ -98009,12 +98009,12 @@
 	            return Object.assign({}, state, { userDetail: action.userDetail });
 
 	        case types.ADD_MESSAGE:
-	            console.log("add message reducer ", action.message.text);
-	            if (!state.message) {
-	                //    Object.assign({}, state, {message:[]});
-	                console.log("***************");
+	            console.log("add message reducer ", action.message);
+	            if (state["message"] == undefined || state["message"] == null) {
+	                Object.assign({}, state, { message: [""] });
+	                console.log("***************", state);
 	            }
-	            return Object.assign([].concat(_toConsumableArray(state.message), [action.message.text]));
+	            return Object.assign({}, state, { message: [].concat(_toConsumableArray(state.message), [action.message]) });
 
 	        default:
 	            return state;
