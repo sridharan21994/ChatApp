@@ -1,0 +1,2 @@
+export const INITIALIZE_USER = "INITIALIZE_USER";
+export const ADD_MESSAGE = "ADD_MESSAGE";

@@ -1,6 +1,7 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 import { Card, CardTitle, CardText } from 'material-ui/Card';
 import Chatty from './chat/ChatContainer.jsx';
+import FbPlugin from './fb/fbPlugin.jsx';
 
 const Dashboard = ({ userData }) => (
   <Card className="container">
@@ -8,8 +9,9 @@ const Dashboard = ({ userData }) => (
       title="Dashboard"
       subtitle="You should get access to this page only after authentication."
     />
+    <FbPlugin/>
 
-    {userData && <CardText style={{ fontSize: '16px', color: 'green' }}>{userData}</CardText>}
+    {userData && <CardText style={{ fontSize: '16px', color: 'green' }}>{userData.email}</CardText>}
 
     <Chatty/>
     
