@@ -20,7 +20,7 @@ class Chatty extends React.Component {
    componentWillMount(){
        console.log("component did mount");
       
-       socket.emit("user-connected", localStorage.getItem("email_id")+" connected");
+       socket.emit("user-connected", "user connected");
       
       socket.on("message",  function(data){
                console.log("from server: "+data.text);

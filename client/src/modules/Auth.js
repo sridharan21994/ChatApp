@@ -7,7 +7,6 @@ class Auth {
    */
   static authenticateUser(response) {
     localStorage.setItem('token', response.token);
-    localStorage.setItem("email_id",response.user.email)
   }
 
   /**

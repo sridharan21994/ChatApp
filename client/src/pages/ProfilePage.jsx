@@ -1,9 +1,8 @@
 import React, { PropTypes } from 'react';
-import SignUpForm from '../components/SignUpForm.jsx';
+import Profile from '../components/Profile.jsx';
 import Auth from '../modules/Auth';
 
-
-class SignUpPage extends React.Component {
+class ProfilePage extends React.Component {
 
   /**
    * Class constructor.
@@ -17,7 +16,8 @@ class SignUpPage extends React.Component {
       user: {
         email: '',
         name: '',
-        password: ''
+        newpassword: '',
+        confirmnewpassword: ''
       }
     };
 
@@ -33,17 +33,17 @@ class SignUpPage extends React.Component {
   processForm(event) {
     // prevent default action. in this case, action is the form submission event
     event.preventDefault();
-
-    // create a string for an HTTP body message
+    if(this.state.user.newpassword===this.state.user.confirmnewpassword){
+       // create a string for an HTTP body message
     const name = encodeURIComponent(this.state.user.name);
-    const email = encodeURIComponent(this.state.user.email);
-    const password = encodeURIComponent(this.state.user.password);
-    const formData = `name=${name}&email=${email}&password=${password}`;
+    const newpassword = encodeURIComponent(this.state.user.newpassword);
+    const formData = `name=${name}&newpassword=${newpassword}`;
 
     // create an AJAX request
     const xhr = new XMLHttpRequest();
-    xhr.open('post', '/auth/signup');
+    xhr.open('post', '/api/editprofile');
     xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    xhr.setRequestHeader('Authorization', `bearer ${Auth.getToken()}`);
     xhr.responseType = 'json';
     xhr.addEventListener('load', () => {
       if (xhr.status === 200) {
@@ -55,10 +55,13 @@ class SignUpPage extends React.Component {
         });
 
         // set a message
-        Auth.authenticateUser(xhr.response);
+        console.log('successMessage: ', xhr.response.message);
 
         // make a redirect
+        if(xhr.response.success){
+            console.log(xhr.response)
         this.context.router.replace('/');
+        }
       } else {
         // failure
 
@@ -71,6 +74,14 @@ class SignUpPage extends React.Component {
       }
     });
     xhr.send(formData);
+    }else{
+        const errors = this.state.errors;
+        errors["summary"] = "passwords are not equal";
+        this.setState({
+          errors
+        });
+    }
+    
   }
 
   /**
@@ -84,7 +95,8 @@ class SignUpPage extends React.Component {
     user[field] = event.target.value;
 
     this.setState({
-      user
+      user,
+      errors:{}
     });
   }
 
@@ -93,7 +105,7 @@ class SignUpPage extends React.Component {
    */
   render() {
     return (
-      <SignUpForm
+      <Profile
         onSubmit={this.processForm}
         onChange={this.changeUser}
         errors={this.state.errors}
@@ -104,9 +116,9 @@ class SignUpPage extends React.Component {
 
 }
 
-SignUpPage.contextTypes = {
+ProfilePage.contextTypes = {
   router: PropTypes.object.isRequired
 };
 
 
-export default SignUpPage;
+export default ProfilePage;

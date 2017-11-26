@@ -9,10 +9,10 @@ case types.INITIALIZE_USER:
     
 case types.ADD_MESSAGE:
     console.log("add message reducer ", action.message);
-    if(state["message"]==undefined||state["message"]==null){
-        Object.assign({}, state, {message:[""]} );
-        console.log("***************",state);
-    }
+    // if(state["message"]==undefined||state["message"]==null){
+    //     Object.assign({}, state, {message:[""]} );
+    //     console.log("***************",state);
+    // }
     return Object.assign({}, state, {message:[...state.message,action.message]} );
 
 default:
