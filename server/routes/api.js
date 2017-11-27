@@ -25,7 +25,10 @@ router.get('/dashboard', (req, res) => {
         return res.status(401).end();
       }
 
-      return res.status(200).json({user});
+      return res.status(200).json({user:{
+        name: user.name,
+        email: user.email
+      }});
     });
   });
   
@@ -39,9 +42,12 @@ router.post('/editprofile', (req, res) => {
    var hashedpassword = "";
   // get the last part from a authorization header string like "bearer token-value"
   const token = req.headers.authorization.split(' ')[1];
-  const data={name: req.body.name,
-              newpassword: req.body.newpassword };
-   console.log(data)
+  const data={
+              name: req.body.name,
+              newpassword: req.body.newpassword 
+            };
+   console.log(data);
+
   jwt.verify(token, config.jwtSecret, (err, decoded) => {
     // the 401 code is for unauthorized status
     if (err) { return res.status(401).end(); }
@@ -77,14 +83,16 @@ router.post('/editprofile', (req, res) => {
 
   //   });
   // });
-       return User.update( {_id: user.id}, 
-                      { password: data.newpassword },
-   function (err, result) {
-      if (err)  return res.status(400).json({success: false,
-                                      message: "try again !unknown error"});
+       return User.update( {_id: user.id}, { password: data.newpassword }, function (err, result) {
+          if (err)  return res.status(400).json({
+                                               success: false,
+                                               message: "try again !unknown error"});
 
                                       console.log(result)
-      return res.status(200).json({result,
+      return res.status(200).json({user:{
+                                          name: result.name,
+                                          email: result.email
+                                           },
                                    success: true});
    });
 
@@ -120,7 +128,10 @@ router.post('/editprofile', (req, res) => {
                   function (err, result) {
                       if (err) return res.status(400).json({success: false,
                                       message: "try again !unknown error"});
-                      return res.status(200).json({user,
+                      return res.status(200).json({user:{
+                                                         name: result.name,
+                                                         email:result.email
+                                                          },
                                                   success: true});
    });
               }

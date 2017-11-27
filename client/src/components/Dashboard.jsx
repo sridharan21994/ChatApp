@@ -5,15 +5,11 @@ import Chatty from './chat/ChatContainer.jsx';
 
 const Dashboard = ({ userData }) => (
   <Card className="container">
-    <CardTitle
-      title="Dashboard"
-      subtitle="You should get access to this page only after authentication."
-    />
     {/* <FbPlugin/> */}
 
     {userData && <CardText style={{ fontSize: '16px', color: 'green' }}>{userData.email}</CardText>}
 
-    <Chatty/>
+    {/*<Chatty/>*/}
     
   </Card>
 );

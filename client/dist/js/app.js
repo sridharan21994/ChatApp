@@ -42279,16 +42279,11 @@
 	  return _react2.default.createElement(
 	    _Card.Card,
 	    { className: 'container' },
-	    _react2.default.createElement(_Card.CardTitle, {
-	      title: 'Dashboard',
-	      subtitle: 'You should get access to this page only after authentication.'
-	    }),
 	    userData && _react2.default.createElement(
 	      _Card.CardText,
 	      { style: { fontSize: '16px', color: 'green' } },
 	      userData.email
-	    ),
-	    _react2.default.createElement(_ChatContainer2.default, null)
+	    )
 	  );
 	};
 
@@ -44901,6 +44896,16 @@
 
 	var _Auth2 = _interopRequireDefault(_Auth);
 
+	var _reactRedux = __webpack_require__(468);
+
+	var _actions = __webpack_require__(504);
+
+	var actions = _interopRequireWildcard(_actions);
+
+	var _redux = __webpack_require__(478);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -44977,6 +44982,7 @@
 	            // make a redirect
 	            if (xhr.response.success) {
 	              console.log(xhr.response);
+	              _this2.props.actions.initializeUser(xhr.response.user);
 	              _this2.context.router.replace('/');
 	            }
 	          } else {
@@ -45042,7 +45048,17 @@
 	  router: _react.PropTypes.object.isRequired
 	};
 
-	exports.default = ProfilePage;
+	function mapStateToProps(state, ownProps) {
+	  return {
+	    userDetail: state.chats.userDetail
+	  };
+	}
+	function mapDispatchToProps(dispatch) {
+	  return {
+	    actions: (0, _redux.bindActionCreators)(actions, dispatch)
+	  };
+	}
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(ProfilePage);
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9)))
 
 /***/ }),
@@ -47751,14 +47767,14 @@
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 	function tempReducer() {
-	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { userDetail: {}, message: [] };
 	    var action = arguments[1];
 
 	    switch (action.type) {
 
 	        case types.INITIALIZE_USER:
 	            console.log("init reducer ", action.userDetail);
-	            return Object.assign({}, state, { userDetail: action.userDetail, message: [] });
+	            return Object.assign({}, state, { userDetail: action.userDetail });
 
 	        case types.ADD_MESSAGE:
 	            console.log("add message reducer ", action.message);

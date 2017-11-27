@@ -15,7 +15,7 @@ io.on('connection', function (socket) {
     // broadcast a user's message to other users
     socket.on('send-message', function (data) {
         console.log("receving from client");
-      console.log(data.text);
+        console.log(data.text);
         io.emit('message', {
             text: data.text
         });

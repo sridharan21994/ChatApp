@@ -1,11 +1,11 @@
 import * as types from "../actions/types.js";
 
-export default function tempReducer (state={},action) {
+export default function tempReducer (state={ userDetail: {}, message:[] },action) {
 switch(action.type){
 
 case types.INITIALIZE_USER:
     console.log("init reducer ", action.userDetail);  
-    return Object.assign({}, state, {userDetail:action.userDetail,message:[]} );
+    return Object.assign({}, state, {userDetail:action.userDetail} );
     
 case types.ADD_MESSAGE:
     console.log("add message reducer ", action.message);

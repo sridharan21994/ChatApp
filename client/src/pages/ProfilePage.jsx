@@ -1,7 +1,9 @@
 import React, { PropTypes } from 'react';
 import Profile from '../components/Profile.jsx';
 import Auth from '../modules/Auth';
-
+import { connect } from "react-redux";
+import * as actions from "../actions/actions.js";
+import { bindActionCreators } from "redux";
 class ProfilePage extends React.Component {
 
   /**
@@ -60,6 +62,7 @@ class ProfilePage extends React.Component {
         // make a redirect
         if(xhr.response.success){
             console.log(xhr.response)
+        this.props.actions.initializeUser(xhr.response.user);
         this.context.router.replace('/');
         }
       } else {
@@ -121,4 +124,14 @@ ProfilePage.contextTypes = {
 };
 
 
-export default ProfilePage;
+function mapStateToProps(state, ownProps){
+   return {
+     userDetail: state.chats.userDetail
+   }
+}
+function mapDispatchToProps(dispatch){
+  return{
+     actions: bindActionCreators( actions , dispatch )
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(ProfilePage);
