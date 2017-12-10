@@ -1,4 +1,6 @@
 import * as types from "./types.js";
+// import axios from "axios";
+// import Auth from '../modules/Auth';
 
 export function initializeUser(userDetail){
     console.log("calling intiliase user actions", userDetail);
@@ -11,3 +13,15 @@ export function addMessage(message){
         type: types.ADD_MESSAGE, message
     }
 }
+
+// export function loadPage(){
+//         return axios.get("/api/dashboard",{headers:{'Content-type': 'application/x-www-form-urlencoded','Authorization': `bearer ${Auth.getToken()}`}})
+//         .then(response=>{
+//             if ((response.status >= 200 && response.status <= 300) || response.status == 304) {
+//             console.log("axios: ", response, "this ", this);
+//             initializeUser(response.data.user);
+//             return true;
+//             }
+//         })
+//         .catch(error=>{throw(error);});
+// }

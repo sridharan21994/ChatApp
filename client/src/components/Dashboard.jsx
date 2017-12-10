@@ -9,8 +9,8 @@ const Dashboard = ({ userData }) => (
 
     {userData && <CardText style={{ fontSize: '16px', color: 'green' }}>{userData.email}</CardText>}
 
-    {/*<Chatty/>*/}
-    
+    <Chatty/>
+      
   </Card>
 );
 

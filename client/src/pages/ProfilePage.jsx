@@ -35,7 +35,7 @@ class ProfilePage extends React.Component {
   processForm(event) {
     // prevent default action. in this case, action is the form submission event
     event.preventDefault();
-    if(this.state.user.newpassword===this.state.user.confirmnewpassword){
+    if((this.state.user.newpassword===this.state.user.confirmnewpassword)&&(this.state.user.newpassword.trim().length>7)&&(this.state.user.confirmnewpassword.trim().length>7)){
        // create a string for an HTTP body message
     const name = encodeURIComponent(this.state.user.name);
     const newpassword = encodeURIComponent(this.state.user.newpassword);
@@ -77,9 +77,13 @@ class ProfilePage extends React.Component {
       }
     });
     xhr.send(formData);
-    }else{
+    }else {
         const errors = this.state.errors;
-        errors["summary"] = "passwords are not equal";
+        if(this.state.user.newpassword!==this.state.user.confirmnewpassword){
+            errors["summary"] = "passwords are not equal";
+        }else{
+             errors["summary"] = "Password must be greater than 8 characters";
+        }     
         this.setState({
           errors
         });
@@ -113,6 +117,7 @@ class ProfilePage extends React.Component {
         onChange={this.changeUser}
         errors={this.state.errors}
         user={this.state.user}
+        userDetail={this.props.userDetail}
       />
     );
   }

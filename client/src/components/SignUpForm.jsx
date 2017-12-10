@@ -19,6 +19,8 @@ const SignUpForm = ({
 
       <div className="field-line">
         <TextField
+          hintText="Name"
+          floatingLabelFixed={true}
           floatingLabelText="Name"
           name="name"
           errorText={errors.name}
@@ -29,6 +31,8 @@ const SignUpForm = ({
 
       <div className="field-line">
         <TextField
+          hintText="Email"
+          floatingLabelFixed={true}
           floatingLabelText="Email"
           name="email"
           errorText={errors.email}
@@ -39,6 +43,8 @@ const SignUpForm = ({
 
       <div className="field-line">
         <TextField
+          hintText="Password"
+          floatingLabelFixed={true}
           floatingLabelText="Password"
           type="password"
           name="password"

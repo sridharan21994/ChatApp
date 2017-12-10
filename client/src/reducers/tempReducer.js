@@ -1,6 +1,7 @@
 import * as types from "../actions/types.js";
+import initialState from "./initialState";
 
-export default function tempReducer (state={ userDetail: {}, message:[] },action) {
+export default function tempReducer (state=initialState, action) {
 switch(action.type){
 
 case types.INITIALIZE_USER:

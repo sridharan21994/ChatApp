@@ -10,6 +10,7 @@ const Profile = ({
   onChange,
   errors,
   user,
+  userDetail
 }) => (
   <Card className="container">
     <form action="/" onSubmit={onSubmit}>
@@ -19,16 +20,20 @@ const Profile = ({
 
       <div className="field-line">
         <TextField
+          hintText="change user name"
+          defaultValue={userDetail.name}
+          floatingLabelFixed={true}
           floatingLabelText="Change User Name"
           name="name"
           errorText={errors.name}
           onChange={onChange}
-          value={user.name}
         />
       </div>
 
       <div className="field-line">
         <TextField
+          hintText="new password"
+          floatingLabelFixed={true}
           floatingLabelText="New Password"
           type="password"
           name="newpassword"
@@ -40,6 +45,8 @@ const Profile = ({
 
       <div className="field-line">
         <TextField
+          hintText="confirm new password"
+          floatingLabelFixed={true}
           floatingLabelText="Confirm New Password"
           type="password"
           name="confirmnewpassword"
@@ -53,7 +60,7 @@ const Profile = ({
         <RaisedButton type="submit" label="Save" primary />
       </div>
        <div className="button-line">
-        <RaisedButton href="/" label="Cancel & go to home" secondary />
+        <RaisedButton href="/" label="Cancel & go to dashboard" secondary />
       </div>
     </form>
   </Card>
@@ -64,6 +71,7 @@ Profile.propTypes = {
   onChange: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired
+//   userDetail: PropTypes.object.isRequired
 };
 
 export default Profile;

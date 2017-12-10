@@ -1,3 +1,5 @@
+// import * as actions from "../actions/actions.js";
+
 class Auth {
 
   /**
@@ -16,6 +18,17 @@ class Auth {
    */
   static isUserAuthenticated() {
     return localStorage.getItem('token') !== null;
+    // if(!localStorage.getItem('token')) return false;
+    // else {
+    // var x=actions.loadPage()
+    // .then(value=>{
+    //   return true;
+    // })
+    // .catch(error=>{
+    //   console.log("error ", error)
+    // });
+    // return x;
+    // }
   }
 
   /**
@@ -38,5 +51,6 @@ class Auth {
   }
 
 }
+
 
 export default Auth;

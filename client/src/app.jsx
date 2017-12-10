@@ -7,8 +7,10 @@ import { browserHistory, Router } from 'react-router';
 import routes from './routes.js';
 import { Provider } from "react-redux";
 import configureStore from "./store/configureStore";
+// import {loadPage} from "./actions/actions.js";
 
 const store = configureStore();
+// store.dispatch(loadPage());
 
 // remove tap delay, essential for MaterialUI to work properly
 injectTapEventPlugin();

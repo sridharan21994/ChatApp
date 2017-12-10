@@ -21,6 +21,8 @@ const LoginForm = ({
 
       <div className="field-line">
         <TextField
+          hintText="Email"
+          floatingLabelFixed={true}
           floatingLabelText="Email"
           name="email"
           errorText={errors.email}
@@ -31,6 +33,8 @@ const LoginForm = ({
 
       <div className="field-line">
         <TextField
+          hintText="Password"
+          floatingLabelFixed={true}
           floatingLabelText="Password"
           type="password"
           name="password"
