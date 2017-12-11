@@ -1,16 +1,17 @@
 import React from 'react';
 import { Card, CardTitle, CardText } from 'material-ui/Card';
 import Chatty from './chat/ChatContainer.jsx';
+import Search from './search/Search.jsx';
 // import FbPlugin from './fb/fbPlugin.jsx';
 
 const Dashboard = ({ userData }) => (
   <Card className="container">
     {/* <FbPlugin/> */}
 
-    {userData && <CardText style={{ fontSize: '16px', color: 'green' }}>{userData.email}</CardText>}
+    {/*{userData && <CardText style={{ fontSize: '16px', color: 'green' }}>{userData.userDetail.email}</CardText>}*/}
 
-    <Chatty/>
-      
+    {/*<Chatty/>*/}
+    <Search/>  
   </Card>
 );
 

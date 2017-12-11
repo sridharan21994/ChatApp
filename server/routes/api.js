@@ -3,9 +3,35 @@ const jwt = require('jsonwebtoken');
 const User = require('mongoose').model('User');
 const config = require('../../config');
 const bcrypt = require('bcrypt');
+const sample = require("../sampleData");
+
+var user;
 
 
 const router = new express.Router();
+
+router.get("/search",(req,res)=>{
+    console.log(req.query.query);
+    var patt = new RegExp("^"+req.query.query);
+    User.find( { name: { $regex: patt, $options: "i"  } },{_id:0,password:0,__v:0},(err,value)=>{
+      if(err) { return res.status(401).end(); }
+      return res.status(200).json({result:value});
+    } )
+});
+
+router.get("/sampledata",(req,res)=>{
+  console.log("total no of data available", sample.length);
+//   for(var i=0; i < sample.length; i++){
+
+//     console.log(sample[i]);
+//     const newUser = new User(sample[i]);
+//  newUser.save((err, user) => {
+//     if (err) { return done(err); }
+
+//     return res.status(200);
+//   });
+//   }
+});
 
 router.get('/dashboard', (req, res) => {
 

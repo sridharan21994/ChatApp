@@ -15,7 +15,7 @@ class DashboardPage extends React.Component {
     super(props);
 
     this.state = {
-      userDetail: ''
+      data: ''
     };  
   }
 
@@ -23,6 +23,8 @@ class DashboardPage extends React.Component {
    * This method will be executed after initial rendering.
    */
   componentWillMount() {
+  //  axios.get("/api/sampledata",{headers:{'Content-type': 'application/x-www-form-urlencoded','Authorization': `bearer ${Auth.getToken()}`}}).then().catch();
+
     axios.get("/api/dashboard",{headers:{'Content-type': 'application/x-www-form-urlencoded','Authorization': `bearer ${Auth.getToken()}`}})
         .then(response=>{
             if ((response.status >= 200 && response.status <= 300) || response.status == 304) {
@@ -54,14 +56,14 @@ class DashboardPage extends React.Component {
    * Render the component.
    */
   render() {
-    return (<Dashboard userData={this.props.userDetail} />);
+    return (<Dashboard userData={this.props.data} />);
   }
 
 }
 function mapStateToProps(state, ownProps){
       console.log("dashboard user details from store ", state.chats);
    return {
-     userDetail: state.chats.userDetail
+     data: state.chats
    }
 }
 function mapDispatchToProps(dispatch){

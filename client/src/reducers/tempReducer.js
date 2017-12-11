@@ -14,7 +14,11 @@ case types.ADD_MESSAGE:
     //     Object.assign({}, state, {message:[""]} );
     //     console.log("***************",state);
     // }
-    return Object.assign({}, state, {message:[...state.message,action.message]} );
+    return Object.assign({}, state, {message: [...state.message,action.message]} );
+
+case types.SUGGESTIONS:
+    console.log("add list reducer ", action.list);
+    return Object.assign({}, state, {list: action.list} )
 
 default:
     return state;
