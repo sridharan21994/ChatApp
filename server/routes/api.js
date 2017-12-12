@@ -4,11 +4,28 @@ const User = require('mongoose').model('User');
 const config = require('../../config');
 const bcrypt = require('bcrypt');
 const sample = require("../sampleData");
-
-var user;
-
-
 const router = new express.Router();
+var app = express();  
+var server = require('http').createServer(app);  
+var io = require('socket.io')(server);
+
+io.on('connection', function (socket) {
+    console.log("Socket Ready");
+   socket.on("user-connected",function(data){
+       console.log(data);
+   });
+    // broadcast a user's message to other users
+    socket.on('send-message', function (data) {
+        console.log("receving from client");
+        console.log(data.text);
+        io.emit('message', {
+            text: data.text
+        });
+    });
+    socket.on("disconnected",function(){
+        console.log("user disconnected")
+    })
+})
 
 router.get("/search",(req,res)=>{
     console.log(req.query.query);

@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardTitle, CardText } from 'material-ui/Card';
 import Chatty from './chat/ChatContainer.jsx';
 import Search from './search/Search.jsx';
+import ListExampleMessages from "./chat/SampleList.jsx";
 // import FbPlugin from './fb/fbPlugin.jsx';
 
 const Dashboard = ({ userData }) => (
@@ -12,6 +13,7 @@ const Dashboard = ({ userData }) => (
 
     {/*<Chatty/>*/}
     <Search/>  
+    <ListExampleMessages/>
   </Card>
 );
 
