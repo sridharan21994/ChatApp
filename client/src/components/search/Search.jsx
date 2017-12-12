@@ -50,13 +50,16 @@ class Search extends React.Component {
     }
 
 
-    insideIconClicked(e,name){
+    insideIconClicked(e,listItem){
       e.stopPropagation();
-      console.log("**********inside icon ",  name );
+      console.log("**********inside icon ",  listItem );
     }
 
-     listItemClicked(e, name){
-       console.log("***********list item " , name );
+     listItemClicked(e, listItem){
+       console.log("***********list item " , listItem );
+       if(!this.props.contactList.find(list=>list.email===listItem.email)){
+            this.props.actions.addContactList(listItem);
+       }
      }
 
     blur(e){
@@ -70,9 +73,9 @@ class Search extends React.Component {
             return <ListItem key={i} 
             id="listId"
             primaryText={list.name}
-            onMouseDown ={(e) => this.listItemClicked(e, list.email)}
+            onMouseDown ={(e) => this.listItemClicked(e, list)}
             rightIcon={
-              <div style={{margin:0,padding:12}} onMouseDown ={(e) => this.insideIconClicked(e, list.email)}>
+              <div style={{margin:0,padding:12}} onMouseDown ={(e) => this.insideIconClicked(e, list)}>
               <CommunicationChatBubble/>
               </div>}
             />
@@ -86,7 +89,7 @@ class Search extends React.Component {
            onBlur={(e)=>this.blur(e)}
            value={this.state.text}
           />
-          {this.props.list.map(renderList, this)}
+          {this.props.searchList.map(renderList, this)}
       </List>
 
          {/*<SearchList list={this.props.list} />*/}
@@ -97,7 +100,8 @@ class Search extends React.Component {
 }
 function mapStateToProps(state, ownProps){
    return {
-     list: state.chats.list
+     searchList: state.myStore.searchList,
+     contactList: state.myStore.contactList
    }
 }
 function mapDispatchToProps(dispatch){

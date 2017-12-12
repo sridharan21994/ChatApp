@@ -23,7 +23,7 @@ class DashboardPage extends React.Component {
    * This method will be executed after initial rendering.
    */
   componentWillMount() {
-  //  axios.get("/api/sampledata",{headers:{'Content-type': 'application/x-www-form-urlencoded','Authorization': `bearer ${Auth.getToken()}`}}).then().catch();
+   // axios.get("/api/sampledata",{headers:{'Content-type': 'application/x-www-form-urlencoded','Authorization': `bearer ${Auth.getToken()}`}}).then().catch();
 
     axios.get("/api/dashboard",{headers:{'Content-type': 'application/x-www-form-urlencoded','Authorization': `bearer ${Auth.getToken()}`}})
         .then(response=>{
@@ -61,9 +61,9 @@ class DashboardPage extends React.Component {
 
 }
 function mapStateToProps(state, ownProps){
-      console.log("dashboard user details from store ", state.chats);
+      console.log("dashboard user details from store ", state.myStore);
    return {
-     data: state.chats
+     data: state.myStore
    }
 }
 function mapDispatchToProps(dispatch){

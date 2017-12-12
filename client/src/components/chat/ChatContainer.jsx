@@ -60,10 +60,10 @@ class Chatty extends React.Component {
 }
 
 function mapStateToProps(state, ownProps){
-    console.log("chatty from store: ",state.chats);
-    if(state.chats.message){
+    console.log("chatty from store: ",state.myStore);
+    if(state.myStore.message){
        return {
-     messages: state.chats.message
+     messages: state.myStore.message
        }
     }else{
         return{

@@ -16,8 +16,11 @@ case types.ADD_MESSAGE:
     // }
     return Object.assign({}, state, {message: [...state.message,action.message]} );
 
-case types.SUGGESTIONS:
-    return Object.assign({}, state, {list: action.list} )
+case types.ADD_SUGGESTIONS:
+    return Object.assign({}, state, {searchList: action.list} );
+
+case types.ADD_CONTACTS:
+    return Object.assign({}, state, {contactList: [...state.contactList,action.list]});   
 
 default:
     return state;

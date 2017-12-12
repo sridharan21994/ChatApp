@@ -8,7 +8,11 @@ export function initializeUser(userDetail){
 }
 
 export function addSuggestions(list){
-    return { type: types.SUGGESTIONS, list };
+    return { type: types.ADD_SUGGESTIONS, list };
+}
+
+export function addContactList(list){
+    return { type: types.ADD_CONTACTS, list};
 }
 
 export function addMessage(message){

@@ -131,7 +131,7 @@ ProfilePage.contextTypes = {
 
 function mapStateToProps(state, ownProps){
    return {
-     userDetail: state.chats.userDetail
+     userDetail: state.myStore.userDetail
    }
 }
 function mapDispatchToProps(dispatch){

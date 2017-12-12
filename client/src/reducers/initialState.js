@@ -1,5 +1,6 @@
 export default {
     userDetail:{},
     message:[],
-    list:[]
+    searchList:[],
+    contactList:[]
 };

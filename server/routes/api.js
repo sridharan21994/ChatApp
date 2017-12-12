@@ -36,8 +36,8 @@ router.get("/search",(req,res)=>{
     } )
 });
 
-router.get("/sampledata",(req,res)=>{
-  console.log("total no of data available", sample.length);
+// router.get("/sampledata",(req,res)=>{
+//   console.log("total no of data available", sample.length);
 //   for(var i=0; i < sample.length; i++){
 
 //     console.log(sample[i]);
@@ -48,7 +48,7 @@ router.get("/sampledata",(req,res)=>{
 //     return res.status(200);
 //   });
 //   }
-});
+// });
 
 router.get('/dashboard', (req, res) => {
 

@@ -42224,7 +42224,7 @@
 	    value: function componentWillMount() {
 	      var _this2 = this;
 
-	      //  axios.get("/api/sampledata",{headers:{'Content-type': 'application/x-www-form-urlencoded','Authorization': `bearer ${Auth.getToken()}`}}).then().catch();
+	      // axios.get("/api/sampledata",{headers:{'Content-type': 'application/x-www-form-urlencoded','Authorization': `bearer ${Auth.getToken()}`}}).then().catch();
 
 	      _axios2.default.get("/api/dashboard", { headers: { 'Content-type': 'application/x-www-form-urlencoded', 'Authorization': 'bearer ' + _Auth2.default.getToken() } }).then(function (response) {
 	        if (response.status >= 200 && response.status <= 300 || response.status == 304) {
@@ -42268,9 +42268,9 @@
 	}(_react2.default.Component);
 
 	function mapStateToProps(state, ownProps) {
-	  console.log("dashboard user details from store ", state.chats);
+	  console.log("dashboard user details from store ", state.myStore);
 	  return {
-	    data: state.chats
+	    data: state.myStore
 	  };
 	}
 	function mapDispatchToProps(dispatch) {
@@ -42435,10 +42435,10 @@
 	}(_react2.default.Component);
 
 	function mapStateToProps(state, ownProps) {
-	    console.log("chatty from store: ", state.chats);
-	    if (state.chats.message) {
+	    console.log("chatty from store: ", state.myStore);
+	    if (state.myStore.message) {
 	        return {
-	            messages: state.chats.message
+	            messages: state.myStore.message
 	        };
 	    } else {
 	        return {
@@ -44876,6 +44876,7 @@
 	});
 	exports.initializeUser = initializeUser;
 	exports.addSuggestions = addSuggestions;
+	exports.addContactList = addContactList;
 	exports.addMessage = addMessage;
 
 	var _types = __webpack_require__(505);
@@ -44893,7 +44894,11 @@
 	}
 
 	function addSuggestions(list) {
-	    return { type: types.SUGGESTIONS, list: list };
+	    return { type: types.ADD_SUGGESTIONS, list: list };
+	}
+
+	function addContactList(list) {
+	    return { type: types.ADD_CONTACTS, list: list };
 	}
 
 	function addMessage(message) {
@@ -44927,7 +44932,8 @@
 	});
 	var INITIALIZE_USER = exports.INITIALIZE_USER = "INITIALIZE_USER";
 	var ADD_MESSAGE = exports.ADD_MESSAGE = "ADD_MESSAGE";
-	var SUGGESTIONS = exports.SUGGESTIONS = "SUGGESTIONS";
+	var ADD_SUGGESTIONS = exports.ADD_SUGGESTIONS = "SUGGESTIONS";
+	var ADD_CONTACTS = exports.ADD_CONTACTS = "ADD_CONTACTS";
 
 /***/ }),
 /* 506 */
@@ -45034,14 +45040,19 @@
 	    }
 	  }, {
 	    key: 'insideIconClicked',
-	    value: function insideIconClicked(e, name) {
+	    value: function insideIconClicked(e, listItem) {
 	      e.stopPropagation();
-	      console.log("**********inside icon ", name);
+	      console.log("**********inside icon ", listItem);
 	    }
 	  }, {
 	    key: 'listItemClicked',
-	    value: function listItemClicked(e, name) {
-	      console.log("***********list item ", name);
+	    value: function listItemClicked(e, listItem) {
+	      console.log("***********list item ", listItem);
+	      if (!this.props.contactList.find(function (list) {
+	        return list.email === listItem.email;
+	      })) {
+	        this.props.actions.addContactList(listItem);
+	      }
 	    }
 	  }, {
 	    key: 'blur',
@@ -45060,12 +45071,12 @@
 	          id: 'listId',
 	          primaryText: list.name,
 	          onMouseDown: function onMouseDown(e) {
-	            return _this3.listItemClicked(e, list.email);
+	            return _this3.listItemClicked(e, list);
 	          },
 	          rightIcon: _react2.default.createElement(
 	            'div',
 	            { style: { margin: 0, padding: 12 }, onMouseDown: function onMouseDown(e) {
-	                return _this3.insideIconClicked(e, list.email);
+	                return _this3.insideIconClicked(e, list);
 	              } },
 	            _react2.default.createElement(_chatBubble2.default, null)
 	          )
@@ -45086,7 +45097,7 @@
 	            },
 	            value: this.state.text
 	          }),
-	          this.props.list.map(renderList, this)
+	          this.props.searchList.map(renderList, this)
 	        )
 	      );
 	    }
@@ -45097,7 +45108,8 @@
 
 	function mapStateToProps(state, ownProps) {
 	  return {
-	    list: state.chats.list
+	    searchList: state.myStore.searchList,
+	    contactList: state.myStore.contactList
 	  };
 	}
 	function mapDispatchToProps(dispatch) {
@@ -45505,7 +45517,7 @@
 	/*!
 	 * Determine if an object is a Buffer
 	 *
-	 * @author   Feross Aboukhadijeh <https://feross.org>
+	 * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
 	 * @license  MIT
 	 */
 
@@ -49454,6 +49466,8 @@
 	  value: true
 	});
 
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
@@ -49490,14 +49504,30 @@
 
 	var _MenuItem2 = _interopRequireDefault(_MenuItem);
 
+	var _reactRedux = __webpack_require__(468);
+
+	var _actions = __webpack_require__(504);
+
+	var actions = _interopRequireWildcard(_actions);
+
+	var _redux = __webpack_require__(478);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var iconButtonElement = _react2.default.createElement(
 	  _IconButton2.default,
 	  {
 	    touch: true,
 	    tooltip: 'more',
-	    tooltipPosition: 'bottom-left'
+	    tooltipPosition: 'top-left'
 	  },
 	  _react2.default.createElement(_moreVert2.default, { color: _colors.grey400 })
 	);
@@ -49522,217 +49552,79 @@
 	  )
 	);
 
-	var ListExampleMessages = function ListExampleMessages() {
-	  return _react2.default.createElement(
-	    'div',
-	    null,
-	    _react2.default.createElement(
-	      'div',
-	      null,
-	      _react2.default.createElement(
-	        _List.List,
-	        null,
-	        _react2.default.createElement(
-	          _Subheader2.default,
-	          null,
-	          'Today'
-	        ),
-	        _react2.default.createElement(_List.ListItem, {
-	          leftAvatar: _react2.default.createElement(_Avatar2.default, { src: 'images/ok-128.jpg' }),
-	          primaryText: 'Brunch this weekend?',
-	          secondaryText: _react2.default.createElement(
-	            'p',
-	            null,
-	            _react2.default.createElement(
-	              'span',
-	              { style: { color: _colors.darkBlack } },
-	              'Brendan Lim'
-	            ),
-	            ' -- I\'ll be in your neighborhood doing errands this weekend. Do you want to grab brunch?'
-	          ),
-	          secondaryTextLines: 2
-	        }),
-	        _react2.default.createElement(_Divider2.default, { inset: true }),
-	        _react2.default.createElement(_List.ListItem, {
-	          leftAvatar: _react2.default.createElement(_Avatar2.default, { src: 'images/kolage-128.jpg' }),
-	          primaryText: _react2.default.createElement(
-	            'p',
-	            null,
-	            'Summer BBQ\xA0\xA0',
-	            _react2.default.createElement(
-	              'span',
-	              { style: { color: _colors.lightBlack } },
-	              '4'
-	            )
-	          ),
-	          secondaryText: _react2.default.createElement(
-	            'p',
-	            null,
-	            _react2.default.createElement(
-	              'span',
-	              { style: { color: _colors.darkBlack } },
-	              'to me, Scott, Jennifer'
-	            ),
-	            ' -- Wish I could come, but I\'m out of town this weekend.'
-	          ),
-	          secondaryTextLines: 2
-	        }),
-	        _react2.default.createElement(_Divider2.default, { inset: true }),
-	        _react2.default.createElement(_List.ListItem, {
-	          leftAvatar: _react2.default.createElement(_Avatar2.default, { src: 'images/uxceo-128.jpg' }),
-	          primaryText: 'Oui oui',
-	          secondaryText: _react2.default.createElement(
-	            'p',
-	            null,
-	            _react2.default.createElement(
-	              'span',
-	              { style: { color: _colors.darkBlack } },
-	              'Grace Ng'
-	            ),
-	            ' -- Do you have Paris recommendations? Have you ever been?'
-	          ),
-	          secondaryTextLines: 2
-	        }),
-	        _react2.default.createElement(_Divider2.default, { inset: true }),
-	        _react2.default.createElement(_List.ListItem, {
-	          leftAvatar: _react2.default.createElement(_Avatar2.default, { src: 'images/kerem-128.jpg' }),
-	          primaryText: 'Birdthday gift',
-	          secondaryText: _react2.default.createElement(
-	            'p',
-	            null,
-	            _react2.default.createElement(
-	              'span',
-	              { style: { color: _colors.darkBlack } },
-	              'Kerem Suer'
-	            ),
-	            ' -- Do you have any ideas what we can get Heidi for her birthday? How about a pony?'
-	          ),
-	          secondaryTextLines: 2
-	        }),
-	        _react2.default.createElement(_Divider2.default, { inset: true }),
-	        _react2.default.createElement(_List.ListItem, {
-	          leftAvatar: _react2.default.createElement(_Avatar2.default, { src: 'images/raquelromanp-128.jpg' }),
-	          primaryText: 'Recipe to try',
-	          secondaryText: _react2.default.createElement(
-	            'p',
-	            null,
-	            _react2.default.createElement(
-	              'span',
-	              { style: { color: _colors.darkBlack } },
-	              'Raquel Parrado'
-	            ),
-	            ' -- We should eat this: grated squash. Corn and tomatillo tacos.'
-	          ),
-	          secondaryTextLines: 2
-	        })
-	      )
-	    ),
-	    _react2.default.createElement(
-	      'div',
-	      null,
-	      _react2.default.createElement(
-	        _List.List,
-	        null,
-	        _react2.default.createElement(
-	          _Subheader2.default,
-	          null,
-	          'Today'
-	        ),
-	        _react2.default.createElement(_List.ListItem, {
-	          leftAvatar: _react2.default.createElement(_Avatar2.default, { src: 'images/ok-128.jpg' }),
-	          rightIconButton: rightIconMenu,
-	          primaryText: 'Brendan Lim',
-	          secondaryText: _react2.default.createElement(
-	            'p',
-	            null,
-	            _react2.default.createElement(
-	              'span',
-	              { style: { color: _colors.darkBlack } },
-	              'Brunch this weekend?'
-	            ),
-	            _react2.default.createElement('br', null),
-	            'I\'ll be in your neighborhood doing errands this weekend. Do you want to grab brunch?'
-	          ),
-	          secondaryTextLines: 2
-	        }),
-	        _react2.default.createElement(_Divider2.default, { inset: true }),
-	        _react2.default.createElement(_List.ListItem, {
-	          leftAvatar: _react2.default.createElement(_Avatar2.default, { src: 'images/kolage-128.jpg' }),
-	          rightIconButton: rightIconMenu,
-	          primaryText: 'me, Scott, Jennifer',
-	          secondaryText: _react2.default.createElement(
-	            'p',
-	            null,
-	            _react2.default.createElement(
-	              'span',
-	              { style: { color: _colors.darkBlack } },
-	              'Summer BBQ'
-	            ),
-	            _react2.default.createElement('br', null),
-	            'Wish I could come, but I\'m out of town this weekend.'
-	          ),
-	          secondaryTextLines: 2
-	        }),
-	        _react2.default.createElement(_Divider2.default, { inset: true }),
-	        _react2.default.createElement(_List.ListItem, {
-	          leftAvatar: _react2.default.createElement(_Avatar2.default, { src: 'images/uxceo-128.jpg' }),
-	          rightIconButton: rightIconMenu,
-	          primaryText: 'Grace Ng',
-	          secondaryText: _react2.default.createElement(
-	            'p',
-	            null,
-	            _react2.default.createElement(
-	              'span',
-	              { style: { color: _colors.darkBlack } },
-	              'Oui oui'
-	            ),
-	            _react2.default.createElement('br', null),
-	            'Do you have any Paris recs? Have you ever been?'
-	          ),
-	          secondaryTextLines: 2
-	        }),
-	        _react2.default.createElement(_Divider2.default, { inset: true }),
-	        _react2.default.createElement(_List.ListItem, {
-	          leftAvatar: _react2.default.createElement(_Avatar2.default, { src: 'images/kerem-128.jpg' }),
-	          rightIconButton: rightIconMenu,
-	          primaryText: 'Kerem Suer',
-	          secondaryText: _react2.default.createElement(
-	            'p',
-	            null,
-	            _react2.default.createElement(
-	              'span',
-	              { style: { color: _colors.darkBlack } },
-	              'Birthday gift'
-	            ),
-	            _react2.default.createElement('br', null),
-	            'Do you have any ideas what we can get Heidi for her birthday? How about a pony?'
-	          ),
-	          secondaryTextLines: 2
-	        }),
-	        _react2.default.createElement(_Divider2.default, { inset: true }),
-	        _react2.default.createElement(_List.ListItem, {
-	          leftAvatar: _react2.default.createElement(_Avatar2.default, { src: 'images/raquelromanp-128.jpg' }),
-	          rightIconButton: rightIconMenu,
-	          primaryText: 'Raquel Parrado',
-	          secondaryText: _react2.default.createElement(
-	            'p',
-	            null,
-	            _react2.default.createElement(
-	              'span',
-	              { style: { color: _colors.darkBlack } },
-	              'Recipe to try'
-	            ),
-	            _react2.default.createElement('br', null),
-	            'We should eat this: grated squash. Corn and tomatillo tacos.'
-	          ),
-	          secondaryTextLines: 2
-	        })
-	      )
-	    )
-	  );
-	};
+	var ListExampleMessages = function (_React$Component) {
+	  _inherits(ListExampleMessages, _React$Component);
 
-	exports.default = ListExampleMessages;
+	  /**
+	   * Class constructor.
+	   */
+	  function ListExampleMessages(props) {
+	    _classCallCheck(this, ListExampleMessages);
+
+	    var _this = _possibleConstructorReturn(this, (ListExampleMessages.__proto__ || Object.getPrototypeOf(ListExampleMessages)).call(this, props));
+
+	    _this.state = {};
+	    return _this;
+	  }
+
+	  _createClass(ListExampleMessages, [{
+	    key: 'render',
+	    value: function render() {
+
+	      var renderList = function renderList(contact, i) {
+	        return _react2.default.createElement(_List.ListItem, {
+	          key: i,
+	          leftAvatar: _react2.default.createElement(_Avatar2.default, { src: 'images/ok-128.jpg' }),
+	          rightIconButton: rightIconMenu,
+	          primaryText: _react2.default.createElement(
+	            'div',
+	            { style: { textAlign: "left" } },
+	            contact.name
+	          ),
+	          secondaryText: _react2.default.createElement(
+	            'p',
+	            null,
+	            contact.email,
+	            ' :I\'ll be in your neighborhood doing errands this weekend. Do you want to grab brunch?'
+	          ),
+	          secondaryTextLines: 1
+	        });
+	      };
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(
+	            _List.List,
+	            null,
+	            _react2.default.createElement(
+	              _Subheader2.default,
+	              null,
+	              'LIST'
+	            ),
+	            this.props.contactList.map(renderList, this)
+	          )
+	        )
+	      );
+	    }
+	  }]);
+
+	  return ListExampleMessages;
+	}(_react2.default.Component);
+
+	function mapStateToProps(state, ownProps) {
+	  return {
+	    contactList: state.myStore.contactList
+	  };
+	}
+	function mapDispatchToProps(dispatch) {
+	  return {
+	    actions: (0, _redux.bindActionCreators)(actions, dispatch)
+	  };
+	}
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(ListExampleMessages);
 
 /***/ }),
 /* 553 */
@@ -53144,7 +53036,7 @@
 
 	function mapStateToProps(state, ownProps) {
 	  return {
-	    userDetail: state.chats.userDetail
+	    userDetail: state.myStore.userDetail
 	  };
 	}
 	function mapDispatchToProps(dispatch) {
@@ -54363,7 +54255,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var rootReducer = (0, _redux.combineReducers)({
-	    chats: _tempReducer2.default
+	    myStore: _tempReducer2.default
 	});
 	exports.default = rootReducer;
 
@@ -54410,8 +54302,11 @@
 	            // }
 	            return Object.assign({}, state, { message: [].concat(_toConsumableArray(state.message), [action.message]) });
 
-	        case types.SUGGESTIONS:
-	            return Object.assign({}, state, { list: action.list });
+	        case types.ADD_SUGGESTIONS:
+	            return Object.assign({}, state, { searchList: action.list });
+
+	        case types.ADD_CONTACTS:
+	            return Object.assign({}, state, { contactList: [].concat(_toConsumableArray(state.contactList), [action.list]) });
 
 	        default:
 	            return state;
@@ -54431,7 +54326,8 @@
 	exports.default = {
 	    userDetail: {},
 	    message: [],
-	    list: []
+	    searchList: [],
+	    contactList: []
 	};
 
 /***/ })
