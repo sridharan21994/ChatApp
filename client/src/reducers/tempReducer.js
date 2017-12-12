@@ -17,7 +17,6 @@ case types.ADD_MESSAGE:
     return Object.assign({}, state, {message: [...state.message,action.message]} );
 
 case types.SUGGESTIONS:
-    console.log("add list reducer ", action.list);
     return Object.assign({}, state, {list: action.list} )
 
 default:

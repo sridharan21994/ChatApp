@@ -20,10 +20,8 @@ class Search extends React.Component {
     super(props);
 
     this.state = {
-      dataSource:[],
       text: ''
     };  
-    
   }
 
   /**
@@ -43,34 +41,54 @@ class Search extends React.Component {
   
    changeHandler(e){
         this.setState({ text : e.target.value });
-        console.log("typed ", e.target.value);
         if( e.target.value.length >= 3 ){
                axios.get("/api/search",{params:{query:e.target.value},headers:{'Content-type': 'application/x-www-form-urlencoded','Authorization': `bearer ${Auth.getToken()}`}})
                .then(response=>{
-                    console.log("serach value ",response.data.result); 
                     this.props.actions.addSuggestions(response.data.result);
                })
-            }   
+            }
+             
         
     }
+
+
+    insideIconClicked(e,name){
+      e.stopPropagation();
+      console.log("**********inside icon ",  name );
+    }
+
+     listItemClicked(e, name){
+       console.log("***********list item " , name );
+     }
+
+    blur(e){
+       this.props.actions.addSuggestions([]);
+    }
+
 
   render() {
 
         var renderList = function(list,i){
             return <ListItem key={i} 
+            id="listId"
             primaryText={list.name}
-            rightIcon={<CommunicationChatBubble />}
+            onMouseDown ={(e) => this.listItemClicked(e, list.email)}
+            rightIcon={
+              <div style={{margin:0,padding:12}} onMouseDown ={(e) => this.insideIconClicked(e, list.email)}>
+              <CommunicationChatBubble/>
+              </div>}
             />
         }
 
     return (<div>
-      <List >
+      <List>
           <TextField
            hintText="Search"
            onChange={this.changeHandler.bind(this)}
+           onBlur={(e)=>this.blur(e)}
            value={this.state.text}
           />
-          {this.props.list.map(renderList)}
+          {this.props.list.map(renderList, this)}
       </List>
 
          {/*<SearchList list={this.props.list} />*/}
