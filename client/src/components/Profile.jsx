@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 import { Card, CardText } from 'material-ui/Card';
-import RaisedButton from 'material-ui/RaisedButton';
+import Button from 'material-ui/Button';
 import TextField from 'material-ui/TextField';
 
 
@@ -20,7 +20,7 @@ const Profile = ({
 
       <div className="field-line">
         <TextField
-          hintText="change user name"
+          placeholder="change user name"
           defaultValue={userDetail.name}
           floatingLabelFixed={true}
           floatingLabelText="Change User Name"
@@ -32,7 +32,7 @@ const Profile = ({
 
       <div className="field-line">
         <TextField
-          hintText="new password"
+          placeholder="new password"
           floatingLabelFixed={true}
           floatingLabelText="New Password"
           type="password"
@@ -45,7 +45,7 @@ const Profile = ({
 
       <div className="field-line">
         <TextField
-          hintText="confirm new password"
+          placeholder="confirm new password"
           floatingLabelFixed={true}
           floatingLabelText="Confirm New Password"
           type="password"
@@ -57,10 +57,10 @@ const Profile = ({
       </div>
 
       <div className="button-line">
-        <RaisedButton type="submit" label="Save" primary />
+        <Button raised color="primary" type="submit" label="Save" primary />
       </div>
        <div className="button-line">
-        <RaisedButton href="/" label="Cancel & go to dashboard" secondary />
+        <Button raised color="accent" href="/" label="Cancel & go to dashboard" secondary />
       </div>
     </form>
   </Card>

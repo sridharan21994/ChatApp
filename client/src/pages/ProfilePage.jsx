@@ -4,6 +4,7 @@ import Auth from '../modules/Auth';
 import { connect } from "react-redux";
 import * as actions from "../actions/actions.js";
 import { bindActionCreators } from "redux";
+
 class ProfilePage extends React.Component {
 
   /**

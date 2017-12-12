@@ -1,16 +1,20 @@
 import React from 'react';
-import {List, ListItem} from 'material-ui/List';
+import List, {
+  ListItem,
+  ListSubheader,
+} from 'material-ui/List';
 import Divider from 'material-ui/Divider';
-import Subheader from 'material-ui/Subheader';
 import Avatar from 'material-ui/Avatar';
-import {grey400, darkBlack, lightBlack} from 'material-ui/styles/colors';
+import {grey400, darkBlack, lightBlack} from 'material-ui/colors';
 import IconButton from 'material-ui/IconButton';
-import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
-import IconMenu from 'material-ui/IconMenu';
-import MenuItem from 'material-ui/MenuItem';
+// import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+// import IconMenu from 'material-ui/IconMenu';
+import Menu, {MenuItem} from 'material-ui/Menu';
 import { connect } from "react-redux";
 import * as actions from "../../actions/actions.js";
 import { bindActionCreators } from "redux";
+import Icon from 'material-ui/Icon';
+
 
 const iconButtonElement = (
   <IconButton
@@ -18,16 +22,17 @@ const iconButtonElement = (
     tooltip="more"
     tooltipPosition="top-left"
   >
-    <MoreVertIcon color={grey400} />
+    <Icon color={grey400} >MoreVertIcon</Icon>
   </IconButton>
 );
 
 const rightIconMenu = (
-  <IconMenu iconButtonElement={iconButtonElement}>
+  <Icon iconButtonElement={iconButtonElement}>
+     MenuItem
     <MenuItem>Reply</MenuItem>
     <MenuItem>Forward</MenuItem>
     <MenuItem>Delete</MenuItem>
-  </IconMenu>
+  </Icon>
 );
 
 class ListExampleMessages extends React.Component {
@@ -63,9 +68,7 @@ class ListExampleMessages extends React.Component {
 return ( 
 <div>
     <div>
-      <List>
-        <Subheader>LIST</Subheader>
-
+      <List subheader={<ListSubheader>Settings</ListSubheader>}>
         {this.props.contactList.map(renderList,this)}
         {/* <Divider inset={true} /> */}
       </List>

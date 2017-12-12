@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 import { Card, CardText } from 'material-ui/Card';
-import RaisedButton from 'material-ui/RaisedButton';
+import Button from 'material-ui/Button';
 import TextField from 'material-ui/TextField';
 
 
@@ -21,7 +21,7 @@ const LoginForm = ({
 
       <div className="field-line">
         <TextField
-          hintText="Email"
+          placeholder="Email"
           floatingLabelFixed={true}
           floatingLabelText="Email"
           name="email"
@@ -33,7 +33,7 @@ const LoginForm = ({
 
       <div className="field-line">
         <TextField
-          hintText="Password"
+          placeholder="Password"
           floatingLabelFixed={true}
           floatingLabelText="Password"
           type="password"
@@ -45,7 +45,7 @@ const LoginForm = ({
       </div>
 
       <div className="button-line">
-        <RaisedButton type="submit" label="Log in" primary />
+        <Button raised color="primary" type="submit" label="Log in" primary />
       </div>
 
       <CardText>Don't have an account? <Link to={'/signup'}>Create one</Link>.</CardText>
