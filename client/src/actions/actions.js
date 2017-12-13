@@ -15,6 +15,10 @@ export function addContactList(list){
     return { type: types.ADD_CONTACTS, list};
 }
 
+export function updateActiveThread(thread_id){
+    return{ type: types.UPDATE_ACTIVE_THREAD, thread_id};
+}
+
 export function addMessage(message){
             console.log("add message action ", message);
     return {

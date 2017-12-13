@@ -22,6 +22,9 @@ case types.ADD_SUGGESTIONS:
 case types.ADD_CONTACTS:
     return Object.assign({}, state, {contactList: [...state.contactList,action.list]});   
 
+case types.UPDATE_ACTIVE_THREAD:
+    return Object.assign({}, state, {activeThread: action.thread_id});    
+
 default:
     return state;
 }

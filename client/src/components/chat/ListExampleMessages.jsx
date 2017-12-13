@@ -41,15 +41,24 @@ class ListExampleMessages extends React.Component {
 
     this.state = {};  
   }
+  
+  openThread(e, contact){
+     this.props.actions.updateActiveThread(contact.email)
+  }
 
   render(){
   
    var renderList = function(contact,i){
             return (<ListItem
-                        key={i} 
-                        leftAvatar={<Avatar src="images/ok-128.jpg" />}
+                        key={i}
+                        onClick={(e)=>this.openThread(e,contact)} 
+                        leftAvatar={contact.image?
+                          <Avatar alt={contact.name.charAt(0)+contact.name.charAt(contact.name.indexOf(" ")+1)} src={contact.image} />
+                          :<Avatar>{contact.name.charAt(0)+contact.name.charAt(contact.name.indexOf(" ")+1)}</Avatar>
+                          }
                         rightIconButton={rightIconMenu}
-                        primaryText={<div style={{textAlign:"left"}}>
+                        primaryText={
+                          <div style={{textAlign:"left"}}>
                           {contact.name}
                           </div>
                           }

@@ -42465,9 +42465,13 @@
 
 	var _Search2 = _interopRequireDefault(_Search);
 
-	var _SampleList = __webpack_require__(555);
+	var _ListExampleMessages = __webpack_require__(555);
 
-	var _SampleList2 = _interopRequireDefault(_SampleList);
+	var _ListExampleMessages2 = _interopRequireDefault(_ListExampleMessages);
+
+	var _ThreadList = __webpack_require__(584);
+
+	var _ThreadList2 = _interopRequireDefault(_ThreadList);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -42479,7 +42483,8 @@
 	                _Card.Card,
 	                { className: 'container' },
 	                _react2.default.createElement(_Search2.default, null),
-	                _react2.default.createElement(_SampleList2.default, null)
+	                _react2.default.createElement(_ListExampleMessages2.default, null),
+	                _react2.default.createElement(_ThreadList2.default, null)
 	        );
 	};
 
@@ -45037,6 +45042,7 @@
 	exports.initializeUser = initializeUser;
 	exports.addSuggestions = addSuggestions;
 	exports.addContactList = addContactList;
+	exports.updateActiveThread = updateActiveThread;
 	exports.addMessage = addMessage;
 
 	var _types = __webpack_require__(508);
@@ -45059,6 +45065,10 @@
 
 	function addContactList(list) {
 	    return { type: types.ADD_CONTACTS, list: list };
+	}
+
+	function updateActiveThread(thread_id) {
+	    return { type: types.UPDATE_ACTIVE_THREAD, thread_id: thread_id };
 	}
 
 	function addMessage(message) {
@@ -45094,6 +45104,7 @@
 	var ADD_MESSAGE = exports.ADD_MESSAGE = "ADD_MESSAGE";
 	var ADD_SUGGESTIONS = exports.ADD_SUGGESTIONS = "SUGGESTIONS";
 	var ADD_CONTACTS = exports.ADD_CONTACTS = "ADD_CONTACTS";
+	var UPDATE_ACTIVE_THREAD = exports.UPDATE_ACTIVE_THREAD = "UPDATE_ACTIVE_THREAD";
 
 /***/ }),
 /* 509 */
@@ -49728,13 +49739,27 @@
 	  }
 
 	  _createClass(ListExampleMessages, [{
+	    key: 'openThread',
+	    value: function openThread(e, contact) {
+	      this.props.actions.updateActiveThread(contact.email);
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 
 	      var renderList = function renderList(contact, i) {
+	        var _this2 = this;
+
 	        return _react2.default.createElement(_List.ListItem, {
 	          key: i,
-	          leftAvatar: _react2.default.createElement(_Avatar2.default, { src: 'images/ok-128.jpg' }),
+	          onClick: function onClick(e) {
+	            return _this2.openThread(e, contact);
+	          },
+	          leftAvatar: contact.image ? _react2.default.createElement(_Avatar2.default, { alt: contact.name.charAt(0) + contact.name.charAt(contact.name.indexOf(" ") + 1), src: contact.image }) : _react2.default.createElement(
+	            _Avatar2.default,
+	            null,
+	            contact.name.charAt(0) + contact.name.charAt(contact.name.indexOf(" ") + 1)
+	          ),
 	          rightIconButton: rightIconMenu,
 	          primaryText: _react2.default.createElement(
 	            'div',
@@ -54468,6 +54493,9 @@
 	        case types.ADD_CONTACTS:
 	            return Object.assign({}, state, { contactList: [].concat(_toConsumableArray(state.contactList), [action.list]) });
 
+	        case types.UPDATE_ACTIVE_THREAD:
+	            return Object.assign({}, state, { activeThread: action.thread_id });
+
 	        default:
 	            return state;
 	    }
@@ -54481,14 +54509,118 @@
 	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
 	exports.default = {
-	    userDetail: {},
-	    message: [],
-	    searchList: [],
-	    contactList: []
+	  userDetail: {},
+	  message: [],
+	  searchList: [],
+	  contactList: [],
+	  activeThread: "",
+	  threadList: [{ convo_id: "francisbarnett@quilch.com",
+	    messages: [{
+	      sender_id: "francisbarnett@quilch.com",
+	      text: "sdfhsdfb ajkdfaljk alhaljkd allakjd al"
+	    }, {
+	      receiver_id: "john@gmail.com",
+	      text: "asdfjka ajkdn ajklsd la skadj a."
+	    }] }, { convo_id: "lourdesrivas@quilch.com",
+	    messages: [{
+	      sender_id: "john@gmail.com",
+	      text: "hi how r u ?"
+	    }, {
+	      receiver_id: "lourdesrivas@quilch.com",
+	      text: "i am fine how r u ?"
+	    }] }]
 	};
+
+/***/ }),
+/* 584 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(471);
+
+	var _actions = __webpack_require__(507);
+
+	var actions = _interopRequireWildcard(_actions);
+
+	var _redux = __webpack_require__(481);
+
+	var _Card = __webpack_require__(414);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	// import openSocket from 'socket.io-client';
+	// const socket = openSocket('http://localhost:3000');
+
+	var ThreadList = function (_React$Component) {
+	    _inherits(ThreadList, _React$Component);
+
+	    function ThreadList(props) {
+	        _classCallCheck(this, ThreadList);
+
+	        var _this = _possibleConstructorReturn(this, (ThreadList.__proto__ || Object.getPrototypeOf(ThreadList)).call(this, props));
+
+	        _this.state = {};
+	        return _this;
+	    }
+
+	    _createClass(ThreadList, [{
+	        key: "render",
+	        value: function render() {
+	            var renderThread = function renderThread(that, activeThread) {
+	                var thread = that.props.threadList.find(function (thread) {
+	                    return thread.convo_id === activeThread;
+	                });
+	                return _react2.default.createElement(
+	                    _Card.Card,
+	                    { className: "container" },
+	                    "sdfgsdf sdfs dfs dfs f"
+	                );
+	            };
+	            return _react2.default.createElement(
+	                "div",
+	                null,
+	                renderThread(this, this.props.activeThread)
+	            );
+	        }
+	    }]);
+
+	    return ThreadList;
+	}(_react2.default.Component);
+
+	function mapStateToProps(state, ownProps) {
+	    return {
+	        threadList: state.myStore.threadList,
+	        activeThread: state.myStore.activeThread
+	    };
+	}
+	function mapDispatchToProps(dispatch) {
+	    return {
+	        actions: (0, _redux.bindActionCreators)(actions, dispatch)
+	    };
+	}
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(ThreadList);
 
 /***/ })
 /******/ ]);
