@@ -5,11 +5,9 @@ import * as actions from "../../actions/actions.js";
 import { bindActionCreators } from "redux";
 import axios from "axios";
 import Avatar from 'material-ui/Avatar';
-import List, { ListItem,ListItemText} from 'material-ui/List';
-// import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
-// import CommentIcon from 'material-ui/Comment';
+import {List, ListItem} from 'material-ui/List';
+import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
 import TextField from 'material-ui/TextField';
-import CommentIcon from 'material-ui-icons/Comment';
 
 class Search extends React.Component {
 
@@ -73,17 +71,20 @@ class Search extends React.Component {
 
         var renderList = function(list,i){
             return <ListItem key={i} 
-            onMouseDown ={(e) => this.listItemClicked(e, list)}
-            >
-                  <ListItemText primary={list.name}/>
-                  <CommentIcon />
-            </ListItem>
-        }
+                id="listId"
+                primaryText={list.name}
+                onMouseDown ={(e) => this.listItemClicked(e, list)}
+                rightIcon={
+                <div style={{margin:0,padding:12}} onMouseDown ={(e) => this.insideIconClicked(e, list)}>
+              <CommunicationChatBubble/>
+              </div>}
+              />
+       }
 
     return (<div>
       <List>
           <TextField
-           placeholder="Search"
+           hintText="Search"
            onChange={this.changeHandler.bind(this)}
            onBlur={(e)=>this.blur(e)}
            value={this.state.text}
