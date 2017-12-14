@@ -2,7 +2,12 @@ const mongoose = require('mongoose');
 
 // define the Messge model schema
 const ChatSchema = new mongoose.Schema({
-  sender_id: {
+  thread_id: {
+    type: String,
+    index: { unique: true }
+  },
+  message:[{
+    sender_id: {
     type: String,
     index: { unique: true }
   },
@@ -11,6 +16,7 @@ const ChatSchema = new mongoose.Schema({
     index: { unique: true }
   },
   text: String
+}]
 });
 
 

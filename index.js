@@ -6,23 +6,23 @@ var app = express();
 var server = require('http').createServer(app);  
 var io = require('socket.io')(server);
 
-io.on('connection', function (socket) {
-    console.log("Socket Ready");
-   socket.on("user-connected",function(data){
-       console.log(data);
-   });
-    // broadcast a user's message to other users
-    socket.on('send-message', function (data) {
-        console.log("receving from client");
-        console.log(data.text);
-        io.emit('message', {
-            text: data.text
-        });
-    });
-    socket.on("disconnected",function(){
-        console.log("user disconnected")
-    })
-})
+// io.on('connection', function (socket) {
+//     console.log("Socket Ready");
+//    socket.on("user-connected",function(data){
+//        console.log(data);
+//    });
+//     // broadcast a user's message to other users
+//     socket.on('send-message', function (data) {
+//         console.log("receving from client");
+//         console.log(data.text);
+//         io.emit('message', {
+//             text: data.text
+//         });
+//     });
+//     socket.on("disconnected",function(){
+//         console.log("user disconnected")
+//     })
+// })
 
 // connect to the database and load models
 require('./server/models').connect(config.dbUri);
@@ -45,12 +45,16 @@ passport.use('local-login', localLoginStrategy);
 // pass the authorization checker middleware
 const authCheckMiddleware = require('./server/middleware/auth-check');
 app.use('/api', authCheckMiddleware);
+app.use('/socket', authCheckMiddleware);
+
 
 // routes
 const authRoutes = require('./server/routes/auth');
 const apiRoutes = require('./server/routes/api');
+const socketRoutes = require('./server/routes/socket');
 app.use('/auth', authRoutes);
 app.use('/api', apiRoutes);
+app.use('/socket', socketRoutes);
 
 app.get("/*", function(req, res) {
 res.sendFile(__dirname + '/server/static/index.html')

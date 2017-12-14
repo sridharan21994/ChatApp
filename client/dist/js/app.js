@@ -72,7 +72,7 @@
 
 	var _reactRedux = __webpack_require__(471);
 
-	var _configureStore = __webpack_require__(580);
+	var _configureStore = __webpack_require__(581);
 
 	var _configureStore2 = _interopRequireDefault(_configureStore);
 
@@ -36537,15 +36537,15 @@
 
 	var _DashboardPage2 = _interopRequireDefault(_DashboardPage);
 
-	var _ProfilePage = __webpack_require__(572);
+	var _ProfilePage = __webpack_require__(573);
 
 	var _ProfilePage2 = _interopRequireDefault(_ProfilePage);
 
-	var _LoginPage = __webpack_require__(576);
+	var _LoginPage = __webpack_require__(577);
 
 	var _LoginPage2 = _interopRequireDefault(_LoginPage);
 
-	var _SignUpPage = __webpack_require__(578);
+	var _SignUpPage = __webpack_require__(579);
 
 	var _SignUpPage2 = _interopRequireDefault(_SignUpPage);
 
@@ -42384,7 +42384,7 @@
 	    value: function componentWillMount() {
 	      var _this2 = this;
 
-	      // axios.get("/api/sampledata",{headers:{'Content-type': 'application/x-www-form-urlencoded','Authorization': `bearer ${Auth.getToken()}`}}).then().catch();
+	      _axios2.default.get("/socket/check", { headers: { 'Content-type': 'application/x-www-form-urlencoded', 'Authorization': 'bearer ' + _Auth2.default.getToken() } }).then().catch();
 
 	      _axios2.default.get("/api/dashboard", { headers: { 'Content-type': 'application/x-www-form-urlencoded', 'Authorization': 'bearer ' + _Auth2.default.getToken() } }).then(function (response) {
 	        if (response.status >= 200 && response.status <= 300 || response.status == 304) {
@@ -42469,7 +42469,7 @@
 
 	var _ListExampleMessages2 = _interopRequireDefault(_ListExampleMessages);
 
-	var _ThreadList = __webpack_require__(584);
+	var _ThreadList = __webpack_require__(572);
 
 	var _ThreadList2 = _interopRequireDefault(_ThreadList);
 
@@ -53042,6 +53042,94 @@
 /* 572 */
 /***/ (function(module, exports, __webpack_require__) {
 
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(471);
+
+	var _actions = __webpack_require__(507);
+
+	var actions = _interopRequireWildcard(_actions);
+
+	var _redux = __webpack_require__(481);
+
+	var _Card = __webpack_require__(414);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	// import openSocket from 'socket.io-client';
+	// const socket = openSocket('http://localhost:3000');
+
+	var ThreadList = function (_React$Component) {
+	    _inherits(ThreadList, _React$Component);
+
+	    function ThreadList(props) {
+	        _classCallCheck(this, ThreadList);
+
+	        var _this = _possibleConstructorReturn(this, (ThreadList.__proto__ || Object.getPrototypeOf(ThreadList)).call(this, props));
+
+	        _this.state = {};
+	        return _this;
+	    }
+
+	    _createClass(ThreadList, [{
+	        key: "render",
+	        value: function render() {
+	            var renderThread = function renderThread(that, activeThread) {
+	                var thread = that.props.threadList.find(function (thread) {
+	                    return thread.convo_id === activeThread;
+	                });
+	                return _react2.default.createElement(
+	                    _Card.Card,
+	                    { className: "container" },
+	                    "sdfgsdf sdfs dfs dfs f"
+	                );
+	            };
+	            return _react2.default.createElement(
+	                "div",
+	                null,
+	                renderThread(this, this.props.activeThread)
+	            );
+	        }
+	    }]);
+
+	    return ThreadList;
+	}(_react2.default.Component);
+
+	function mapStateToProps(state, ownProps) {
+	    return {
+	        threadList: state.myStore.threadList,
+	        activeThread: state.myStore.activeThread
+	    };
+	}
+	function mapDispatchToProps(dispatch) {
+	    return {
+	        actions: (0, _redux.bindActionCreators)(actions, dispatch)
+	    };
+	}
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(ThreadList);
+
+/***/ }),
+/* 573 */
+/***/ (function(module, exports, __webpack_require__) {
+
 	/* WEBPACK VAR INJECTION */(function(console) {'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
@@ -53054,7 +53142,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Profile = __webpack_require__(573);
+	var _Profile = __webpack_require__(574);
 
 	var _Profile2 = _interopRequireDefault(_Profile);
 
@@ -53233,7 +53321,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9)))
 
 /***/ }),
-/* 573 */
+/* 574 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -53250,7 +53338,7 @@
 
 	var _Card = __webpack_require__(414);
 
-	var _RaisedButton = __webpack_require__(574);
+	var _RaisedButton = __webpack_require__(575);
 
 	var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
 
@@ -53348,7 +53436,7 @@
 	exports.default = Profile;
 
 /***/ }),
-/* 574 */
+/* 575 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -53358,7 +53446,7 @@
 	});
 	exports.default = undefined;
 
-	var _RaisedButton = __webpack_require__(575);
+	var _RaisedButton = __webpack_require__(576);
 
 	var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
 
@@ -53367,7 +53455,7 @@
 	exports.default = _RaisedButton2.default;
 
 /***/ }),
-/* 575 */
+/* 576 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -53847,7 +53935,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
-/* 576 */
+/* 577 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -53866,7 +53954,7 @@
 
 	var _Auth2 = _interopRequireDefault(_Auth);
 
-	var _LoginForm = __webpack_require__(577);
+	var _LoginForm = __webpack_require__(578);
 
 	var _LoginForm2 = _interopRequireDefault(_LoginForm);
 
@@ -54011,7 +54099,7 @@
 	exports.default = LoginPage;
 
 /***/ }),
-/* 577 */
+/* 578 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -54028,7 +54116,7 @@
 
 	var _Card = __webpack_require__(414);
 
-	var _RaisedButton = __webpack_require__(574);
+	var _RaisedButton = __webpack_require__(575);
 
 	var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
 
@@ -54123,7 +54211,7 @@
 	exports.default = LoginForm;
 
 /***/ }),
-/* 578 */
+/* 579 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -54138,7 +54226,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _SignUpForm = __webpack_require__(579);
+	var _SignUpForm = __webpack_require__(580);
 
 	var _SignUpForm2 = _interopRequireDefault(_SignUpForm);
 
@@ -54278,7 +54366,7 @@
 	exports.default = SignUpPage;
 
 /***/ }),
-/* 579 */
+/* 580 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -54295,7 +54383,7 @@
 
 	var _Card = __webpack_require__(414);
 
-	var _RaisedButton = __webpack_require__(574);
+	var _RaisedButton = __webpack_require__(575);
 
 	var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
 
@@ -54395,7 +54483,7 @@
 	exports.default = SignUpForm;
 
 /***/ }),
-/* 580 */
+/* 581 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -54407,7 +54495,7 @@
 
 	var _redux = __webpack_require__(481);
 
-	var _rootReducer = __webpack_require__(581);
+	var _rootReducer = __webpack_require__(582);
 
 	var _rootReducer2 = _interopRequireDefault(_rootReducer);
 
@@ -54422,7 +54510,7 @@
 	}
 
 /***/ }),
-/* 581 */
+/* 582 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -54433,7 +54521,7 @@
 
 	var _redux = __webpack_require__(481);
 
-	var _tempReducer = __webpack_require__(582);
+	var _tempReducer = __webpack_require__(583);
 
 	var _tempReducer2 = _interopRequireDefault(_tempReducer);
 
@@ -54445,7 +54533,7 @@
 	exports.default = rootReducer;
 
 /***/ }),
-/* 582 */
+/* 583 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(console) {"use strict";
@@ -54459,7 +54547,7 @@
 
 	var types = _interopRequireWildcard(_types);
 
-	var _initialState = __webpack_require__(583);
+	var _initialState = __webpack_require__(584);
 
 	var _initialState2 = _interopRequireDefault(_initialState);
 
@@ -54503,7 +54591,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9)))
 
 /***/ }),
-/* 583 */
+/* 584 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -54533,94 +54621,6 @@
 	      text: "i am fine how r u ?"
 	    }] }]
 	};
-
-/***/ }),
-/* 584 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(471);
-
-	var _actions = __webpack_require__(507);
-
-	var actions = _interopRequireWildcard(_actions);
-
-	var _redux = __webpack_require__(481);
-
-	var _Card = __webpack_require__(414);
-
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	// import openSocket from 'socket.io-client';
-	// const socket = openSocket('http://localhost:3000');
-
-	var ThreadList = function (_React$Component) {
-	    _inherits(ThreadList, _React$Component);
-
-	    function ThreadList(props) {
-	        _classCallCheck(this, ThreadList);
-
-	        var _this = _possibleConstructorReturn(this, (ThreadList.__proto__ || Object.getPrototypeOf(ThreadList)).call(this, props));
-
-	        _this.state = {};
-	        return _this;
-	    }
-
-	    _createClass(ThreadList, [{
-	        key: "render",
-	        value: function render() {
-	            var renderThread = function renderThread(that, activeThread) {
-	                var thread = that.props.threadList.find(function (thread) {
-	                    return thread.convo_id === activeThread;
-	                });
-	                return _react2.default.createElement(
-	                    _Card.Card,
-	                    { className: "container" },
-	                    "sdfgsdf sdfs dfs dfs f"
-	                );
-	            };
-	            return _react2.default.createElement(
-	                "div",
-	                null,
-	                renderThread(this, this.props.activeThread)
-	            );
-	        }
-	    }]);
-
-	    return ThreadList;
-	}(_react2.default.Component);
-
-	function mapStateToProps(state, ownProps) {
-	    return {
-	        threadList: state.myStore.threadList,
-	        activeThread: state.myStore.activeThread
-	    };
-	}
-	function mapDispatchToProps(dispatch) {
-	    return {
-	        actions: (0, _redux.bindActionCreators)(actions, dispatch)
-	    };
-	}
-	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(ThreadList);
 
 /***/ })
 /******/ ]);
