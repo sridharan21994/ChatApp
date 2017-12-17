@@ -4,11 +4,8 @@ import React from 'react';
 import { connect } from "react-redux";
 import * as actions from "../../actions/actions.js";
 import { bindActionCreators } from "redux";
+import Auth from '../../modules/Auth';
 
-
-
-// import openSocket from 'socket.io-client';
-// const socket = openSocket('http://localhost:3000');
 
 class Chatty extends React.Component {
 
@@ -18,19 +15,29 @@ class Chatty extends React.Component {
   }
 
    componentWillMount(){
-       console.log("component did mount");
-      
-       socket.emit("user-connected", "user connected");
-      
-      socket.on("message",  function(data){
-               console.log("from server: "+data.text);
-//         this.setState(prevState => ({
-//   messages: [...prevState.messages, message]
-//              }));
-               this.props.actions.addMessage(data.text);
-          }.bind(this));
-           
+       console.log("component will mount");
+            
+   
    } 
+
+   componentDidMount(){
+
+            socket.on('connect', function () {
+                console.log("socket connnected");
+                socket.emit('authenticate', {token: Auth.getToken()});
+            });
+            socket.on('authenticated', function () {
+                 socket.emit("user-connected", "user connected");
+                 socket.on("message",  function(data){
+               console.log("from server: "+data.text);
+                //         this.setState(prevState => ({
+                //   messages: [...prevState.messages, message]
+                //              }));
+                         //   this.props.actions.addMessage(data.text);
+                        }.bind(this));
+            });
+
+   }
         
     
     messageRecieve(message){
@@ -44,9 +51,9 @@ class Chatty extends React.Component {
 //         this.setState(prevState => ({
 //   messages: [...prevState.messages, message]
 //              }));
-               this.props.actions.addMessage(message.text);
+              // this.props.actions.addMessage(message.text);
      console.log("emitting socket message: ", message);
-        socket.emit('send-message', message);
+     socket.emit('send-message', message);
     }
 
     render(){

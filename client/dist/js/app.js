@@ -42384,7 +42384,7 @@
 	    value: function componentWillMount() {
 	      var _this2 = this;
 
-	      _axios2.default.get("/socket/check", { headers: { 'Content-type': 'application/x-www-form-urlencoded', 'Authorization': 'bearer ' + _Auth2.default.getToken() } }).then().catch();
+	      //  axios.get("/socket/check",{headers:{'Content-type': 'application/x-www-form-urlencoded','Authorization': `bearer ${Auth.getToken()}`}}).then().catch();
 
 	      _axios2.default.get("/api/dashboard", { headers: { 'Content-type': 'application/x-www-form-urlencoded', 'Authorization': 'bearer ' + _Auth2.default.getToken() } }).then(function (response) {
 	        if (response.status >= 200 && response.status <= 300 || response.status == 304) {
@@ -42448,7 +42448,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	        value: true
+	  value: true
 	});
 
 	var _react = __webpack_require__(1);
@@ -42478,14 +42478,15 @@
 	// import FbPlugin from './fb/fbPlugin.jsx';
 
 	var Dashboard = function Dashboard(_ref) {
-	        var userData = _ref.userData;
-	        return _react2.default.createElement(
-	                _Card.Card,
-	                { className: 'container' },
-	                _react2.default.createElement(_Search2.default, null),
-	                _react2.default.createElement(_ListExampleMessages2.default, null),
-	                _react2.default.createElement(_ThreadList2.default, null)
-	        );
+	  var userData = _ref.userData;
+	  return _react2.default.createElement(
+	    _Card.Card,
+	    { className: 'container' },
+	    _react2.default.createElement(_ChatContainer2.default, null),
+	    _react2.default.createElement(_Search2.default, null),
+	    _react2.default.createElement(_ListExampleMessages2.default, null),
+	    _react2.default.createElement(_ThreadList2.default, null)
+	  );
 	};
 
 	// Dashboard.propTypes = {
@@ -42526,6 +42527,10 @@
 
 	var _redux = __webpack_require__(481);
 
+	var _Auth = __webpack_require__(412);
+
+	var _Auth2 = _interopRequireDefault(_Auth);
+
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -42535,9 +42540,6 @@
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	// import openSocket from 'socket.io-client';
-	// const socket = openSocket('http://localhost:3000');
 
 	var Chatty = function (_React$Component) {
 	    _inherits(Chatty, _React$Component);
@@ -42554,17 +42556,26 @@
 	    _createClass(Chatty, [{
 	        key: 'componentWillMount',
 	        value: function componentWillMount() {
-	            console.log("component did mount");
+	            console.log("component will mount");
+	        }
+	    }, {
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
 
-	            socket.emit("user-connected", "user connected");
-
-	            socket.on("message", function (data) {
-	                console.log("from server: " + data.text);
-	                //         this.setState(prevState => ({
-	                //   messages: [...prevState.messages, message]
-	                //              }));
-	                this.props.actions.addMessage(data.text);
-	            }.bind(this));
+	            socket.on('connect', function () {
+	                console.log("socket connnected");
+	                socket.emit('authenticate', { token: _Auth2.default.getToken() });
+	            });
+	            socket.on('authenticated', function () {
+	                socket.emit("user-connected", "user connected");
+	                socket.on("message", function (data) {
+	                    console.log("from server: " + data.text);
+	                    //         this.setState(prevState => ({
+	                    //   messages: [...prevState.messages, message]
+	                    //              }));
+	                    //   this.props.actions.addMessage(data.text);
+	                }.bind(this));
+	            });
 	        }
 	    }, {
 	        key: 'messageRecieve',
@@ -42580,7 +42591,7 @@
 	            //         this.setState(prevState => ({
 	            //   messages: [...prevState.messages, message]
 	            //              }));
-	            this.props.actions.addMessage(message.text);
+	            // this.props.actions.addMessage(message.text);
 	            console.log("emitting socket message: ", message);
 	            socket.emit('send-message', message);
 	        }
@@ -42774,8 +42785,8 @@
 	            };
 	            this.props.submitfnc(message);
 
-	            //      console.log("emitting socket message: ", message);
-	            // socket.emit('send:message', message);
+	            //console.log("emitting socket message: ", message);
+	            //socket.emit('send-message', message);
 	            this.setState({ text: '' });
 	        }
 	    }, {
@@ -45073,9 +45084,7 @@
 
 	function addMessage(message) {
 	    console.log("add message action ", message);
-	    return {
-	        type: types.ADD_MESSAGE, message: message
-	    };
+	    return { type: types.ADD_MESSAGE, message: message };
 	}
 
 	// export function loadPage(){
@@ -45688,7 +45697,7 @@
 	/*!
 	 * Determine if an object is a Buffer
 	 *
-	 * @author   Feross Aboukhadijeh <https://feross.org>
+	 * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
 	 * @license  MIT
 	 */
 
@@ -53073,9 +53082,6 @@
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	// import openSocket from 'socket.io-client';
-	// const socket = openSocket('http://localhost:3000');
 
 	var ThreadList = function (_React$Component) {
 	    _inherits(ThreadList, _React$Component);

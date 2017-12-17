@@ -12,7 +12,7 @@ const Dashboard = ({ userData }) => (
 
         {/*{userData && <CardText style={{ fontSize: '16px', color: 'green' }}>{userData.userDetail.email}</CardText>}*/}
 
-        {/*<Chatty/>*/}
+        <Chatty/>
         <Search/>  
         <ListExampleMessages/>
         <ThreadList/>

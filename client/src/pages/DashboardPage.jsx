@@ -23,7 +23,7 @@ class DashboardPage extends React.Component {
    * This method will be executed after initial rendering.
    */
   componentWillMount() {
-    axios.get("/socket/check",{headers:{'Content-type': 'application/x-www-form-urlencoded','Authorization': `bearer ${Auth.getToken()}`}}).then().catch();
+  //  axios.get("/socket/check",{headers:{'Content-type': 'application/x-www-form-urlencoded','Authorization': `bearer ${Auth.getToken()}`}}).then().catch();
 
     axios.get("/api/dashboard",{headers:{'Content-type': 'application/x-www-form-urlencoded','Authorization': `bearer ${Auth.getToken()}`}})
         .then(response=>{
