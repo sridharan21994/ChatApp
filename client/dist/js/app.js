@@ -42448,7 +42448,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	        value: true
 	});
 
 	var _react = __webpack_require__(1);
@@ -42478,15 +42478,23 @@
 	// import FbPlugin from './fb/fbPlugin.jsx';
 
 	var Dashboard = function Dashboard(_ref) {
-	  var userData = _ref.userData;
-	  return _react2.default.createElement(
-	    _Card.Card,
-	    { className: 'container' },
-	    _react2.default.createElement(_ChatContainer2.default, null),
-	    _react2.default.createElement(_Search2.default, null),
-	    _react2.default.createElement(_ListExampleMessages2.default, null),
-	    _react2.default.createElement(_ThreadList2.default, null)
-	  );
+	        var userData = _ref.userData;
+	        return _react2.default.createElement(
+	                'div',
+	                { style: { display: 'flex', margin: '0 auto', width: 1000, textAlign: 'center' } },
+	                _react2.default.createElement(
+	                        _Card.Card,
+	                        { style: { flex: 1, height: 500, width: 500 } },
+	                        _react2.default.createElement(_Search2.default, null),
+	                        _react2.default.createElement(_ListExampleMessages2.default, null),
+	                        _react2.default.createElement(_ThreadList2.default, null)
+	                ),
+	                _react2.default.createElement(
+	                        _Card.Card,
+	                        { style: { flex: 1, height: 500, width: 500 } },
+	                        _react2.default.createElement(_ChatContainer2.default, { style: { position: 'absolute', bottom: 0 } })
+	                )
+	        );
 	};
 
 	// Dashboard.propTypes = {
@@ -42799,7 +42807,7 @@
 	                    'form',
 	                    { onSubmit: this.handleSubmit.bind(this) },
 	                    _react2.default.createElement('input', { onChange: this.changeHandler.bind(this), value: this.state.text }),
-	                    _react2.default.createElement('input', { type: 'button', onClick: this.handleSubmit.bind(this), value: 'send message' })
+	                    _react2.default.createElement('input', { type: 'button', onClick: this.handleSubmit.bind(this), value: 'send' })
 	                )
 	            );
 	        }
@@ -45697,7 +45705,7 @@
 	/*!
 	 * Determine if an object is a Buffer
 	 *
-	 * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
+	 * @author   Feross Aboukhadijeh <https://feross.org>
 	 * @license  MIT
 	 */
 

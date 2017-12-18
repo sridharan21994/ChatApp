@@ -29,7 +29,7 @@ class MessageForm extends React.Component{
           <div className="messageForm">
               <form onSubmit={this.handleSubmit.bind(this)} >
                   <input onChange={this.changeHandler.bind(this)} value={this.state.text}/>
-                  <input type="button" onClick={this.handleSubmit.bind(this)} value="send message"/>
+                  <input type="button" onClick={this.handleSubmit.bind(this)} value="send"/>
               </form>
           </div>
         );
