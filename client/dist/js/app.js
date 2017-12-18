@@ -42448,7 +42448,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	        value: true
+	  value: true
 	});
 
 	var _react = __webpack_require__(1);
@@ -42478,23 +42478,23 @@
 	// import FbPlugin from './fb/fbPlugin.jsx';
 
 	var Dashboard = function Dashboard(_ref) {
-	        var userData = _ref.userData;
-	        return _react2.default.createElement(
-	                'div',
-	                { style: { display: 'flex', margin: '0 auto', width: 1000, textAlign: 'center' } },
-	                _react2.default.createElement(
-	                        _Card.Card,
-	                        { style: { flex: 1, height: 500, width: 500 } },
-	                        _react2.default.createElement(_Search2.default, null),
-	                        _react2.default.createElement(_ListExampleMessages2.default, null),
-	                        _react2.default.createElement(_ThreadList2.default, null)
-	                ),
-	                _react2.default.createElement(
-	                        _Card.Card,
-	                        { style: { flex: 1, height: 500, width: 500 } },
-	                        _react2.default.createElement(_ChatContainer2.default, { style: { position: 'absolute', bottom: 0 } })
-	                )
-	        );
+	  var userData = _ref.userData;
+	  return _react2.default.createElement(
+	    'div',
+	    { style: { display: 'flex', margin: '0 auto', width: 1000, textAlign: 'center' } },
+	    _react2.default.createElement(
+	      _Card.Card,
+	      { style: { flex: 1, height: 500, width: 500 } },
+	      _react2.default.createElement(_Search2.default, null),
+	      _react2.default.createElement(_ListExampleMessages2.default, null),
+	      _react2.default.createElement(_ThreadList2.default, null)
+	    ),
+	    _react2.default.createElement(
+	      _Card.Card,
+	      { style: { flex: 1, height: 500, width: 500 } },
+	      _react2.default.createElement(_ChatContainer2.default, { style: { position: 'absolute', bottom: 0 } })
+	    )
+	  );
 	};
 
 	// Dashboard.propTypes = {
@@ -42569,19 +42569,18 @@
 	    }, {
 	        key: 'componentDidMount',
 	        value: function componentDidMount() {
-
+	            console.log("did mount");
 	            socket.on('connect', function () {
 	                console.log("socket connnected");
 	                socket.emit('authenticate', { token: _Auth2.default.getToken() });
 	            });
 	            socket.on('authenticated', function () {
 	                socket.emit("user-connected", "user connected");
+	                socket.on(this.props.userDetail.email, function (data) {
+	                    console.log("********** ", data);
+	                });
 	                socket.on("message", function (data) {
-	                    console.log("from server: " + data.text);
-	                    //         this.setState(prevState => ({
-	                    //   messages: [...prevState.messages, message]
-	                    //              }));
-	                    //   this.props.actions.addMessage(data.text);
+	                    console.log("from server: " + data);
 	                }.bind(this));
 	            });
 	        }
@@ -42600,8 +42599,34 @@
 	            //   messages: [...prevState.messages, message]
 	            //              }));
 	            // this.props.actions.addMessage(message.text);
-	            console.log("emitting socket message: ", message);
-	            socket.emit('send-message', message);
+	            console.log("emitting socket message: ", { message: message, activeThread: this.props.activeThread });
+	            if (this.props.activeThread.convo_id) {
+	                socket.emit('send-message', { convo_id: this.props.activeThread.convo_id, message: {
+	                        sender_id: this.props.userDetail.email,
+	                        receiver_id: this.props.activeThread.email,
+	                        text: message.text
+	                    } });
+	                this.props.actions.addMessage({ convo_id: this.props.activeThread.convo_id, message: {
+	                        sender_id: this.props.userDetail.email,
+	                        receiver_id: this.props.activeThread.email,
+	                        text: message.text
+	                    } });
+	            } else {
+	                socket.emit('send-message', { convo_id: "", message: {
+	                        sender_id: this.props.userDetail.email,
+	                        receiver_id: this.props.activeThread.email,
+	                        text: message.text
+	                    } }, function (data) {
+	                    this.props.actions.pushNewThread({
+	                        convo_id: data.convo_id,
+	                        messages: [{ sender_id: this.props.userDetail.email,
+	                            receiver_id: data.receiver_id,
+	                            text: message.text
+	                        }]
+
+	                    });
+	                }.bind(this));
+	            }
 	        }
 	    }, {
 	        key: 'render',
@@ -42622,7 +42647,9 @@
 	    console.log("chatty from store: ", state.myStore);
 	    if (state.myStore.message) {
 	        return {
-	            messages: state.myStore.message
+	            messages: state.myStore.message,
+	            activeThread: state.myStore.activeThread,
+	            userDetail: state.myStore.userDetail
 	        };
 	    } else {
 	        return {
@@ -45063,6 +45090,7 @@
 	exports.addContactList = addContactList;
 	exports.updateActiveThread = updateActiveThread;
 	exports.addMessage = addMessage;
+	exports.pushNewThread = pushNewThread;
 
 	var _types = __webpack_require__(508);
 
@@ -45090,11 +45118,14 @@
 	    return { type: types.UPDATE_ACTIVE_THREAD, thread_id: thread_id };
 	}
 
-	function addMessage(message) {
-	    console.log("add message action ", message);
-	    return { type: types.ADD_MESSAGE, message: message };
+	function addMessage(data) {
+	    console.log("add message action ", data);
+	    return { type: types.ADD_MESSAGE, data: data };
 	}
 
+	function pushNewThread(data) {
+	    return { type: types.PUSH_NEW_THREAD, data: data };
+	}
 	// export function loadPage(){
 	//         return axios.get("/api/dashboard",{headers:{'Content-type': 'application/x-www-form-urlencoded','Authorization': `bearer ${Auth.getToken()}`}})
 	//         .then(response=>{
@@ -45122,6 +45153,7 @@
 	var ADD_SUGGESTIONS = exports.ADD_SUGGESTIONS = "SUGGESTIONS";
 	var ADD_CONTACTS = exports.ADD_CONTACTS = "ADD_CONTACTS";
 	var UPDATE_ACTIVE_THREAD = exports.UPDATE_ACTIVE_THREAD = "UPDATE_ACTIVE_THREAD";
+	var PUSH_NEW_THREAD = exports.PUSH_NEW_THREAD = "PUSH_NEW_THREAD";
 
 /***/ }),
 /* 509 */
@@ -45705,7 +45737,7 @@
 	/*!
 	 * Determine if an object is a Buffer
 	 *
-	 * @author   Feross Aboukhadijeh <https://feross.org>
+	 * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
 	 * @license  MIT
 	 */
 
@@ -49758,7 +49790,7 @@
 	  _createClass(ListExampleMessages, [{
 	    key: 'openThread',
 	    value: function openThread(e, contact) {
-	      this.props.actions.updateActiveThread(contact.email);
+	      this.props.actions.updateActiveThread(contact);
 	    }
 	  }, {
 	    key: 'render',
@@ -49801,11 +49833,6 @@
 	          _react2.default.createElement(
 	            _List.List,
 	            null,
-	            _react2.default.createElement(
-	              _Subheader2.default,
-	              null,
-	              'LIST'
-	            ),
 	            this.props.contactList.map(renderList, this)
 	          )
 	        )
@@ -54582,12 +54609,9 @@
 	            return Object.assign({}, state, { userDetail: action.userDetail });
 
 	        case types.ADD_MESSAGE:
-	            console.log("add message reducer ", action.message);
-	            // if(state["message"]==undefined||state["message"]==null){
-	            //     Object.assign({}, state, {message:[""]} );
-	            //     console.log("***************",state);
-	            // }
-	            return Object.assign({}, state, { message: [].concat(_toConsumableArray(state.message), [action.message]) });
+	            return Object.assign({}, state, { threadList: state.threadList.map(function (content, index) {
+	                    return content.convo_id === action.data.convo_id ? Object.assign({}, content, { messages: [].concat(_toConsumableArray(content.messages), [action.data.message]) }) : content;
+	                }) });
 
 	        case types.ADD_SUGGESTIONS:
 	            return Object.assign({}, state, { searchList: action.list });
@@ -54597,6 +54621,9 @@
 
 	        case types.UPDATE_ACTIVE_THREAD:
 	            return Object.assign({}, state, { activeThread: action.thread_id });
+
+	        case types.PUSH_NEW_THREAD:
+	            return Object.assign({}, state, { threadList: [].concat(_toConsumableArray(state.threadList), [action.data]) });
 
 	        default:
 	            return state;

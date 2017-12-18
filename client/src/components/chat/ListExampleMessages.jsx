@@ -43,7 +43,7 @@ class ListExampleMessages extends React.Component {
   }
   
   openThread(e, contact){
-     this.props.actions.updateActiveThread(contact.email)
+     this.props.actions.updateActiveThread(contact)
   }
 
   render(){
@@ -74,7 +74,7 @@ return (
 <div>
     <div>
       <List>
-        <Subheader>LIST</Subheader>
+        {/* <Subheader>LIST</Subheader> */}
         {this.props.contactList.map(renderList,this)}
         {/* <Divider inset={true} /> */}
       </List>

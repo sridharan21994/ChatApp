@@ -23,8 +23,11 @@ const mongoose = require('mongoose');
   // load models
   require('./server/models/user');
   require("./server/models/chat");
+  require("./server/models/check");
 
 const User = require('mongoose').model('User');
+const Chat = require('mongoose').model('Chat');
+
 
 // io.use(socketioJwt.authorize({
 //   secret: config.jwtSecret,
@@ -35,40 +38,57 @@ const authCheckMiddleware = require('./server/middleware/auth-check');
 const authSocketMiddleware = require('./server/middleware/auth-socket');
 
 io.use(function(socket, next){
+  console.log("check in socket request");
   if (socket.handshake.query && socket.handshake.query.token){
     jwt.verify(socket.handshake.query.token, config.jwtSecret , function(err, decoded) {
       if(err) return next(new Error('Authentication error'));
       socket.decoded = decoded;
-      console.log("check ",decoded);
+      // console.log("check ",decoded);
       User.findById(decoded.sub, (userErr, user) => {
       if (userErr || !user) {
         console.log("error");
         return next(new Error('Authentication error'));
       }
-      console.log(user);
+      // console.log(user);
       return next();
     });
     });
   }
   next(new Error('Authentication error'));
-})
+});
 
  
 io.on('connection', function (socket) {
 
   // in socket.io 1.0 
-  console.log('authenticated user: ', socket.decoded);
+  // console.log('authenticated user: ', socket.decoded);
 
      socket.on("user-connected",function(data){
-       console.log(data);
+      //  console.log(data);
    });
     // broadcast a user's message to other users
-    socket.on('send-message', function (data) {
+    socket.on('send-message', function (data,callback) {
         console.log("receving from client");
-        console.log(data.text);
-        io.emit('message', {
-            text: data.text
-        });
+        console.log(data);
+
+        if(data.convo_id){
+           console.log("convo_id : ",data.convo_id);
+        }else{
+            var newChat = new Chat({message:data.message});
+
+              newChat.save((err, chat) => {
+                if (err) {
+                  console.log(err);
+                  return false;
+                }
+                console.log(chat)
+                // callback({convo_id:chat._id, receiver_id:data.message.receiver_id});
+               });
+        }
+        console.log("******check");
+        // io.emit('message', {
+        //     text: data.text
+        // });
     });
 });
 

@@ -19,11 +19,14 @@ export function updateActiveThread(thread_id){
     return { type: types.UPDATE_ACTIVE_THREAD, thread_id};
 }
 
-export function addMessage(message){
-            console.log("add message action ", message);
-    return {type: types.ADD_MESSAGE, message};
+export function addMessage(data){
+            console.log("add message action ", data);
+    return {type: types.ADD_MESSAGE, data};
 }
 
+export function pushNewThread(data){
+    return { type: types.PUSH_NEW_THREAD, data }
+}
 // export function loadPage(){
 //         return axios.get("/api/dashboard",{headers:{'Content-type': 'application/x-www-form-urlencoded','Authorization': `bearer ${Auth.getToken()}`}})
 //         .then(response=>{
