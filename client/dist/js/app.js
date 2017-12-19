@@ -42448,7 +42448,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	        value: true
 	});
 
 	var _react = __webpack_require__(1);
@@ -42478,23 +42478,23 @@
 	// import FbPlugin from './fb/fbPlugin.jsx';
 
 	var Dashboard = function Dashboard(_ref) {
-	  var userData = _ref.userData;
-	  return _react2.default.createElement(
-	    'div',
-	    { style: { display: 'flex', margin: '0 auto', width: 1000, textAlign: 'center' } },
-	    _react2.default.createElement(
-	      _Card.Card,
-	      { style: { flex: 1, height: 500, width: 500 } },
-	      _react2.default.createElement(_Search2.default, null),
-	      _react2.default.createElement(_ListExampleMessages2.default, null),
-	      _react2.default.createElement(_ThreadList2.default, null)
-	    ),
-	    _react2.default.createElement(
-	      _Card.Card,
-	      { style: { flex: 1, height: 500, width: 500 } },
-	      _react2.default.createElement(_ChatContainer2.default, { style: { position: 'absolute', bottom: 0 } })
-	    )
-	  );
+	        var userData = _ref.userData;
+	        return _react2.default.createElement(
+	                'div',
+	                { style: { display: 'flex', margin: '0 auto', width: 1000, textAlign: 'center' } },
+	                _react2.default.createElement(
+	                        _Card.Card,
+	                        { style: { flex: 1, height: 500, width: 500 } },
+	                        _react2.default.createElement(_Search2.default, null),
+	                        _react2.default.createElement(_ListExampleMessages2.default, null),
+	                        _react2.default.createElement(_ThreadList2.default, null)
+	                ),
+	                _react2.default.createElement(
+	                        _Card.Card,
+	                        { style: { flex: 1, height: 500, width: 500 } },
+	                        _react2.default.createElement(_ChatContainer2.default, { style: { position: 'absolute', bottom: 0 } })
+	                )
+	        );
 	};
 
 	// Dashboard.propTypes = {
@@ -42543,6 +42543,8 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -42557,7 +42559,11 @@
 
 	        var _this = _possibleConstructorReturn(this, (Chatty.__proto__ || Object.getPrototypeOf(Chatty)).call(this, props));
 
-	        _this.state = { messages: [], text: '' };
+	        _this.state = {
+	            messages: [],
+	            text: '',
+	            tempStorage: []
+	        };
 	        return _this;
 	    }
 
@@ -42585,47 +42591,83 @@
 	            });
 	        }
 	    }, {
+	        key: 'search',
+	        value: function search(nameKey, myArray, stop) {
+	            var temp = [];
+	            for (var i = 0; i < myArray.length; i++) {
+	                if (myArray[i].message.receiver_id === nameKey) {
+	                    if (stop) return true;else temp.push(myArray[i]);
+	                }
+	            }
+	            if (temp.length === 0) return false;else return temp;
+	        }
+	    }, {
 	        key: 'messageRecieve',
 	        value: function messageRecieve(message) {
 	            //         this.setState(prevState => ({
 	            //   messages: [...prevState.messages, message]
 	            //              }));        
-	            this.props.actions.addMessage(message);
+	            //this.props.actions.addMessage(message);
 	        }
 	    }, {
 	        key: 'handleMessageSubmit',
 	        value: function handleMessageSubmit(message) {
+	            var _this2 = this;
+
 	            //         this.setState(prevState => ({
 	            //   messages: [...prevState.messages, message]
 	            //              }));
 	            // this.props.actions.addMessage(message.text);
+	            var packet = {
+	                sender_id: this.props.userDetail.email,
+	                receiver_id: this.props.activeThread.email,
+	                text: message.text
+	            };
 	            console.log("emitting socket message: ", { message: message, activeThread: this.props.activeThread });
 	            if (this.props.activeThread.convo_id) {
-	                socket.emit('send-message', { convo_id: this.props.activeThread.convo_id, message: {
-	                        sender_id: this.props.userDetail.email,
-	                        receiver_id: this.props.activeThread.email,
-	                        text: message.text
-	                    } });
-	                this.props.actions.addMessage({ convo_id: this.props.activeThread.convo_id, message: {
-	                        sender_id: this.props.userDetail.email,
-	                        receiver_id: this.props.activeThread.email,
-	                        text: message.text
-	                    } });
+	                socket.emit('send-message', {
+	                    convo_id: this.props.activeThread.convo_id, message: packet
+	                });
+	                this.props.actions.addMessage({
+	                    convo_id: this.props.activeThread.convo_id, message: packet
+	                });
 	            } else {
-	                socket.emit('send-message', { convo_id: "", message: {
-	                        sender_id: this.props.userDetail.email,
-	                        receiver_id: this.props.activeThread.email,
-	                        text: message.text
-	                    } }, function (data) {
-	                    this.props.actions.pushNewThread({
-	                        convo_id: data.convo_id,
-	                        messages: [{ sender_id: this.props.userDetail.email,
-	                            receiver_id: data.receiver_id,
-	                            text: message.text
-	                        }]
 
+	                if (this.search(this.props.activeThread.email, this.state.tempStorage, true)) {
+	                    console.log("******true in tempStorage");
+	                    this.state.tempStorage.map(function (content, index) {
+	                        return content.message.receiver_id === _this2.props.activeThread.email ? _this2.setState(function (prevState) {
+	                            return { tempStorage: [].concat(_toConsumableArray(prevState.tempStorage[index].message), [packet]) };
+	                        }) : content;
 	                    });
-	                }.bind(this));
+	                } else {
+	                    console.log("******not true in tempStorage");
+	                    this.setState(function (prevState) {
+	                        return {
+	                            tempStorage: [].concat(_toConsumableArray(prevState.tempStorage), [{ convo_id: "", message: packet }])
+	                        };
+	                    });
+	                    console.log("tempStorage creating new", this.state.tempStorage);
+	                    socket.emit('send-message', {
+	                        convo_id: "", message: packet
+	                    }, function (data) {
+
+	                        console.log("from server:", data);
+	                        this.props.actions.updateActiveThread({ email: this.props.activeThread.email, convo_id: data.convo_id });
+
+	                        var resultObject = this.search(data.receiver_id, this.state.tempStorage, false);
+	                        resultObject[0].convo_id = data.convo_id;
+	                        console.log("resultObject: ", resultObject);
+
+	                        if (resultObject[0].message.length > 1) {
+	                            socket.emit("send-message", resultObject[0].message.slice().splice(1, 2), function (data) {
+	                                this.props.actions.pushNewThread(resultObject[0]);
+	                            });
+	                        } else {
+	                            this.props.actions.pushNewThread(resultObject[0]);
+	                        }
+	                    }.bind(this));
+	                }
 	            }
 	        }
 	    }, {
@@ -42649,7 +42691,8 @@
 	        return {
 	            messages: state.myStore.message,
 	            activeThread: state.myStore.activeThread,
-	            userDetail: state.myStore.userDetail
+	            userDetail: state.myStore.userDetail,
+	            threadList: state.myStore.threadList
 	        };
 	    } else {
 	        return {
@@ -45737,7 +45780,7 @@
 	/*!
 	 * Determine if an object is a Buffer
 	 *
-	 * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
+	 * @author   Feross Aboukhadijeh <https://feross.org>
 	 * @license  MIT
 	 */
 
@@ -49788,9 +49831,25 @@
 	  }
 
 	  _createClass(ListExampleMessages, [{
+	    key: 'search',
+	    value: function search(nameKey, myArray, stop) {
+	      var temp = [];
+	      for (var i = 0; i < myArray.length; i++) {
+	        if (myArray[i].message.receiver_id === nameKey) {
+	          return myArray[i].convo_id;
+	        }
+	      }
+	      return false;
+	    }
+	  }, {
 	    key: 'openThread',
 	    value: function openThread(e, contact) {
-	      this.props.actions.updateActiveThread(contact);
+	      var activeConvoId = this.search(contact.email, this.props.threadList);
+	      if (activeConvoId) {
+	        this.props.actions.updateActiveThread({ email: contact.email, convo_id: activeConvoId });
+	      } else {
+	        this.props.actions.updateActiveThread(contact);
+	      }
 	    }
 	  }, {
 	    key: 'render',
@@ -49845,7 +49904,8 @@
 
 	function mapStateToProps(state, ownProps) {
 	  return {
-	    contactList: state.myStore.contactList
+	    contactList: state.myStore.contactList,
+	    threadList: state.myStore.threadList
 	  };
 	}
 	function mapDispatchToProps(dispatch) {
@@ -54610,7 +54670,7 @@
 
 	        case types.ADD_MESSAGE:
 	            return Object.assign({}, state, { threadList: state.threadList.map(function (content, index) {
-	                    return content.convo_id === action.data.convo_id ? Object.assign({}, content, { messages: [].concat(_toConsumableArray(content.messages), [action.data.message]) }) : content;
+	                    return content.convo_id === action.convo_id ? Object.assign({}, content, { messages: [].concat(_toConsumableArray(content.messages), [action.data.message]) }) : content;
 	                }) });
 
 	        case types.ADD_SUGGESTIONS:
@@ -54638,29 +54698,15 @@
 	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	    value: true
 	});
 	exports.default = {
-	  userDetail: {},
-	  message: [],
-	  searchList: [],
-	  contactList: [],
-	  activeThread: "",
-	  threadList: [{ convo_id: "francisbarnett@quilch.com",
-	    messages: [{
-	      sender_id: "francisbarnett@quilch.com",
-	      text: "sdfhsdfb ajkdfaljk alhaljkd allakjd al"
-	    }, {
-	      receiver_id: "john@gmail.com",
-	      text: "asdfjka ajkdn ajklsd la skadj a."
-	    }] }, { convo_id: "lourdesrivas@quilch.com",
-	    messages: [{
-	      sender_id: "john@gmail.com",
-	      text: "hi how r u ?"
-	    }, {
-	      receiver_id: "lourdesrivas@quilch.com",
-	      text: "i am fine how r u ?"
-	    }] }]
+	    userDetail: {},
+	    message: [],
+	    searchList: [],
+	    contactList: [],
+	    activeThread: "",
+	    threadList: []
 	};
 
 /***/ })

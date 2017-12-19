@@ -18,7 +18,7 @@ const Dashboard = ({ userData }) => (
         <ThreadList/>
       </Card>
       <Card style={{flex:1,height:500, width:500}}>
-              <Chatty style={{position:'absolute', bottom:0}} />
+              <Chatty style={{ position:'absolute', bottom:0}} />
       </Card>
      
       </div>
