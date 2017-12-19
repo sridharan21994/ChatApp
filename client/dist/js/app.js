@@ -42448,7 +42448,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	        value: true
+	  value: true
 	});
 
 	var _react = __webpack_require__(1);
@@ -42478,23 +42478,23 @@
 	// import FbPlugin from './fb/fbPlugin.jsx';
 
 	var Dashboard = function Dashboard(_ref) {
-	        var userData = _ref.userData;
-	        return _react2.default.createElement(
-	                'div',
-	                { style: { display: 'flex', margin: '0 auto', width: 1000, textAlign: 'center' } },
-	                _react2.default.createElement(
-	                        _Card.Card,
-	                        { style: { flex: 1, height: 500, width: 500 } },
-	                        _react2.default.createElement(_Search2.default, null),
-	                        _react2.default.createElement(_ListExampleMessages2.default, null),
-	                        _react2.default.createElement(_ThreadList2.default, null)
-	                ),
-	                _react2.default.createElement(
-	                        _Card.Card,
-	                        { style: { flex: 1, height: 500, width: 500 } },
-	                        _react2.default.createElement(_ChatContainer2.default, { style: { position: 'absolute', bottom: 0 } })
-	                )
-	        );
+	  var userData = _ref.userData;
+	  return _react2.default.createElement(
+	    'div',
+	    { style: { display: 'flex', margin: '0 auto', width: 1000, textAlign: 'center' } },
+	    _react2.default.createElement(
+	      _Card.Card,
+	      { style: { flex: 1, height: 500, width: 500 } },
+	      _react2.default.createElement(_Search2.default, null),
+	      _react2.default.createElement(_ListExampleMessages2.default, null),
+	      _react2.default.createElement(_ThreadList2.default, null)
+	    ),
+	    _react2.default.createElement(
+	      _Card.Card,
+	      { style: { flex: 1, height: 500, width: 500 } },
+	      _react2.default.createElement(_ChatContainer2.default, { style: { position: 'absolute', bottom: 0 } })
+	    )
+	  );
 	};
 
 	// Dashboard.propTypes = {
@@ -42564,6 +42564,7 @@
 	            text: '',
 	            tempStorage: []
 	        };
+	        _this.handleMessageSubmit = _this.handleMessageSubmit.bind(_this);
 	        return _this;
 	    }
 
@@ -42618,6 +42619,7 @@
 	            //   messages: [...prevState.messages, message]
 	            //              }));
 	            // this.props.actions.addMessage(message.text);
+	            console.log("***********", this.props.userDetail);
 	            var packet = {
 	                sender_id: this.props.userDetail.email,
 	                receiver_id: this.props.activeThread.email,
@@ -42625,6 +42627,7 @@
 	            };
 	            console.log("emitting socket message: ", { message: message, activeThread: this.props.activeThread });
 	            if (this.props.activeThread.convo_id) {
+	                console.log("true convo_id first condition", packet);
 	                socket.emit('send-message', {
 	                    convo_id: this.props.activeThread.convo_id, message: packet
 	                });
@@ -42676,8 +42679,7 @@
 	            return _react2.default.createElement(
 	                'div',
 	                { className: 'chatty' },
-	                _react2.default.createElement(_messageList2.default, { messages: this.props.messages }),
-	                _react2.default.createElement(_messageForm2.default, { submitfnc: this.handleMessageSubmit.bind(this) })
+	                _react2.default.createElement(_messageForm2.default, { submitfnc: this.handleMessageSubmit })
 	            );
 	        }
 	    }]);
@@ -42687,18 +42689,11 @@
 
 	function mapStateToProps(state, ownProps) {
 	    console.log("chatty from store: ", state.myStore);
-	    if (state.myStore.message) {
-	        return {
-	            messages: state.myStore.message,
-	            activeThread: state.myStore.activeThread,
-	            userDetail: state.myStore.userDetail,
-	            threadList: state.myStore.threadList
-	        };
-	    } else {
-	        return {
-	            messages: []
-	        };
-	    }
+	    return {
+	        activeThread: state.myStore.activeThread,
+	        userDetail: state.myStore.userDetail,
+	        threadList: state.myStore.threadList
+	    };
 	}
 	function mapDispatchToProps(dispatch) {
 	    return {
@@ -45780,7 +45775,7 @@
 	/*!
 	 * Determine if an object is a Buffer
 	 *
-	 * @author   Feross Aboukhadijeh <https://feross.org>
+	 * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
 	 * @license  MIT
 	 */
 
@@ -54670,7 +54665,7 @@
 
 	        case types.ADD_MESSAGE:
 	            return Object.assign({}, state, { threadList: state.threadList.map(function (content, index) {
-	                    return content.convo_id === action.convo_id ? Object.assign({}, content, { messages: [].concat(_toConsumableArray(content.messages), [action.data.message]) }) : content;
+	                    return content.convo_id === action.data.convo_id ? Object.assign({}, content, { message: [].concat(_toConsumableArray(content.message), [action.data.message]) }) : content;
 	                }) });
 
 	        case types.ADD_SUGGESTIONS:
@@ -54702,7 +54697,6 @@
 	});
 	exports.default = {
 	    userDetail: {},
-	    message: [],
 	    searchList: [],
 	    contactList: [],
 	    activeThread: "",

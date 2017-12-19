@@ -9,8 +9,8 @@ case types.INITIALIZE_USER:
     return Object.assign({}, state, {userDetail:action.userDetail} );
     
 case types.ADD_MESSAGE:
-    return Object.assign({}, state, {threadList:state.threadList.map((content, index)=> (content.convo_id===action.convo_id) ? 
-        Object.assign({}, content, {messages:[...content.messages,action.data.message]})
+    return Object.assign({}, state, {threadList:state.threadList.map((content, index)=> (content.convo_id===action.data.convo_id) ? 
+        Object.assign({}, content, {message:[...content.message,action.data.message]})
         :content)});
 
 case types.ADD_SUGGESTIONS:

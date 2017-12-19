@@ -16,6 +16,7 @@ class Chatty extends React.Component {
             text: '',
             tempStorage: []
         };
+        this.handleMessageSubmit=this.handleMessageSubmit.bind(this);
     }
 
     componentWillMount() {
@@ -63,6 +64,7 @@ class Chatty extends React.Component {
         //   messages: [...prevState.messages, message]
         //              }));
         // this.props.actions.addMessage(message.text);
+        console.log("***********",this.props.userDetail)
         let packet = {
             sender_id: this.props.userDetail.email,
             receiver_id: this.props.activeThread.email,
@@ -70,6 +72,7 @@ class Chatty extends React.Component {
         };
         console.log("emitting socket message: ", { message: message, activeThread: this.props.activeThread });
         if (this.props.activeThread.convo_id) {
+            console.log("true convo_id first condition", packet);
             socket.emit('send-message', {
                 convo_id: this.props.activeThread.convo_id, message: packet
             });
@@ -123,8 +126,8 @@ class Chatty extends React.Component {
     render() {
         return (
             <div className="chatty">
-                <MessageList messages={this.props.messages} />
-                <MessageForm submitfnc={this.handleMessageSubmit.bind(this)} />
+                {/* <MessageList messages={this.props.messages} /> */}
+                <MessageForm submitfnc={this.handleMessageSubmit} />
             </div>
         );
     }
@@ -132,19 +135,11 @@ class Chatty extends React.Component {
 
 function mapStateToProps(state, ownProps) {
     console.log("chatty from store: ", state.myStore);
-    if (state.myStore.message) {
         return {
-            messages: state.myStore.message,
             activeThread: state.myStore.activeThread,
             userDetail: state.myStore.userDetail,
             threadList: state.myStore.threadList
         }
-    } else {
-        return {
-            messages: []
-        }
-    }
-
 }
 function mapDispatchToProps(dispatch) {
     return {
