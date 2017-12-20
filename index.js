@@ -8,7 +8,7 @@ var io = require('socket.io')(server);
 // var socketioJwt   = require("socketio-jwt");
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
-
+var users=[];
 
 mongoose.connect(config.dbUri);
 // plug in the promise library:
@@ -58,54 +58,64 @@ io.use(function (socket, next) {
 
 
 io.on('connection', function (socket) {
+        // console.log('authenticated user: ', socket.decoded);
 
-  // in socket.io 1.0 
-  // console.log('authenticated user: ', socket.decoded);
-
-  socket.on("user-connected", function (data) {
-    //  console.log(data);
-  });
-  // broadcast a user's message to other users
-  socket.on('send-message', function (data, callback) {
-    console.log("receving from client");
-    console.log(data);
-
-    if (data.convo_id) {
-      Chat.findOneAndUpdate({
-        _id: data.convo_id
-      }, {
-        $push: {
-          message: data.message
-        }
-      }, function (err, chat) {
-            if(err){
-          console.log(err);
-          return false;
-        }
-        // callback("updated");
-      })
-    } else {
-      var newChat = new Chat({
-        message: data.message
-      });
-
-      newChat.save((err, chat) => {
-        if (err) {
-          console.log(err);
-          return false;
-        }
-        console.log(chat);
-        callback({
-          convo_id: chat._id,
-          receiver_id: data.message.receiver_id
+        socket.on("user-connected", function (data) {
+            console.log(data,socket.id);
+            users.push({
+                    id : socket.id,
+                    userDetail : data
+                  });
+                  let len = this.users.length;
+                  len--;
+      
+              // 	io.emit('userList', users, users[len].id); 
         });
-      });
-    }
-    console.log("******check");
-    // io.emit('message', {
-    //     text: data.text
-    // });
-  });
+
+        socket.on('disconnect',()=>{
+		    	
+		      	for(let i=0; i < this.users.length; i++){
+		        	
+		        	if(this.users[i].id === socket.id){
+		          		this.users.splice(i,1); 
+		        	}
+		      	}
+		      	this.io.emit('exit',this.users); 
+        });
+              
+          // broadcast a user's message to other users
+          socket.on('send-message', function (data, callback) {
+            console.log("receving from client");
+            console.log(data);
+          socket.broadcast.to(data.toid).emit('message',{
+                    msg:data.msg,
+                    name:data.name
+                  });
+            if (data.convo_id) {
+              Chat.findOneAndUpdate({_id: data.convo_id}, {$push: {message: data.message}}, 
+                function (err, chat) {
+                    if(err){console.log(err);return false;}
+                // callback("updated");
+              })
+            } else {
+              var newChat = new Chat({
+                message: data.message
+              });
+
+              newChat.save((err, chat) => {
+                if (err) {console.log(err);return false;}
+                console.log(chat);
+                callback({
+                  convo_id: chat._id,
+                  receiver_id: data.message.receiver_id
+                });
+              });
+            }
+            console.log("******check");
+            // io.emit('message', {
+            //     text: data.text
+            // });
+          });
 });
 
 // io.sockets
