@@ -37,7 +37,7 @@ const authCheckMiddleware = require('./server/middleware/auth-check');
 const authSocketMiddleware = require('./server/middleware/auth-socket');
 
 io.use(function (socket, next) {
-  console.log("check in socket request");
+  console.log("socket connected", socket.id);
   if (socket.handshake.query && socket.handshake.query.token) {
     jwt.verify(socket.handshake.query.token, config.jwtSecret, function (err, decoded) {
       if (err) return next(new Error('Authentication error'));
@@ -64,23 +64,23 @@ io.on('connection', function (socket) {
             console.log(data,socket.id);
             users.push({
                     id : socket.id,
-                    userDetail : data
+                    email : data.email
                   });
-                  let len = this.users.length;
+                  let len = users.length;
                   len--;
-      
+      console.log(users);
               // 	io.emit('userList', users, users[len].id); 
         });
 
         socket.on('disconnect',()=>{
 		    	
-		      	for(let i=0; i < this.users.length; i++){
+		      	for(let i=0; i < users.length; i++){
 		        	
-		        	if(this.users[i].id === socket.id){
-		          		this.users.splice(i,1); 
+		        	if(users[i].id === socket.id){
+		          		users.splice(i,1); 
 		        	}
 		      	}
-		      	this.io.emit('exit',this.users); 
+		      	io.emit('exit',users); 
         });
               
           // broadcast a user's message to other users
@@ -95,6 +95,13 @@ io.on('connection', function (socket) {
               Chat.findOneAndUpdate({_id: data.convo_id}, {$push: {message: data.message}}, 
                 function (err, chat) {
                     if(err){console.log(err);return false;}
+                    for(let i=0; i < users.length; i++){
+                      if(users[i].email === chat.message[0].receiver_id){
+                        console.log("****************emitting");
+                          socket.to(users[i].id).emit("message-received", chat.message[0].text);
+                      }
+                    }
+
                 // callback("updated");
               })
             } else {
@@ -105,6 +112,18 @@ io.on('connection', function (socket) {
               newChat.save((err, chat) => {
                 if (err) {console.log(err);return false;}
                 console.log(chat);
+
+                User.update({email:{$in:[chat.message[0].sender_id,chat.message[0].receiver_id]}},{convoList:[chat._id]},{multi:true},function(err,data){
+                  if(err){console.log(err); return false;}
+
+                  for(let i=0; i < users.length; i++){
+                      if(users[i].email === chat.message[0].receiver_id){
+                        console.log("****************emitting")
+                          socket.to(users[i].id).emit("message-received", chat.message[0].text);
+                      }
+                    }
+                });
+
                 callback({
                   convo_id: chat._id,
                   receiver_id: data.message.receiver_id
