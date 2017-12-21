@@ -9,7 +9,7 @@ const router = new express.Router();
 router.get("/search",(req,res)=>{
     console.log(req.query.query);
     var patt = new RegExp("^"+req.query.query);
-    User.find( { name: { $regex: patt, $options: "i"  } },{_id:0,password:0,__v:0},(err,value)=>{
+    User.find( { name: { $regex: patt, $options: "i"  } },{_id:0,password:0,__v:0, convoList:0},(err,value)=>{
       if(err) { return res.status(401).end(); }
       return res.status(200).json({result:value});
     } )

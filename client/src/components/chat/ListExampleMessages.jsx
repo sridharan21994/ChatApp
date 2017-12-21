@@ -42,23 +42,24 @@ class ListExampleMessages extends React.Component {
     this.state = {};  
   }
 
-      search(nameKey, myArray, stop) {
-        var temp = [];
-        for (var i = 0; i < myArray.length; i++) {
-            if (myArray[i].message.receiver_id === nameKey) {
-                 return myArray[i].convo_id;
-            }
-        }
-        return false;
-    }
+    //   search(nameKey, myArray, stop) {
+    //     var temp = [];
+    //     for (var i = 0; i < myArray.length; i++) {
+    //       console.log("myArray", myArray[i])
+    //         if ((myArray[i].message[0].receiver_id === nameKey)||(myArray[i].message[0].sender_id === nameKey)) {
+    //              return myArray[i].convo_id;
+    //         }
+    //     }
+    //     return false;
+    // }
   
   openThread(e, contact){
-     var activeConvoId=this.search(contact.email, this.props.threadList);
-     if(activeConvoId){
-       this.props.actions.updateActiveThread({email:contact.email, convo_id: activeConvoId});
-     }else{
+    //  var activeConvoId=this.search(contact.email, this.props.threadList);
+    //  if(activeConvoId){
+    //    this.props.actions.updateActiveThread({email:contact.email, convo_id: activeConvoId});
+    //  }else{
        this.props.actions.updateActiveThread(contact);
-     }
+     //}
   }
 
   render(){

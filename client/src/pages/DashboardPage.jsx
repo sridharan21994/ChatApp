@@ -61,7 +61,6 @@ class DashboardPage extends React.Component {
 
 }
 function mapStateToProps(state, ownProps){
-      console.log("dashboard user details from store ", state.myStore);
    return {
      data: state.myStore
    }

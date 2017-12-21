@@ -37,17 +37,17 @@ const authCheckMiddleware = require('./server/middleware/auth-check');
 const authSocketMiddleware = require('./server/middleware/auth-socket');
 
 io.use(function (socket, next) {
-  console.log("socket connected", socket.id);
+  console.log("socket for auth check", socket.id);
   if (socket.handshake.query && socket.handshake.query.token) {
     jwt.verify(socket.handshake.query.token, config.jwtSecret, function (err, decoded) {
       if (err) return next(new Error('Authentication error'));
-      socket.decoded = decoded;
       // console.log("check ",decoded);
       User.findById(decoded.sub, (userErr, user) => {
         if (userErr || !user) {
           console.log("error");
           return next(new Error('Authentication error'));
         }
+        socket.decoded = user;
         // console.log(user);
         return next();
       });
@@ -57,20 +57,18 @@ io.use(function (socket, next) {
 });
 
 
-io.on('connection', function (socket) {
-        // console.log('authenticated user: ', socket.decoded);
+io.on('connection', function (socket,user) {
+         console.log("socket connected: ", socket.id);
+         console.log('authenticated user: ', socket.decoded);
 
-        socket.on("user-connected", function (data) {
-            console.log(data,socket.id);
             users.push({
                     id : socket.id,
-                    email : data.email
+                    email : socket.decoded.email
                   });
                   let len = users.length;
                   len--;
-      console.log(users);
+      console.log("connected users list: ",users);
               // 	io.emit('userList', users, users[len].id); 
-        });
 
         socket.on('disconnect',()=>{
 		    	
@@ -80,25 +78,21 @@ io.on('connection', function (socket) {
 		          		users.splice(i,1); 
 		        	}
 		      	}
-		      	io.emit('exit',users); 
         });
               
           // broadcast a user's message to other users
           socket.on('send-message', function (data, callback) {
             console.log("receving from client");
             console.log(data);
-          socket.broadcast.to(data.toid).emit('message',{
-                    msg:data.msg,
-                    name:data.name
-                  });
+
             if (data.convo_id) {
               Chat.findOneAndUpdate({_id: data.convo_id}, {$push: {message: data.message}}, 
                 function (err, chat) {
                     if(err){console.log(err);return false;}
                     for(let i=0; i < users.length; i++){
                       if(users[i].email === chat.message[0].receiver_id){
-                        console.log("****************emitting", chat.message[0]);
-                          socket.to(users[i].id).emit("message-received", chat.message[0]);
+                        console.log("****************emitting", {convo_id:chat._id, message:data.message});
+                          socket.to(users[i].id).emit("message-received", {convo_id:chat._id, message:data.message});
                       }
                     }
 
@@ -113,15 +107,16 @@ io.on('connection', function (socket) {
                 if (err) {console.log(err);return false;}
                 console.log(chat);
 
-                User.update({email:{$in:[chat.message[0].sender_id,chat.message[0].receiver_id]}},{convoList:[chat._id]},{multi:true},function(err,data){
+              for(var i=0; i < users.length; i++){
+                      if(users[i].id === socket.id){
+                        break;
+                      }
+              }
+                User.update({email:{$in:[chat.message[0].sender_id,chat.message[0].receiver_id]}},{convoList:[{chat_id:chat._id,initiator:users[i].email}]},{multi:true},function(err,data){
                   if(err){console.log(err); return false;}
 
-                  for(let i=0; i < users.length; i++){
-                      if(users[i].email === chat.message[0].receiver_id){
-                        console.log("****************emitting: ", chat.message[0]);
-                          socket.to(users[i].id).emit("message-received", chat.message[0]);
-                      }
-                    }
+                        console.log("****************emitting: ", {convo_id:chat._id, message:chat.message});
+                          socket.to(users[i].id).emit("message-received", {convo_id:chat._id, message:[chat.message]});                    
                 });
 
                 callback({
