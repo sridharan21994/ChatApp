@@ -97,8 +97,8 @@ io.on('connection', function (socket) {
                     if(err){console.log(err);return false;}
                     for(let i=0; i < users.length; i++){
                       if(users[i].email === chat.message[0].receiver_id){
-                        console.log("****************emitting");
-                          socket.to(users[i].id).emit("message-received", chat.message[0].text);
+                        console.log("****************emitting", chat.message[0]);
+                          socket.to(users[i].id).emit("message-received", chat.message[0]);
                       }
                     }
 
@@ -118,8 +118,8 @@ io.on('connection', function (socket) {
 
                   for(let i=0; i < users.length; i++){
                       if(users[i].email === chat.message[0].receiver_id){
-                        console.log("****************emitting")
-                          socket.to(users[i].id).emit("message-received", chat.message[0].text);
+                        console.log("****************emitting: ", chat.message[0]);
+                          socket.to(users[i].id).emit("message-received", chat.message[0]);
                       }
                     }
                 });
@@ -130,7 +130,6 @@ io.on('connection', function (socket) {
                 });
               });
             }
-            console.log("******check");
             // io.emit('message', {
             //     text: data.text
             // });

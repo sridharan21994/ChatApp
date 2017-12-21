@@ -42448,7 +42448,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	        value: true
 	});
 
 	var _react = __webpack_require__(1);
@@ -42478,23 +42478,23 @@
 	// import FbPlugin from './fb/fbPlugin.jsx';
 
 	var Dashboard = function Dashboard(_ref) {
-	  var userData = _ref.userData;
-	  return _react2.default.createElement(
-	    'div',
-	    { style: { display: 'flex', margin: '0 auto', width: 1000, textAlign: 'center' } },
-	    _react2.default.createElement(
-	      _Card.Card,
-	      { style: { flex: 1, height: 500, width: 500 } },
-	      _react2.default.createElement(_Search2.default, null),
-	      _react2.default.createElement(_ListExampleMessages2.default, null),
-	      _react2.default.createElement(_ThreadList2.default, null)
-	    ),
-	    _react2.default.createElement(
-	      _Card.Card,
-	      { style: { flex: 1, height: 500, width: 500 } },
-	      _react2.default.createElement(_ChatContainer2.default, { style: { position: 'absolute', bottom: 0 } })
-	    )
-	  );
+	        var userData = _ref.userData;
+	        return _react2.default.createElement(
+	                'div',
+	                { style: { display: 'flex', margin: '0 auto', width: 1000, textAlign: 'center' } },
+	                _react2.default.createElement(
+	                        _Card.Card,
+	                        { style: { flex: 1, height: 500, width: 500 } },
+	                        _react2.default.createElement(_Search2.default, null),
+	                        _react2.default.createElement(_ListExampleMessages2.default, null),
+	                        _react2.default.createElement(_ThreadList2.default, null)
+	                ),
+	                _react2.default.createElement(
+	                        _Card.Card,
+	                        { style: { flex: 1, height: 500, width: 500 } },
+	                        _react2.default.createElement(_ChatContainer2.default, { style: { position: 'absolute', bottom: 0 } })
+	                )
+	        );
 	};
 
 	// Dashboard.propTypes = {
@@ -42578,17 +42578,17 @@
 	        value: function componentDidMount() {
 	            console.log("did mount");
 	            socket.on('connect', function () {
-	                console.log("socket connnected");
+	                console.log("socket connnected ", socket.id);
 	                socket.emit("user-connected", this.props.userDetail);
+	                socket.on("message-received", function (data) {
+	                    console.log("from other user: ", data);
+	                });
 	                socket.emit('authenticate', { token: _Auth2.default.getToken() });
 	            }.bind(this));
 	            socket.on('authenticated', function () {
 	                // socket.on("message", function (data) {
 	                //     console.log("from server: " + data);
 	                // }.bind(this));
-	                socket.on("message-received", function (data) {
-	                    console.log("from other user: ", data);
-	                });
 	            });
 	        }
 	    }, {
@@ -45775,7 +45775,7 @@
 	/*!
 	 * Determine if an object is a Buffer
 	 *
-	 * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
+	 * @author   Feross Aboukhadijeh <https://feross.org>
 	 * @license  MIT
 	 */
 

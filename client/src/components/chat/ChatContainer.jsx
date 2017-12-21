@@ -26,17 +26,17 @@ class Chatty extends React.Component {
     componentDidMount() {
         console.log("did mount")
         socket.on('connect', function () {
-            console.log("socket connnected");
+            console.log("socket connnected ", socket.id);
             socket.emit("user-connected", this.props.userDetail);
+            socket.on("message-received",function(data){
+                console.log("from other user: ",data);
+            });
             socket.emit('authenticate', { token: Auth.getToken() });
         }.bind(this));
         socket.on('authenticated', function () {
             // socket.on("message", function (data) {
             //     console.log("from server: " + data);
             // }.bind(this));
-            socket.on("message-received",function(data){
-                console.log("from other user: ",data);
-            });
         });
 
     }
