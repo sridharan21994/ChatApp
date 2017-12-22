@@ -109,6 +109,8 @@ class Chatty extends React.Component {
                 this.setState(prevState=>({
                     tempStorage: [...prevState.tempStorage, { convo_id: "", message: packet }]
                 }));
+                packet.sender_name=this.props.userDetail.name;
+                packet.receiver_name=this.props.activeThread.name;
                   console.log("tempStorage creating new", this.state.tempStorage);
                 socket.emit('send-message', {
                     convo_id: "", message: packet

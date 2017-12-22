@@ -1,6 +1,7 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const User = require('mongoose').model('User');
+const Chat = require('mongoose').model('Chat');
 const config = require('../../config');
 const bcrypt = require('bcrypt');
 const sample = require("../sampleData");
@@ -46,11 +47,41 @@ router.get('/dashboard', (req, res) => {
       if (userErr || !user) {
         return res.status(401).end();
       }
-
-      return res.status(200).json({user:{
+        
+      if(user.convoList.length===0){
+        return res.status(200).json({
         name: user.name,
-        email: user.email
-      }});
+        email: user.email,
+        threadList: []
+      });
+      }else if(user.convoList.length>0){
+         Chat.find({_id:{$in:[user.convoList]}},{ __v:0},function(err, data){
+           if(err){console.log("error in dashboard: ", err); return res.status(401).end();}
+
+           console.log("dashboard data",data);
+           let contactList=[];
+           data.map((content,index)=>{ Object.defineProperty(content, "convo_id",{value: content["_id"],writable: true,enumerable: true,configurable: true});
+                                      delete content["_id"]; 
+                                      if(content.initiator.sender_id===user.email){
+                                        contactList.push({convo_id: content.convo_id, name:content.initiator.receiver_name,email:content.initiator.receiver_id});
+                                      }else{
+                                        contactList.push({convo_id: content.convo_id, name:content.initiator.sender_name,email:content.initiator.receiver_id});      
+                                      }
+                                       
+                                      });
+
+           return res.status(200).json({
+              name: user.name,
+              email: user.email,
+              threadList: data,
+              contactList: contactList
+            });
+         })
+      }  
+      // return res.status(200).json({user:{
+      //   name: user.name,
+      //   email: user.email
+      // }});
     });
   });
   

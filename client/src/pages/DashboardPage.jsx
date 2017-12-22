@@ -29,7 +29,7 @@ class DashboardPage extends React.Component {
         .then(response=>{
             if ((response.status >= 200 && response.status <= 300) || response.status == 304) {
             console.log("axios: ", response, "this ", this);
-            this.props.actions.initializeUser(response.data.user);
+            this.props.actions.initializeUser(response.data);
             return true;
             }
         })

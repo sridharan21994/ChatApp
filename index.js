@@ -99,20 +99,31 @@ io.on('connection', function (socket,user) {
                 // callback("updated");
               })
             } else {
+               for(var i=0; i < users.length; i++){
+                      if(users[i].id === socket.id){
+                        break;
+                      }
+              }
               var newChat = new Chat({
-                message: data.message
+                message: {
+                   sender_id: data.message.sender_id,
+                   receiver_id: data.message.receiver_id,
+                   text: data.message.text
+                },
+                initiator: {
+                  sender_id: data.message.sender_id,
+                  sender_name: data.message.sender_name,
+                  receiver_id: data.message.receiver_id,
+                  receiver_name: data.message.receiver_name
+                }
               });
 
               newChat.save((err, chat) => {
                 if (err) {console.log(err);return false;}
                 console.log(chat);
 
-              for(var i=0; i < users.length; i++){
-                      if(users[i].id === socket.id){
-                        break;
-                      }
-              }
-                User.update({email:{$in:[chat.message[0].sender_id,chat.message[0].receiver_id]}},{convoList:[{chat_id:chat._id,initiator:users[i].email}]},{multi:true},function(err,data){
+             
+                User.update({email:{$in:[chat.message[0].sender_id,chat.message[0].receiver_id]}},{convoList:[chat._id]},{multi:true},function(err,data){
                   if(err){console.log(err); return false;}
 
                         console.log("****************emitting: ", {convo_id:chat._id, message:chat.message});

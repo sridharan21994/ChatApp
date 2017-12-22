@@ -4,3 +4,4 @@ export const ADD_SUGGESTIONS = "SUGGESTIONS";
 export const ADD_CONTACTS = "ADD_CONTACTS";
 export const UPDATE_ACTIVE_THREAD = "UPDATE_ACTIVE_THREAD";
 export const PUSH_NEW_THREAD = "PUSH_NEW_THREAD";
+export const ON_LOAD = "ON_LOAD";
