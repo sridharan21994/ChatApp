@@ -15,6 +15,10 @@ export function addContactList(list){
     return { type: types.ADD_CONTACTS, list};
 }
 
+export function updateContactConvoId(data){
+    return { type: types.UPDATE_CONTACT_CONVO_ID, data }    
+}
+
 export function updateActiveThread(thread_id){
     return { type: types.UPDATE_ACTIVE_THREAD, thread_id};
 }

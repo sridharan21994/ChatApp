@@ -91,7 +91,7 @@ return (
     <div>
       <List>
         {/* <Subheader>LIST</Subheader> */}
-        {this.props.contactList.map(renderList,this)}
+        {this.props.contactList&&this.props.contactList.map(renderList,this)}
         {/* <Divider inset={true} /> */}
       </List>
     </div> 

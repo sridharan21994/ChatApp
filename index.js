@@ -37,7 +37,7 @@ const authCheckMiddleware = require('./server/middleware/auth-check');
 const authSocketMiddleware = require('./server/middleware/auth-socket');
 
 io.use(function (socket, next) {
-  console.log("socket for auth check", socket.id);
+  //console.log("socket for auth check", socket.id);
   if (socket.handshake.query && socket.handshake.query.token) {
     jwt.verify(socket.handshake.query.token, config.jwtSecret, function (err, decoded) {
       if (err) return next(new Error('Authentication error'));
@@ -58,26 +58,25 @@ io.use(function (socket, next) {
 
 
 io.on('connection', function (socket,user) {
-         console.log("socket connected: ", socket.id);
-         console.log('authenticated user: ', socket.decoded);
+      //   console.log("socket connected: ", socket.id);
+         console.log('socket authenticated user: ', socket.decoded.name);
 
-            users.push({
+            users.unshift({
                     id : socket.id,
                     email : socket.decoded.email
                   });
-                  let len = users.length;
-                  len--;
+                  // let len = users.length;
+                  // len--;
       console.log("connected users list: ",users);
               // 	io.emit('userList', users, users[len].id); 
 
         socket.on('disconnect',()=>{
-		    	
 		      	for(let i=0; i < users.length; i++){
-		        	
 		        	if(users[i].id === socket.id){
-		          		users.splice(i,1); 
-		        	}
-		      	}
+               users.splice(i,1);  
+              }     
+            }
+        console.log("disconnected and connected users list: ",users);            
         });
               
           // broadcast a user's message to other users
@@ -90,8 +89,8 @@ io.on('connection', function (socket,user) {
                 function (err, chat) {
                     if(err){console.log(err);return false;}
                     for(let i=0; i < users.length; i++){
-                      if(users[i].email === chat.message[0].receiver_id){
-                        console.log("****************emitting", {convo_id:chat._id, message:data.message});
+                      if(users[i].email === data.message.receiver_id){
+                        console.log("****************emitting old chat", {convo_id:chat._id, message:data.message}, "to user: ", users[i]);
                           socket.to(users[i].id).emit("message-received", {convo_id:chat._id, message:data.message});
                       }
                     }
@@ -100,7 +99,7 @@ io.on('connection', function (socket,user) {
               })
             } else {
                for(var i=0; i < users.length; i++){
-                      if(users[i].id === socket.id){
+                      if(users[i].email === data.message.receiver_id){
                         break;
                       }
               }
@@ -123,11 +122,14 @@ io.on('connection', function (socket,user) {
                 console.log(chat);
 
              
-                User.update({email:{$in:[chat.message[0].sender_id,chat.message[0].receiver_id]}},{convoList:[chat._id]},{multi:true},function(err,data){
+                User.update({email:{$in:[chat.message[0].sender_id,chat.message[0].receiver_id]}},{$push:{convoList:chat._id}},{multi:true},function(err,user){
                   if(err){console.log(err); return false;}
 
-                        console.log("****************emitting: ", {convo_id:chat._id, message:chat.message});
-                          socket.to(users[i].id).emit("message-received", {convo_id:chat._id, message:[chat.message]});                    
+                if(users[i]){
+                console.log("****************emitting new chat: ", {convo_id:chat._id, message:chat.message}," to user: ", users[i]);
+                socket.to(users[i].id).emit("message-received", {convo_id:chat._id,
+                                                                 sender_name: data.message.sender_name, 
+                                                                 message:[chat.message]});  }                  
                 });
 
                 callback({

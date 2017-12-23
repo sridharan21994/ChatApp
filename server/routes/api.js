@@ -52,28 +52,31 @@ router.get('/dashboard', (req, res) => {
         return res.status(200).json({
         name: user.name,
         email: user.email,
-        threadList: []
+        threadList: [],
+        contactList:[]
       });
       }else if(user.convoList.length>0){
-         Chat.find({_id:{$in:[user.convoList]}},{ __v:0},function(err, data){
-           if(err){console.log("error in dashboard: ", err); return res.status(401).end();}
+         Chat.find({_id:{$in:user.convoList}},{ __v:0},function(err, data){
+           if(err){console.log("error in dashboard: ", err.name); return res.status(401).end();}
 
-           console.log("dashboard data",data);
+           
            let contactList=[];
-           data.map((content,index)=>{ Object.defineProperty(content, "convo_id",{value: content["_id"],writable: true,enumerable: true,configurable: true});
-                                      delete content["_id"]; 
+           let threadList=[];
+           data.map((content,index)=>{  threadList[index]={};
+                                        threadList[index]["convo_id"]= content._id;
+                                       threadList[index].message=content.message;
                                       if(content.initiator.sender_id===user.email){
-                                        contactList.push({convo_id: content.convo_id, name:content.initiator.receiver_name,email:content.initiator.receiver_id});
+                                        contactList.push({convo_id: content._id, name:content.initiator.receiver_name,email:content.initiator.receiver_id});
                                       }else{
-                                        contactList.push({convo_id: content.convo_id, name:content.initiator.sender_name,email:content.initiator.receiver_id});      
+                                        contactList.push({convo_id: content._id, name:content.initiator.sender_name,email:content.initiator.sender_id});      
                                       }
-                                       
+                                      
                                       });
-
+//console.log("dashboard data",{name: user.name,email: user.email,threadList: threadList,contactList: contactList});
            return res.status(200).json({
               name: user.name,
               email: user.email,
-              threadList: data,
+              threadList: threadList,
               contactList: contactList
             });
          })

@@ -9,7 +9,7 @@ import Auth from '../../modules/Auth';
 import io from 'socket.io-client';
 
 
-const socket = io("http://localhost:3000", {
+const socket = io("http://localhost:3000", {transports: ['websocket'], upgrade: false,
         'query': {'token': localStorage.getItem("token")}
         }); 
 
@@ -23,6 +23,7 @@ class Chatty extends React.Component {
             thread:{}
         };
         this.handleMessageSubmit=this.handleMessageSubmit.bind(this);
+        this.findThread=this.findThread.bind(this);
     }
 
     componentWillMount() {
@@ -39,12 +40,18 @@ class Chatty extends React.Component {
             console.log("socket connnected ", socket.id);
             socket.emit("user-connected", this.props.userDetail);
             socket.on("message-received",function(data){
-                console.log("from other user: ",data);
-                if(this.props.threadList.find((content)=>content.convo_id===data.convo_id)){
-                this.props.actions.addMessage(data);
+                if(data.sender_name){
+                    this.props.actions.pushNewThread({convo_id:data.convo_id, message:data.message});
+                    this.props.actions.addContactList({convo_id:data.convo_id, name: data.sender_name, email:data.message.sender_id});
                 }else{
-                    this.props.actions.pushNewThread(data)
+                    this.props.actions.addMessage(data);
                 }
+                // console.log("from other user: ",data);
+                // if(this.props.threadList.find((content)=>content.convo_id===data.convo_id)){
+                
+                // }else{
+                //     this.props.actions.pushNewThread(data);
+                // }
 
                 
             }.bind(this));
@@ -69,27 +76,21 @@ class Chatty extends React.Component {
         if(temp.length===0) return false;
         else return temp;
     }
-    messageRecieve(message) {
-        //         this.setState(prevState => ({
-        //   messages: [...prevState.messages, message]
-        //              }));        
-        //this.props.actions.addMessage(message);
-    }
 
     handleMessageSubmit(message) {
         //         this.setState(prevState => ({
         //   messages: [...prevState.messages, message]
         //              }));
         // this.props.actions.addMessage(message.text);
-        console.log("***********",this.props.userDetail)
+        
+        if(this.props.activeThread.email){
         let packet = {
             sender_id: this.props.userDetail.email,
             receiver_id: this.props.activeThread.email,
             text: message.text
         };
-        console.log("emitting socket message: ", { message: message, activeThread: this.props.activeThread });
         if (this.props.activeThread.convo_id) {
-            console.log("true convo_id first condition", packet);
+            console.log("emitting OLD socket message: ", {convo_id: this.props.activeThread.convo_id, message: packet});
             socket.emit('send-message', {
                 convo_id: this.props.activeThread.convo_id, message: packet
             });
@@ -105,20 +106,19 @@ class Chatty extends React.Component {
                     : content);
 
             } else {
-                  console.log("******not true in tempStorage");
                 this.setState(prevState=>({
                     tempStorage: [...prevState.tempStorage, { convo_id: "", message: packet }]
                 }));
                 packet.sender_name=this.props.userDetail.name;
                 packet.receiver_name=this.props.activeThread.name;
-                  console.log("tempStorage creating new", this.state.tempStorage);
+                console.log("emitting NEW socket message: ", {convo_id: this.props.activeThread.convo_id, message: packet});
                 socket.emit('send-message', {
                     convo_id: "", message: packet
                 }, function (data) {
 
                     console.log("from server:", data);
                     this.props.actions.updateActiveThread({email:this.props.activeThread.email,convo_id:data.convo_id});
-
+                    this.props.actions.updateContactConvoId({email:this.props.activeThread.email,convo_id:data.convo_id});
                     var resultObject = this.search(data.receiver_id, this.state.tempStorage, false);
                     resultObject[0].convo_id = data.convo_id;
                     console.log("resultObject: ", resultObject);
@@ -135,11 +135,16 @@ class Chatty extends React.Component {
 
             }
 
+        }}
 
-
-
+    }
+    findThread(activeThread,threadList){
+        for(var i=0; i< threadList.length;i++){
+            if(threadList[i].convo_id===activeThread.convo_id){
+                return threadList[i];
+            }
         }
-
+        return "";
     }
 
     render() {
@@ -158,15 +163,14 @@ class Chatty extends React.Component {
 
         return (
             <div className="chatty">
-                {/* <MessageList messages={this.props.messages} /> */}
-                <List>
+                  <MessageList thread={this.findThread(this.props.activeThread,this.props.threadList)}/>  
+                 {/* <List>
                 {this.props.threadList.length&&(this.props.threadList.map((content,index)=>
-                (content.convo_id===this.props.activeThread.convo_id)?
+                {(content.convo_id===this.props.activeThread.convo_id)?
                 (content.message.map(renderList,this))
                 :""
-                ))}
-                </List>
-                
+                }))}
+                </List>  */}
                 <MessageForm submitfnc={this.handleMessageSubmit} />
             </div>
         );
