@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import * as actions from "../../actions/actions.js";
 import { bindActionCreators } from "redux";
 
+
 class MessageList extends React.Component {
 constructor(props){
     super(props);
@@ -15,10 +16,10 @@ shouldComponentUpdate(nextProps){
 
 render() {
         var renderMessage = function(message,i){
-            return <Message key={i} msg={message} />
-        }
+            return <Message key={i} msg={message} userDetail={this.props.userDetail}/>
+        }.bind(this);
         return(
-        <ul className="message">
+        <ul style={{listStyleType:"none", padding:0, overflow:scroll, height:500}} className="message">
             {this.props.thread?this.props.thread.message.map(renderMessage):""}
         </ul>
         );
@@ -27,7 +28,8 @@ render() {
 
 function mapStateToProps(state, ownProps) {
         return {
-            threadList: state.myStore.threadList
+            threadList: state.myStore.threadList,
+            userDetail: state.myStore.userDetail
         }
 }
 function mapDispatchToProps(dispatch) {

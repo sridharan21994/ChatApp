@@ -15,7 +15,8 @@ class DashboardPage extends React.Component {
     super(props);
 
     this.state = {
-      data: ''
+      data: '',
+      loaded: false
     };  
   }
 
@@ -30,6 +31,9 @@ class DashboardPage extends React.Component {
             if ((response.status >= 200 && response.status <= 300) || response.status == 304) {
             console.log("axios: ", response, "this ", this);
             this.props.actions.initializeUser(response.data);
+            this.setState({
+              loaded:true
+            })
             return true;
             }
         })

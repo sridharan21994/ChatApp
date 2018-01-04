@@ -68,7 +68,7 @@ router.get('/dashboard', (req, res) => {
                                       if(content.initiator.sender_id===user.email){
                                         contactList.push({convo_id: content._id, name:content.initiator.receiver_name,email:content.initiator.receiver_id});
                                       }else{
-                                        contactList.push({convo_id: content._id, name:content.initiator.sender_name,email:content.initiator.sender_id});      
+                                        contactList.push({convo_id: content._id, name: "ANONYMOUS",email: "ANONYMOUS"});      
                                       }
                                       
                                       });

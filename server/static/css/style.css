@@ -65,3 +65,25 @@ a:hover {
   padding: 0 16px;
   color: green;
 }
+
+
+.containerText{
+    border-radius: 5px;
+    background-color: #f1f1f1;
+    height: 30px;
+    width: max-content;
+    line-height: 30px;
+    text-align: right;
+    padding: 0 10px;
+    float: right;
+    margin: 1px 5px;
+    margin-left: 100%;
+}
+.other-user{
+    text-align: left;
+    float: left;
+    border: 1px solid #f1f1f1;
+    background-color: #fff;
+    margin-left: 5px;
+    margin-right: 100%;
+}

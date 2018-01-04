@@ -74,29 +74,60 @@ io.on('connection', function (socket,user) {
 		      	for(let i=0; i < users.length; i++){
 		        	if(users[i].id === socket.id){
                users.splice(i,1);  
+               break;
               }     
             }
         console.log("disconnected and connected users list: ",users);            
         });
               
-          // broadcast a user's message to other users
           socket.on('send-message', function (data, callback) {
             console.log("receving from client");
             console.log(data);
 
             if (data.convo_id) {
-              Chat.findOneAndUpdate({_id: data.convo_id}, {$push: {message: data.message}}, 
-                function (err, chat) {
-                    if(err){console.log(err);return false;}
-                    for(let i=0; i < users.length; i++){
-                      if(users[i].email === data.message.receiver_id){
-                        console.log("****************emitting old chat", {convo_id:chat._id, message:data.message}, "to user: ", users[i]);
-                          socket.to(users[i].id).emit("message-received", {convo_id:chat._id, message:data.message});
-                      }
-                    }
+              Chat.findById(data.convo_id,function(err,value){
+                  if(err){console.log("error in data.convo_id: ", err.name); return false;}
 
-                // callback("updated");
-              })
+                  if(socket.decoded.email===value.initiator.sender_id){
+                      Chat.findOneAndUpdate({_id: data.convo_id}, {$push: {message: {receiver_id: value.initiator.receiver_id , text: data.message.text}}}, 
+                        function (err, chat) {if(err){console.log(err);return false;}
+
+                          for(let i=0; i < users.length; i++){
+                            if(users[i].email === value.initiator.receiver_id){
+                              console.log("****************emitting old chat", {convo_id:chat._id, message: {receiver_id: value.initiator.receiver_id , text: data.message.text}}, "to user: ", users[i]);
+                                socket.to(users[i].id).emit("message-received", {convo_id:chat._id, message: {receiver_id: value.initiator.receiver_id , text: data.message.text}});
+                                break;
+                            }
+                          }
+                        });
+                  }else if(socket.decoded.email===value.initiator.receiver_id){
+                      Chat.findOneAndUpdate({_id: data.convo_id}, {$push: {message: {sender_id: value.initiator.receiver_id , text: data.message.text}}}, 
+                        function (err, chat) {if(err){console.log(err);return false;}
+                           
+                           for(let i=0; i < users.length; i++){
+                            if(users[i].email === value.initiator.sender_id){
+                              console.log("****************emitting old chat", {convo_id:chat._id, message: {sender_id: value.initiator.receiver_id , text: data.message.text}}, "to user: ", users[i]);
+                                socket.to(users[i].id).emit("message-received", {convo_id:chat._id, message: {sender_id: value.initiator.receiver_id , text: data.message.text}});
+                                break;
+                            }
+                          }
+                        });
+                  }
+              });
+
+              // Chat.findOneAndUpdate({_id: data.convo_id}, {$push: {message: data.message}}, 
+              //   function (err, chat) {
+              //       if(err){console.log(err);return false;}
+              //       for(let i=0; i < users.length; i++){
+              //         if(users[i].email === data.message.receiver_id){
+              //           console.log("****************emitting old chat", {convo_id:chat._id, message:data.message}, "to user: ", users[i]);
+              //             socket.to(users[i].id).emit("message-received", {convo_id:chat._id, message:data.message});
+              //             break;
+              //         }
+              //       }
+
+              //   // callback("updated");
+              // })
             } else {
                for(var i=0; i < users.length; i++){
                       if(users[i].email === data.message.receiver_id){
@@ -105,13 +136,12 @@ io.on('connection', function (socket,user) {
               }
               var newChat = new Chat({
                 message: {
-                   sender_id: data.message.sender_id,
                    receiver_id: data.message.receiver_id,
                    text: data.message.text
                 },
                 initiator: {
-                  sender_id: data.message.sender_id,
-                  sender_name: data.message.sender_name,
+                  sender_id: socket.decoded.email,
+                  sender_name: socket.decoded.name,
                   receiver_id: data.message.receiver_id,
                   receiver_name: data.message.receiver_name
                 }
@@ -122,19 +152,19 @@ io.on('connection', function (socket,user) {
                 console.log(chat);
 
              
-                User.update({email:{$in:[chat.message[0].sender_id,chat.message[0].receiver_id]}},{$push:{convoList:chat._id}},{multi:true},function(err,user){
+                User.update({email:{$in:[chat.initiator.sender_id,chat.initiator.receiver_id]}},{$push:{convoList:chat._id}},{multi:true},function(err,user){
                   if(err){console.log(err); return false;}
 
                 if(users[i]){
                 console.log("****************emitting new chat: ", {convo_id:chat._id, message:chat.message}," to user: ", users[i]);
                 socket.to(users[i].id).emit("message-received", {convo_id:chat._id,
-                                                                 sender_name: data.message.sender_name, 
-                                                                 message:[chat.message]});  }                  
+                                                                 sender_name: "ANONYMOUS", 
+                                                                 message:chat.message});  }                  
                 });
 
                 callback({
                   convo_id: chat._id,
-                  receiver_id: data.message.receiver_id
+                  receiver_id: chat.initiator.receiver_id
                 });
               });
             }

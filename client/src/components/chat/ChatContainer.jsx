@@ -8,10 +8,7 @@ import { bindActionCreators } from "redux";
 import Auth from '../../modules/Auth';
 import io from 'socket.io-client';
 
-
-const socket = io("http://localhost:3000", {transports: ['websocket'], upgrade: false,
-        'query': {'token': localStorage.getItem("token")}
-        }); 
+var socket;
 
 class Chatty extends React.Component {
 
@@ -35,14 +32,18 @@ class Chatty extends React.Component {
     }
     componentDidMount() {
         console.log("did mount");
+        socket = io("http://localhost:3000", {transports: ['websocket'], upgrade: false,
+        'query': {'token': localStorage.getItem("token")}
+        }); 
          
             socket.on('connect', function () {
             console.log("socket connnected ", socket.id);
             socket.emit("user-connected", this.props.userDetail);
             socket.on("message-received",function(data){
-                if(data.sender_name){
+                if((data.sender_name)&&(data.sender_name==="ANONYMOUS")){
+                    console.log("from sever: new chat: ",data)
                     this.props.actions.pushNewThread({convo_id:data.convo_id, message:data.message});
-                    this.props.actions.addContactList({convo_id:data.convo_id, name: data.sender_name, email:data.message.sender_id});
+                    this.props.actions.addContactList({convo_id:data.convo_id, name: "ANONYMOUS", email: "ANONYMOUS"});
                 }else{
                     this.props.actions.addMessage(data);
                 }
@@ -58,6 +59,7 @@ class Chatty extends React.Component {
             socket.emit('authenticate', { token: Auth.getToken() });
         }.bind(this));
         socket.on('authenticated', function () {
+            console.log("running socket authentication");
             // socket.on("message", function (data) {
             //     console.log("from server: " + data);
             // }.bind(this));
@@ -84,11 +86,19 @@ class Chatty extends React.Component {
         // this.props.actions.addMessage(message.text);
         
         if(this.props.activeThread.email){
-        let packet = {
-            sender_id: this.props.userDetail.email,
-            receiver_id: this.props.activeThread.email,
-            text: message.text
-        };
+            let packet={};
+            if(this.props.activeThread.email==="ANONYMOUS"){
+                packet={
+                    sender_id: this.props.userDetail.email,
+                    text: message.text
+                };
+            }else{
+                packet = {
+                    receiver_id: this.props.activeThread.email,
+                    text: message.text
+                };
+            }
+          
         if (this.props.activeThread.convo_id) {
             console.log("emitting OLD socket message: ", {convo_id: this.props.activeThread.convo_id, message: packet});
             socket.emit('send-message', {
@@ -148,22 +158,10 @@ class Chatty extends React.Component {
     }
 
     render() {
-        var renderList = function(message,i){
-           
-                      return (<ListItem
-                        key={i}
-                        secondaryText={
-                          <p>
-                                {message.sender_id}: {message.text} 
-                          </p>
-                        }
-                        secondaryTextLines={1}
-                        />)
-        }.bind(this)
 
         return (
             <div className="chatty">
-                  <MessageList thread={this.findThread(this.props.activeThread,this.props.threadList)}/>  
+                  <MessageList thread={this.findThread(this.props.activeThread,this.props.threadList)} />  
                  {/* <List>
                 {this.props.threadList.length&&(this.props.threadList.map((content,index)=>
                 {(content.convo_id===this.props.activeThread.convo_id)?
