@@ -31,6 +31,12 @@ router.get("/search",(req,res)=>{
 // });
 
 router.get('/dashboard', (req, res) => {
+  
+        //   if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(req.headers["user-agent"]) ) {
+        // console.log("mobile");
+        // }else{
+        //   console.log("web desktop")
+        // }
 
   // get the last part from a authorization header string like "bearer token-value"
   const token = req.headers.authorization.split(' ')[1];
@@ -68,7 +74,7 @@ router.get('/dashboard', (req, res) => {
                                       if(content.initiator.sender_id===user.email){
                                         contactList.push({convo_id: content._id, name:content.initiator.receiver_name,email:content.initiator.receiver_id});
                                       }else{
-                                        contactList.push({convo_id: content._id, name: "ANONYMOUS",email: "ANONYMOUS"});      
+                                        contactList.push({convo_id: content._id, name:"ANONYMOUS",email: "ANONYMOUS"});      
                                       }
                                       
                                       });

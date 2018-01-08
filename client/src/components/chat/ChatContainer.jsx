@@ -161,7 +161,9 @@ class Chatty extends React.Component {
 
         return (
             <div className="chatty">
-                  <MessageList thread={this.findThread(this.props.activeThread,this.props.threadList)} />  
+                  <MessageList 
+                   style={{overflow:"scroll"}}
+                   thread={this.findThread(this.props.activeThread,this.props.threadList)} />  
                  {/* <List>
                 {this.props.threadList.length&&(this.props.threadList.map((content,index)=>
                 {(content.convo_id===this.props.activeThread.convo_id)?

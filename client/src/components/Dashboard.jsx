@@ -5,23 +5,24 @@ import Search from './search/Search.jsx';
 import ListExampleMessages from "./chat/ListExampleMessages.jsx";
 import ThreadList from "./chat/ThreadList.jsx";
 import FbPlugin from './fb/fbPlugin.jsx';
+import Paper from "material-ui/Paper";
+import TabsControl from './Mobile/TabsControl.jsx';
 
 const Dashboard = ({ userData }) => (
-  <div>
-    <div style={{margin:"o auto", textAlign: "center"}}>
-      <Search/>
-    </div>  
-    <div style={{display:'flex', margin:'0 auto', width: 1000, textAlign: 'center'}}>
-      <Card style={{flex:1, height:500, width:500, overflow:"scroll" }}>
-           <FbPlugin/> 
+    window.outerWidth>768?(<div className="dashboard">
+      <Paper style={{flex:1, height:500, width:500, overflow:"scroll" }}>
+           {/* <FbPlugin/>  */}
           <ListExampleMessages/>
-      </Card>
-      <Card style={{flex:1,height:500, width:500, overflow:"scroll"}}>
+      </Paper>
+      <Paper style={{flex:1,height:500, width:500}}>
           <Chatty style={{ position:'absolute', bottom:0 }} />
-      </Card>
+      </Paper>
       
-    </div>
-  </div>
+    </div>):(
+      <div>
+        <TabsControl/>
+      </div>   
+    )
 );
 
 // Dashboard.propTypes = {

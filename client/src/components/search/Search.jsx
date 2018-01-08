@@ -8,6 +8,7 @@ import Avatar from 'material-ui/Avatar';
 import {List, ListItem} from 'material-ui/List';
 import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
 import TextField from 'material-ui/TextField';
+import Card from "material-ui/Card";
 
 class Search extends React.Component {
 
@@ -89,7 +90,9 @@ class Search extends React.Component {
            onBlur={(e)=>this.blur(e)}
            value={this.state.text}
           />
-          {this.props.searchList.map(renderList, this)}
+          <Card zDepth={3}>
+            {this.props.searchList.map(renderList, this)}
+          </Card>
       </List>
 
          {/*<SearchList list={this.props.list} />*/}
