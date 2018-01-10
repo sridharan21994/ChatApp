@@ -15,11 +15,11 @@ const Dashboard = ({ userData }) => (
           <ListExampleMessages/>
       </Paper>
       <Paper style={{flex:1,height:500, width:500}}>
-          <Chatty style={{ position:'absolute', bottom:0 }} />
+          <Chatty  />
       </Paper>
       
     </div>):(
-      <div>
+      <div className="dashboard-sm">
         <TabsControl/>
       </div>   
     )

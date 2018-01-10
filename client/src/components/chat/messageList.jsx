@@ -19,7 +19,7 @@ render() {
             return <Message key={i} msg={message} userDetail={this.props.userDetail}/>
         }.bind(this);
         return(
-        <ul style={{listStyleType:"none", padding:0, overflow:scroll, height:500}} className="message">
+        <ul className={window.outerWidth>768?"message-ul-list":"message-ul-list-sm"}>
             {this.props.thread?this.props.thread.message.map(renderMessage):""}
         </ul>
         );

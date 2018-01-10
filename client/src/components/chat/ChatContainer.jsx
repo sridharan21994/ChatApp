@@ -7,6 +7,7 @@ import * as actions from "../../actions/actions.js";
 import { bindActionCreators } from "redux";
 import Auth from '../../modules/Auth';
 import io from 'socket.io-client';
+import ArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 
 var socket;
 
@@ -17,7 +18,8 @@ class Chatty extends React.Component {
         
         this.state = {
             tempStorage: [],
-            thread:{}
+            thread:{},
+            clicked: false
         };
         this.handleMessageSubmit=this.handleMessageSubmit.bind(this);
         this.findThread=this.findThread.bind(this);
@@ -65,6 +67,14 @@ class Chatty extends React.Component {
             // }.bind(this));
         });
 
+    }
+
+    componentWillReceiveProps(nextProps){
+        if(nextProps.activeThread.clicked!==this.state.clicked){
+            this.setState({
+                clicked: nextProps.activeThread.clicked
+            })
+        }
     }
 
     search(nameKey, myArray, stop) {
@@ -156,23 +166,29 @@ class Chatty extends React.Component {
         }
         return "";
     }
+    
+    arrowBack(){
+        this.props.actions.updateActiveThread({clicked:false});
+    }
 
     render() {
 
         return (
-            <div className="chatty">
-                  <MessageList 
-                   style={{overflow:"scroll"}}
-                   thread={this.findThread(this.props.activeThread,this.props.threadList)} />  
-                 {/* <List>
-                {this.props.threadList.length&&(this.props.threadList.map((content,index)=>
-                {(content.convo_id===this.props.activeThread.convo_id)?
-                (content.message.map(renderList,this))
-                :""
-                }))}
-                </List>  */}
-                <MessageForm submitfnc={this.handleMessageSubmit} />
-            </div>
+            window.outerWidth>768?(<div className="chatty">
+                    <MessageList 
+                    thread={this.findThread(this.props.activeThread,this.props.threadList)} />
+                    <MessageForm className="input-form" submitfnc={this.handleMessageSubmit} />
+                </div>
+                ):(<div className={this.state.clicked?"chatty-sm":"hide"}>
+                    <div className="chatty-sm-header">
+                        <ArrowBack className="arrow-back-sm" onClick={this.arrowBack.bind(this)}/>
+                        {this.props.activeThread.name}
+                    </div>
+                    <MessageList 
+                    thread={this.findThread(this.props.activeThread,this.props.threadList)} />
+                    <MessageForm className="input-form" submitfnc={this.handleMessageSubmit} />
+                </div>
+                )           
         );
     }
 }

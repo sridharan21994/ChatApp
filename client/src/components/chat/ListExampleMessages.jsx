@@ -58,6 +58,7 @@ class ListExampleMessages extends React.Component {
     //  if(activeConvoId){
     //    this.props.actions.updateActiveThread({email:contact.email, convo_id: activeConvoId});
     //  }else{
+       contact.clicked = true;
        this.props.actions.updateActiveThread(contact);
      //}
   }

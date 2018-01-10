@@ -69,7 +69,7 @@ class Base extends React.Component{
      
      <MenuIcon style={{height: '32px', width: '32px'}} onClick={this.toggleMenu.bind(this)}/>
      {Auth.isUserAuthenticated()?(
-      <div className="search" style={{verticalAlign: "middle"}}>
+      <div className="search">
          <Search/>
       </div>   
      ):(

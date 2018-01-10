@@ -2,6 +2,7 @@ import React from 'react';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import ListExampleMessages from "../chat/ListExampleMessages.jsx";
 import Paper from "material-ui/Paper";
+import Chatty from "../chat/ChatContainer.jsx";
 
 const styles = {
   headline: {
@@ -17,7 +18,7 @@ class TabsControl extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: 'a',
+      value: 'a'
     };
   }
 
@@ -35,8 +36,9 @@ class TabsControl extends React.Component {
       >
         <Tab label="Tab A" value="a">
           <div>
-            <Paper>
+            <Paper style={{height: 500, overflow: "scroll"}}>
              <ListExampleMessages/>
+             <Chatty/>
             </Paper> 
           </div>
         </Tab>
