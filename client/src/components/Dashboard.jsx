@@ -10,8 +10,8 @@ import TabsControl from './Mobile/TabsControl.jsx';
 
 const Dashboard = ({ userData }) => (
     window.outerWidth>768?(<div className="dashboard">
-      <Paper style={{flex:1, height:500, width:500, overflow:"scroll" }}>
-           {/* <FbPlugin/>  */}
+      <Paper style={{flex:1, height:500, width:500, overflowY:"scroll" }}>
+            <FbPlugin/>  
           <ListExampleMessages/>
       </Paper>
       <Paper style={{flex:1,height:500, width:500}}>

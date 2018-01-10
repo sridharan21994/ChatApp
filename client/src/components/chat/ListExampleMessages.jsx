@@ -80,8 +80,8 @@ class ListExampleMessages extends React.Component {
                           </div>
                           }
                         secondaryText={
-                          <p>
-                            {contact.email} :I&apos;ll be in your neighborhood doing errands this weekend. Do you want to grab brunch?
+                          <p style={{textAlign:"left"}}>
+                            {contact.lastMessage.text}
                           </p>
                         }
                         secondaryTextLines={1}

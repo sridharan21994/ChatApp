@@ -70,11 +70,18 @@ router.get('/dashboard', (req, res) => {
            let threadList=[];
            data.map((content,index)=>{  threadList[index]={};
                                         threadList[index]["convo_id"]= content._id;
-                                       threadList[index].message=content.message;
+                                        threadList[index].message=content.message;
+                                        let lastMessage = threadList[index].message[threadList[index].message.length-1];
                                       if(content.initiator.sender_id===user.email){
-                                        contactList.push({convo_id: content._id, name:content.initiator.receiver_name,email:content.initiator.receiver_id});
+                                        contactList.push({convo_id: content._id, 
+                                                          name:content.initiator.receiver_name,
+                                                          email:content.initiator.receiver_id,
+                                                          lastMessage});
                                       }else{
-                                        contactList.push({convo_id: content._id, name:"ANONYMOUS",email: "ANONYMOUS"});      
+                                        contactList.push({convo_id: content._id, 
+                                                          name:"ANONYMOUS",
+                                                          email: "ANONYMOUS",
+                                                          lastMessage});      
                                       }
                                       
                                       });

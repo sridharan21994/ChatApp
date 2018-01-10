@@ -10,10 +10,6 @@ constructor(props){
     super(props);
 }
 
-shouldComponentUpdate(nextProps){
-     return this.props.thread!==nextProps.thread;
-}
-
 render() {
         var renderMessage = function(message,i){
             return <Message key={i} msg={message} userDetail={this.props.userDetail}/>

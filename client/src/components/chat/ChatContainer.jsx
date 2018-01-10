@@ -175,8 +175,7 @@ class Chatty extends React.Component {
 
         return (
             window.outerWidth>768?(<div className="chatty">
-                    <MessageList 
-                    thread={this.findThread(this.props.activeThread,this.props.threadList)} />
+                    <MessageList thread={this.findThread(this.props.activeThread,this.props.threadList)} />
                     <MessageForm className="input-form" submitfnc={this.handleMessageSubmit} />
                 </div>
                 ):(<div className={this.state.clicked?"chatty-sm":"hide"}>
@@ -184,8 +183,7 @@ class Chatty extends React.Component {
                         <ArrowBack className="arrow-back-sm" onClick={this.arrowBack.bind(this)}/>
                         {this.props.activeThread.name}
                     </div>
-                    <MessageList 
-                    thread={this.findThread(this.props.activeThread,this.props.threadList)} />
+                    <MessageList thread={this.findThread(this.props.activeThread,this.props.threadList)} />
                     <MessageForm className="input-form" submitfnc={this.handleMessageSubmit} />
                 </div>
                 )           

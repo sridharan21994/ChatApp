@@ -139,16 +139,16 @@ a:hover {
 
 .message-ul-list{
   list-style-type: none;
+  overflow-y: scroll;
   padding: 0;
   height: 448px;
-  overflow: scroll;
 }
 
 .message-ul-list-sm{
   list-style-type: none;
   padding: 0;
   height: 400px;
-  overflow: scroll;
+  overflow-y: scroll;
 }
 
 .input-text{

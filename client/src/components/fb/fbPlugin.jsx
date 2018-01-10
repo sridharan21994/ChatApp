@@ -14,6 +14,9 @@ class FbPlugin extends React.Component {
         FB.api('/me', { access_token },function (response) {
             console.log('Successful login for: ' + response.name, response);
         });
+        FB.api('/me/friends', 'GET', {}, function(response){
+            console.log("friends list: ", response);
+        });
     }
 
     statusChangeCallback(response) {
@@ -29,7 +32,7 @@ class FbPlugin extends React.Component {
                 if(response.status=== "connected"){
                    this.testAPI(response.authResponse.accessToken);
                 }
-            }.bind(this));
+            }.bind(this),{scope: 'public_profile,email,user_friends,publish_actions'});
         }
     }
 
