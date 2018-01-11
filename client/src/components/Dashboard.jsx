@@ -9,7 +9,7 @@ import Paper from "material-ui/Paper";
 import TabsControl from './Mobile/TabsControl.jsx';
 
 const Dashboard = ({ userData }) => (
-    window.outerWidth>768?(<div className="dashboard">
+    isDesktop?(<div className="dashboard">
       <Paper style={{flex:1, height:500, width:500, overflowY:"scroll" }}>
             <FbPlugin/>  
           <ListExampleMessages/>

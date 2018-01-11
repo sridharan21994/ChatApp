@@ -174,7 +174,7 @@ class Chatty extends React.Component {
     render() {
 
         return (
-            window.outerWidth>768?(<div className="chatty">
+            isDesktop?(<div className="chatty">
                     <MessageList thread={this.findThread(this.props.activeThread,this.props.threadList)} />
                     <MessageForm className="input-form" submitfnc={this.handleMessageSubmit} />
                 </div>

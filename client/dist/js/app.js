@@ -36692,7 +36692,7 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      return window.outerWidth > 768 ? _react2.default.createElement(
+	      return isDesktop ? _react2.default.createElement(
 	        'div',
 	        null,
 	        _Auth2.default.isUserAuthenticated() ? _react2.default.createElement(
@@ -53110,7 +53110,7 @@
 
 	var Dashboard = function Dashboard(_ref) {
 	  var userData = _ref.userData;
-	  return window.outerWidth > 768 ? _react2.default.createElement(
+	  return isDesktop ? _react2.default.createElement(
 	    'div',
 	    { className: 'dashboard' },
 	    _react2.default.createElement(
@@ -53373,7 +53373,7 @@
 	        key: 'render',
 	        value: function render() {
 
-	            return window.outerWidth > 768 ? _react2.default.createElement(
+	            return isDesktop ? _react2.default.createElement(
 	                'div',
 	                { className: 'chatty' },
 	                _react2.default.createElement(_messageList2.default, { thread: this.findThread(this.props.activeThread, this.props.threadList) }),
@@ -53467,7 +53467,7 @@
 	            }.bind(this);
 	            return _react2.default.createElement(
 	                "ul",
-	                { className: window.outerWidth > 768 ? "message-ul-list" : "message-ul-list-sm" },
+	                { className: isDesktop ? "message-ul-list" : "message-ul-list-sm" },
 	                this.props.thread ? this.props.thread.message.map(renderMessage) : ""
 	            );
 	        }

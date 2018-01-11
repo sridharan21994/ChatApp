@@ -35,7 +35,7 @@ class Base extends React.Component{
 
   render(){
     return(
-  window.outerWidth>768?(<div>
+    isDesktop?(<div>
       {Auth.isUserAuthenticated() ? (
         <div className="top-bar">        
           <div className="top-bar-left">

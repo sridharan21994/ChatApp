@@ -15,7 +15,7 @@ render() {
             return <Message key={i} msg={message} userDetail={this.props.userDetail}/>
         }.bind(this);
         return(
-        <ul className={window.outerWidth>768?"message-ul-list":"message-ul-list-sm"}>
+        <ul className={isDesktop?"message-ul-list":"message-ul-list-sm"}>
             {this.props.thread?this.props.thread.message.map(renderMessage):""}
         </ul>
         );
