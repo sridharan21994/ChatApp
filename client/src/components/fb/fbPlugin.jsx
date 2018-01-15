@@ -14,7 +14,7 @@ class FbPlugin extends React.Component {
         FB.api('/me', { access_token },function (response) {
             console.log('Successful login for: ' + response.name, response);
         });
-        FB.api('/me/friends', 'GET', {}, function(response){
+        FB.api('/me/picture', 'GET', {height: 99999}, function(response){
             console.log("friends list: ", response);
         });
     }
@@ -118,7 +118,7 @@ class FbPlugin extends React.Component {
                     href="javascript:void(0)"
                     onClick={this
                     .handleClick
-                    .bind(this)}>Login</a>
+                    .bind(this)}> FB Login</a>
         
             </div>
 

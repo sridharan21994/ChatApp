@@ -23,8 +23,10 @@ a:hover {
 }
 
 .top-bar {
-  padding: 10px 15px;
+  padding: 0;
   margin-bottom: 50px;
+  /*background-color: #689f38;*/
+  border: 1px solid #689f38;
 }
 .top-bar::after {
   content: '';
@@ -36,11 +38,13 @@ a:hover {
   float: left;
   font-size: 1.5em;
   display: inline-block;
+  background-color: #fff;
 }
 
 .top-bar-right {
   float: right;
   display: inline-block;
+  background-color: #fff;
 }
 
 .top-bar a,
@@ -125,8 +129,8 @@ a:hover {
   width: 1000px;
   text-align: center;
   position: absolute;
-  top: 100px;
-  left: 200px;
+  top: 68px;
+  left: 0;
 }
 
 .dashboard-sm{
@@ -142,6 +146,28 @@ a:hover {
   overflow-y: scroll;
   padding: 0;
   height: 448px;
+}
+
+/*.message-ul-list::-webkit-scrollbar {
+    width: 1em;
+}
+ 
+.message-ul-list::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+}
+ 
+.message-ul-list::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
+}*/
+.message-ul-list::-webkit-scrollbar,
+.name-list-item::-webkit-scrollbar {
+    width: 5px;
+    background-color: #FFFFFF;
+} 
+.message-ul-list::-webkit-scrollbar-thumb ,
+.name-list-item::-webkit-scrollbar-thumb {
+    background-color: #dedede;
 }
 
 .message-ul-list-sm{
@@ -161,4 +187,15 @@ a:hover {
   float: right;
   width: 20%;
   border: 1px solid #000;
+}
+
+.footer{
+  height: 20px;
+  width: 100%;
+  border: 1px solid #689f38;
+  position: fixed;
+  bottom: 0;
+  color: #fff;
+  text-align: center;
+  background-color: #689f38;
 }

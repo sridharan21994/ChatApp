@@ -23,13 +23,6 @@ const iconButtonElement = (
   </IconButton>
 );
 
-const rightIconMenu = (
-   <IconMenu iconButtonElement={iconButtonElement}>
-    <MenuItem>Reply</MenuItem>
-    <MenuItem>Forward</MenuItem>
-    <MenuItem>Delete</MenuItem>
-  </IconMenu>
-);
 
 class ListExampleMessages extends React.Component {
 
@@ -40,6 +33,7 @@ class ListExampleMessages extends React.Component {
     super(props);
 
     this.state = {};  
+    this.blockUser = this.blockUser.bind(this);
   }
 
     //   search(nameKey, myArray, stop) {
@@ -63,6 +57,12 @@ class ListExampleMessages extends React.Component {
      //}
   }
 
+  blockUser(e, contact){
+    e.preventDefault();
+    e.stopPropagation();
+    console.log("bloack user: ", contact);
+  }
+
   render(){
   
    var renderList = function(contact,i){
@@ -73,15 +73,19 @@ class ListExampleMessages extends React.Component {
                           <Avatar alt={contact.name.charAt(0)+contact.name.charAt(contact.name.indexOf(" ")+1)} src={contact.image} />
                           :<Avatar>{contact.name.charAt(0)+contact.name.charAt(contact.name.indexOf(" ")+1)}</Avatar>
                           }
-                        rightIconButton={rightIconMenu}
+                        rightIconButton={<IconMenu iconButtonElement={iconButtonElement}>
+                                          <MenuItem>Report</MenuItem>
+                                          <MenuItem style={{zIndex: 9999}} onClick={(e)=>this.blockUser(e, contact)}>Block</MenuItem>
+                                          <MenuItem>Delete</MenuItem>
+                                        </IconMenu>}
                         primaryText={
                           <div style={{textAlign:"left"}}>
                           {contact.name}
                           </div>
                           }
                         secondaryText={
-                          <p style={{textAlign:"left"}}>
-                            {contact.lastMessage.text}
+                          <p style={{textAlign:"left", fontStyle: contact.lastMessage?"normal":"italic"}}>
+                            {contact.lastMessage?contact.lastMessage.text:"Tap to send message"}
                           </p>
                         }
                         secondaryTextLines={1}
@@ -89,13 +93,11 @@ class ListExampleMessages extends React.Component {
         }
 return ( 
 <div>
-    <div>
       <List>
         {/* <Subheader>LIST</Subheader> */}
         {this.props.contactList&&this.props.contactList.map(renderList,this)}
          {/* <Divider inset={true} />  */}
       </List>
-    </div> 
   </div>);
   }
 }

@@ -38,9 +38,10 @@ class Chatty extends React.Component {
         'query': {'token': localStorage.getItem("token")}
         }); 
          
-            socket.on('connect', function () {
+    socket.on('connect', function () {
             console.log("socket connnected ", socket.id);
             socket.emit("user-connected", this.props.userDetail);
+
             socket.on("message-received",function(data){
                 if((data.sender_name)&&(data.sender_name==="ANONYMOUS")){
                     console.log("from sever: new chat: ",data)
@@ -59,12 +60,26 @@ class Chatty extends React.Component {
                 
             }.bind(this));
             socket.emit('authenticate', { token: Auth.getToken() });
-        }.bind(this));
+    }.bind(this));
+
+
         socket.on('authenticated', function () {
             console.log("running socket authentication");
             // socket.on("message", function (data) {
             //     console.log("from server: " + data);
             // }.bind(this));
+        });
+
+        socket.on("disconnect",function(){
+            socket.close();
+        });
+
+        socket.on("connect_failed", function(){
+           socket.close();
+        });
+
+        socket.on("connect_error", function(){
+           socket.close();
         });
 
     }
@@ -94,8 +109,8 @@ class Chatty extends React.Component {
         //   messages: [...prevState.messages, message]
         //              }));
         // this.props.actions.addMessage(message.text);
-        
-        if(this.props.activeThread.email){
+        message.text=message.text.trim();
+        if(this.props.activeThread.email&&message.text){
             let packet={};
             if(this.props.activeThread.email==="ANONYMOUS"){
                 packet={

@@ -10,14 +10,13 @@ import TabsControl from './Mobile/TabsControl.jsx';
 
 const Dashboard = ({ userData }) => (
     isDesktop?(<div className="dashboard">
-      <Paper style={{flex:1, height:500, width:500, overflowY:"scroll" }}>
-            <FbPlugin/>  
+      <Paper className="name-list-item" style={{flex:1, height:500, width:500, overflowY:"scroll" }}>
           <ListExampleMessages/>
       </Paper>
       <Paper style={{flex:1,height:500, width:500}}>
           <Chatty  />
       </Paper>
-      
+      <FbPlugin/>  
     </div>):(
       <div className="dashboard-sm">
         <TabsControl/>

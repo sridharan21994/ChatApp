@@ -63,7 +63,10 @@ class Base extends React.Component{
 
 
     { /* child component will be rendered here */ }
-    {this.props.children}
+      {this.props.children}
+      <div className="footer">
+        footer
+      </div>
   </div>):(<div onClick={this.closeMenu.bind(this)} >
      
      <MenuIcon style={{height: '32px', width: '32px'}} onClick={this.toggleMenu.bind(this)}/>

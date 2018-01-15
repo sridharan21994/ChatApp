@@ -36753,7 +36753,12 @@
 	            )
 	          )
 	        ),
-	        this.props.children
+	        this.props.children,
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'footer' },
+	          'footer'
+	        )
 	      ) : _react2.default.createElement(
 	        'div',
 	        { onClick: this.closeMenu.bind(this) },
@@ -53115,15 +53120,15 @@
 	    { className: 'dashboard' },
 	    _react2.default.createElement(
 	      _Paper2.default,
-	      { style: { flex: 1, height: 500, width: 500, overflowY: "scroll" } },
-	      _react2.default.createElement(_fbPlugin2.default, null),
+	      { className: 'name-list-item', style: { flex: 1, height: 500, width: 500, overflowY: "scroll" } },
 	      _react2.default.createElement(_ListExampleMessages2.default, null)
 	    ),
 	    _react2.default.createElement(
 	      _Paper2.default,
 	      { style: { flex: 1, height: 500, width: 500 } },
 	      _react2.default.createElement(_ChatContainer2.default, null)
-	    )
+	    ),
+	    _react2.default.createElement(_fbPlugin2.default, null)
 	  ) : _react2.default.createElement(
 	    'div',
 	    { className: 'dashboard-sm' },
@@ -53236,6 +53241,7 @@
 	            socket.on('connect', function () {
 	                console.log("socket connnected ", socket.id);
 	                socket.emit("user-connected", this.props.userDetail);
+
 	                socket.on("message-received", function (data) {
 	                    if (data.sender_name && data.sender_name === "ANONYMOUS") {
 	                        console.log("from sever: new chat: ", data);
@@ -53254,11 +53260,24 @@
 	                }.bind(this));
 	                socket.emit('authenticate', { token: _Auth2.default.getToken() });
 	            }.bind(this));
+
 	            socket.on('authenticated', function () {
 	                console.log("running socket authentication");
 	                // socket.on("message", function (data) {
 	                //     console.log("from server: " + data);
 	                // }.bind(this));
+	            });
+
+	            socket.on("disconnect", function () {
+	                socket.close();
+	            });
+
+	            socket.on("connect_failed", function () {
+	                socket.close();
+	            });
+
+	            socket.on("connect_error", function () {
+	                socket.close();
 	            });
 	        }
 	    }, {
@@ -53290,8 +53309,8 @@
 	            //   messages: [...prevState.messages, message]
 	            //              }));
 	            // this.props.actions.addMessage(message.text);
-
-	            if (this.props.activeThread.email) {
+	            message.text = message.text.trim();
+	            if (this.props.activeThread.email && message.text) {
 	                var packet = {};
 	                if (this.props.activeThread.email === "ANONYMOUS") {
 	                    packet = {
@@ -60002,7 +60021,7 @@
 /* 616 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	'use strict';
+	/* WEBPACK VAR INJECTION */(function(console) {'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -60074,26 +60093,6 @@
 	  _react2.default.createElement(_moreVert2.default, { color: _colors.grey400 })
 	);
 
-	var rightIconMenu = _react2.default.createElement(
-	  _IconMenu2.default,
-	  { iconButtonElement: iconButtonElement },
-	  _react2.default.createElement(
-	    _MenuItem2.default,
-	    null,
-	    'Reply'
-	  ),
-	  _react2.default.createElement(
-	    _MenuItem2.default,
-	    null,
-	    'Forward'
-	  ),
-	  _react2.default.createElement(
-	    _MenuItem2.default,
-	    null,
-	    'Delete'
-	  )
-	);
-
 	var ListExampleMessages = function (_React$Component) {
 	  _inherits(ListExampleMessages, _React$Component);
 
@@ -60106,6 +60105,7 @@
 	    var _this = _possibleConstructorReturn(this, (ListExampleMessages.__proto__ || Object.getPrototypeOf(ListExampleMessages)).call(this, props));
 
 	    _this.state = {};
+	    _this.blockUser = _this.blockUser.bind(_this);
 	    return _this;
 	  }
 
@@ -60132,6 +60132,13 @@
 	      //}
 	    }
 	  }, {
+	    key: 'blockUser',
+	    value: function blockUser(e, contact) {
+	      e.preventDefault();
+	      e.stopPropagation();
+	      console.log("bloack user: ", contact);
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 
@@ -60148,7 +60155,27 @@
 	            null,
 	            contact.name.charAt(0) + contact.name.charAt(contact.name.indexOf(" ") + 1)
 	          ),
-	          rightIconButton: rightIconMenu,
+	          rightIconButton: _react2.default.createElement(
+	            _IconMenu2.default,
+	            { iconButtonElement: iconButtonElement },
+	            _react2.default.createElement(
+	              _MenuItem2.default,
+	              null,
+	              'Report'
+	            ),
+	            _react2.default.createElement(
+	              _MenuItem2.default,
+	              { style: { zIndex: 9999 }, onClick: function onClick(e) {
+	                  return _this2.blockUser(e, contact);
+	                } },
+	              'Block'
+	            ),
+	            _react2.default.createElement(
+	              _MenuItem2.default,
+	              null,
+	              'Delete'
+	            )
+	          ),
 	          primaryText: _react2.default.createElement(
 	            'div',
 	            { style: { textAlign: "left" } },
@@ -60156,8 +60183,8 @@
 	          ),
 	          secondaryText: _react2.default.createElement(
 	            'p',
-	            { style: { textAlign: "left" } },
-	            contact.lastMessage.text
+	            { style: { textAlign: "left", fontStyle: contact.lastMessage ? "normal" : "italic" } },
+	            contact.lastMessage ? contact.lastMessage.text : "Tap to send message"
 	          ),
 	          secondaryTextLines: 1
 	        });
@@ -60166,13 +60193,9 @@
 	        'div',
 	        null,
 	        _react2.default.createElement(
-	          'div',
+	          _List.List,
 	          null,
-	          _react2.default.createElement(
-	            _List.List,
-	            null,
-	            this.props.contactList && this.props.contactList.map(renderList, this)
-	          )
+	          this.props.contactList && this.props.contactList.map(renderList, this)
 	        )
 	      );
 	    }
@@ -60193,6 +60216,7 @@
 	  };
 	}
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(ListExampleMessages);
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9)))
 
 /***/ }),
 /* 617 */
@@ -60808,7 +60832,7 @@
 	            FB.api('/me', { access_token: access_token }, function (response) {
 	                console.log('Successful login for: ' + response.name, response);
 	            });
-	            FB.api('/me/friends', 'GET', {}, function (response) {
+	            FB.api('/me/picture', 'GET', { height: 99999 }, function (response) {
 	                console.log("friends list: ", response);
 	            });
 	        }
@@ -60914,7 +60938,7 @@
 	                    {
 	                        href: 'javascript:void(0)',
 	                        onClick: this.handleClick.bind(this) },
-	                    'Login'
+	                    ' FB Login'
 	                )
 	            );
 	        }
