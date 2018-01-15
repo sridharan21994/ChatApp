@@ -85,7 +85,7 @@ class ListExampleMessages extends React.Component {
                           }
                         secondaryText={
                           <p style={{textAlign:"left", fontStyle: contact.lastMessage?"normal":"italic"}}>
-                            {contact.lastMessage?contact.lastMessage.text:"Tap to send message"}
+                            {contact.lastMessage?contact.lastMessage.text:""}
                           </p>
                         }
                         secondaryTextLines={1}

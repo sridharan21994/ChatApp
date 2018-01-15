@@ -4,6 +4,10 @@ import * as types from "./types.js";
 
 export function initializeUser(userDetail){
     console.log("calling intiliase user actions", userDetail);
+    if((userDetail.threadList.length>0)&&(userDetail.contactList.length>0)){
+        userDetail.activeThread= userDetail.contactList[0];
+    }
+
     return { type: types.INITIALIZE_USER, userDetail };
 }
 

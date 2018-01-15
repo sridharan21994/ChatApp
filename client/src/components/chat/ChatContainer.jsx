@@ -34,6 +34,7 @@ class Chatty extends React.Component {
     }
     componentDidMount() {
         console.log("did mount");
+
         socket = io("http://localhost:3000", {transports: ['websocket'], upgrade: false,
         'query': {'token': localStorage.getItem("token")}
         }); 

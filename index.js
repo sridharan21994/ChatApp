@@ -152,7 +152,7 @@ io.on('connection', function (socket,user) {
                 console.log(chat);
 
              
-                User.update({email:{$in:[chat.initiator.sender_id,chat.initiator.receiver_id]}},{$push:{convoList:chat._id}},{multi:true},function(err,user){
+                User.update({email:{$in:[chat.initiator.sender_id,chat.initiator.receiver_id]}},{$push:{convoList:{$each:[chat._id],$position: 0}}},{multi:true},function(err,user){
                   if(err){console.log(err); return false;}
 
                 if(users[i]){

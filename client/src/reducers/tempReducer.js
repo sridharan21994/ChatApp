@@ -8,7 +8,9 @@ case types.INITIALIZE_USER:
     console.log("init reducer ", action.userDetail);  
     return Object.assign({}, state, {userDetail: {"name":action.userDetail.name, "email": action.userDetail.email },
                                      threadList: action.userDetail.threadList,
-                                     contactList: action.userDetail.contactList } );
+                                     contactList: action.userDetail.contactList,
+                                     activeThread: action.userDetail.activeThread
+                                    } );
     
 case types.ADD_MESSAGE:
 console.log("reducer add message: ",action.data)
