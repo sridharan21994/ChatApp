@@ -11,6 +11,8 @@ import MenuItem from 'material-ui/MenuItem';
 import { connect } from "react-redux";
 import * as actions from "../../actions/actions.js";
 import { bindActionCreators } from "redux";
+import axios from "axios";
+import Auth from '../../modules/Auth';
 
 
 const iconButtonElement = (
@@ -60,7 +62,17 @@ class ListExampleMessages extends React.Component {
   blockUser(e, contact){
     e.preventDefault();
     e.stopPropagation();
-    console.log("bloack user: ", contact);
+    console.log("block user: ", contact);
+    axios.get("/api/block", {params:{query:{convo_id:contact.convo_id, block: contact.email, blocked_by: this.props.userDetail.email}},
+    headers:{'Content-type': 'application/x-www-form-urlencoded','Authorization': `bearer ${Auth.getToken()}`}})
+    .then(response=>{
+            if ((response.status >= 200 && response.status <= 300) || response.status == 304) {
+            console.log("axios after block: ", response);
+            return true;
+            }
+        })
+      .catch(error=>{throw(error);});
+
   }
 
   render(){
@@ -105,7 +117,8 @@ return (
 function mapStateToProps(state, ownProps){
    return {
      contactList: state.myStore.contactList,
-     threadList: state.myStore.threadList
+     threadList: state.myStore.threadList,
+     userDetail: state.myStore.userDetail
    }
 }
 function mapDispatchToProps(dispatch){

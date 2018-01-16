@@ -6,6 +6,8 @@ const config = require('../../config');
 const bcrypt = require('bcrypt');
 const sample = require("../sampleData");
 const router = new express.Router();
+//var ObjectId = require('mongodb').ObjectID;
+
 
 router.get("/search",(req,res)=>{
     console.log(req.query.query);
@@ -13,7 +15,7 @@ router.get("/search",(req,res)=>{
     User.find( { name: { $regex: patt, $options: "i"  } },{_id:0,password:0,__v:0, convoList:0},(err,value)=>{
       if(err) { return res.status(401).end(); }
       return res.status(200).json({result:value});
-    } )
+    } );
 });
 
 // router.get("/sampledata",(req,res)=>{
@@ -30,7 +32,7 @@ router.get("/search",(req,res)=>{
 //   }
 // });
 
-router.get('/dashboard', (req, res) => {
+router.get('/dashboard', (req, res) => {       
   
         //   if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(req.headers["user-agent"]) ) {
         // console.log("mobile");
@@ -85,7 +87,7 @@ router.get('/dashboard', (req, res) => {
                                       }
                                       
                                       });
-//console.log("dashboard data",{name: user.name,email: user.email,threadList: threadList,contactList: contactList});
+ //console.log("dashboard data",{name: user.name,email: user.email,threadList: threadList,contactList: contactList});
            return res.status(200).json({
               name: user.name,
               email: user.email,
@@ -215,6 +217,20 @@ router.post('/editprofile', (req, res) => {
   // res.status(200).json({
   //   message: "You're authorized to see this secret message. sdbkakdjas"
   //   });
+});
+
+router.get('/block', (req,res) => {
+            
+             var query = JSON.parse(req.query.query);
+              console.log(query.block);
+             Chat.findOneAndUpdate({ _id: query.convo_id},
+            { "initiator.block": query.block, "initiator.blocked_by": query.blocked_by },{new : true},
+             function(err, chat){
+                  if(err){ console.log("error in blocking user"); return res.status(401).end(); };
+                  console.log("after ", chat.initiator);
+                  return res.status(200).json({blocked: true});
+             });
+
 });
 
 
