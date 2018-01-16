@@ -6,7 +6,6 @@ const config = require('../../config');
 const bcrypt = require('bcrypt');
 const sample = require("../sampleData");
 const router = new express.Router();
-//var ObjectId = require('mongodb').ObjectID;
 
 
 router.get("/search",(req,res)=>{
@@ -219,19 +218,34 @@ router.post('/editprofile', (req, res) => {
   //   });
 });
 
-router.get('/block', (req,res) => {
+// router.get('/block', (req,res) => {
             
-             var query = JSON.parse(req.query.query);
-              console.log(query.block);
-             Chat.findOneAndUpdate({ _id: query.convo_id},
-            { "initiator.block": query.block, "initiator.blocked_by": query.blocked_by },{new : true},
-             function(err, chat){
-                  if(err){ console.log("error in blocking user"); return res.status(401).end(); };
-                  console.log("after ", chat.initiator);
-                  return res.status(200).json({blocked: true});
-             });
+//              var query = JSON.parse(req.query.query);
+//               console.log(query.block);
+//              Chat.findOneAndUpdate({ _id: query.convo_id},
+//                  { "initiator.block": query.block, "initiator.blocked_by": query.blocked_by },{new : true},
+//                  function(err, chat){
+//                     if(err){ console.log("error in blocking user"); return res.status(401).end(); };
+//                     console.log("after ", chat.initiator);
 
-});
+//                    User.findOneAndUpdate({email:chat.initiator.block},{"blocked_by": chat.initiator.blocked_by },
+//                       function(err,user){
+//                         if(err){ console.log("error in blocking user"); return res.status(401).end(); };
+
+//                       User.findOneAndUpdate({email:chat.initiator.blocked_by},{"block": chat.initiator.block },
+//                       function(err,user){
+//                         if(err){ console.log("error in blocking user"); return res.status(401).end(); };
+                        
+//                         return res.status(200).json({blocked: true});
+
+//                       });
+//                   });
+                  
+//              });
+
+           
+
+// });
 
 
 

@@ -3,5 +3,6 @@ export default {
     searchList:[],
     contactList:[],
     activeThread: {},
-    threadList:[]
+    threadList:[],
+    blockedList: []
 };

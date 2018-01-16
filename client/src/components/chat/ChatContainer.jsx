@@ -70,6 +70,10 @@ class Chatty extends React.Component {
             //     console.log("from server: " + data);
             // }.bind(this));
         });
+        
+        socket.on("youareblocked", function(data){
+            
+        });
 
         socket.on("disconnect",function(){
             socket.close();
@@ -90,6 +94,12 @@ class Chatty extends React.Component {
             this.setState({
                 clicked: nextProps.activeThread.clicked
             })
+        }
+
+        if(nextProps.blockedList!==this.props.blockedList){
+              socket.emit("block-user", nextProps.blockedList[nextProps.blockedList.length-1], function(response){
+                  console.log(response);
+              });
         }
     }
 
@@ -213,7 +223,8 @@ function mapStateToProps(state, ownProps) {
         return {
             activeThread: state.myStore.activeThread,
             userDetail: state.myStore.userDetail,
-            threadList: state.myStore.threadList
+            threadList: state.myStore.threadList,
+            blockedList: state.myStore.blockedList
         }
 }
 function mapDispatchToProps(dispatch) {

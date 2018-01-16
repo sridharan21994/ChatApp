@@ -34,7 +34,10 @@ case types.UPDATE_ACTIVE_THREAD:
     return Object.assign({}, state, {activeThread: action.thread_id});  
     
 case types.PUSH_NEW_THREAD:
-    return Object.assign({}, state, {threadList:[...state.threadList,action.data]})    
+    return Object.assign({}, state, {threadList:[...state.threadList,action.data]});
+
+case types.ADD_BLOCKED_LIST:
+    return Object.assign({}, state, {blockedList: [...state.blockedList, action.data]});    
 
 default:
     return state;

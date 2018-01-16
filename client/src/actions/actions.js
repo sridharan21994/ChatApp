@@ -35,6 +35,11 @@ export function addMessage(data){
 export function pushNewThread(data){
     return { type: types.PUSH_NEW_THREAD, data }
 }
+
+export function addBlockedList(data){
+    return { type: types.ADD_BLOCKED_LIST, data }
+}
+
 // export function loadPage(){
 //         return axios.get("/api/dashboard",{headers:{'Content-type': 'application/x-www-form-urlencoded','Authorization': `bearer ${Auth.getToken()}`}})
 //         .then(response=>{

@@ -63,15 +63,16 @@ class ListExampleMessages extends React.Component {
     e.preventDefault();
     e.stopPropagation();
     console.log("block user: ", contact);
-    axios.get("/api/block", {params:{query:{convo_id:contact.convo_id, block: contact.email, blocked_by: this.props.userDetail.email}},
-    headers:{'Content-type': 'application/x-www-form-urlencoded','Authorization': `bearer ${Auth.getToken()}`}})
-    .then(response=>{
-            if ((response.status >= 200 && response.status <= 300) || response.status == 304) {
-            console.log("axios after block: ", response);
-            return true;
-            }
-        })
-      .catch(error=>{throw(error);});
+    // axios.get("/api/block", {params:{query:{convo_id:contact.convo_id, block: contact.email, blocked_by: this.props.userDetail.email}},
+    // headers:{'Content-type': 'application/x-www-form-urlencoded','Authorization': `bearer ${Auth.getToken()}`}})
+    // .then(response=>{
+    //         if ((response.status >= 200 && response.status <= 300) || response.status == 304) {
+    //         console.log("axios after block: ", response);
+    //         return true;
+    //         }
+    //     })
+    //   .catch(error=>{throw(error);});
+    this.props.actions.addBlockedList({"convo_id":contact.convo_id, "block": contact.email, "blocked_by": this.props.userDetail.email});
 
   }
 
@@ -87,8 +88,7 @@ class ListExampleMessages extends React.Component {
                           }
                         rightIconButton={<IconMenu iconButtonElement={iconButtonElement}>
                                           <MenuItem>Report</MenuItem>
-                                          <MenuItem style={{zIndex: 9999}} onClick={(e)=>this.blockUser(e, contact)}>Block</MenuItem>
-                                          <MenuItem>Delete</MenuItem>
+                                          <MenuItem style={{zIndex: 9999}} onClick={(e)=>this.blockUser(e, contact)}>Block&Delete</MenuItem>
                                         </IconMenu>}
                         primaryText={
                           <div style={{textAlign:"left"}}>

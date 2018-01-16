@@ -9,7 +9,9 @@ const UserSchema = new mongoose.Schema({
   },
   password: String,
   name: String,
-  convoList: Array
+  convoList: Array,
+  block: Array,
+  blocked_by: Array
 });
 
 

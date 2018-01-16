@@ -80,6 +80,41 @@ io.on('connection', function (socket,user) {
         console.log("disconnected and connected users list: ",users);            
         });
               
+        socket.on("block-user", function(data,callback){
+
+          for(let i=0; i < users.length; i++){
+                 if(users[i].email === data.block){
+                   socket.to(users[i].id).emit("youareblocked", 
+                     {convo_id: data.convo_id, blocked_by: data.blocked_by});
+                     break;
+                  }
+          } 
+
+             Chat.findOneAndUpdate({ _id: data.convo_id},
+                 { "initiator.block": data.block, "initiator.blocked_by": data.blocked_by },{new : true},
+                 function(err, chat){
+                    if(err){ console.log("error in blocking user"); return false };
+                    console.log("after ", chat.initiator);
+                                      
+
+                   User.findOneAndUpdate({email:chat.initiator.block},{"blocked_by": chat.initiator.blocked_by },
+                      function(err,user){
+                        if(err){ console.log("error in blocking user"); return false };
+
+                      User.findOneAndUpdate({email:chat.initiator.blocked_by},{"block": chat.initiator.block },
+                      function(err,user){
+                        if(err){ console.log("error in blocking user"); return false };
+
+
+                        
+                        callback({blocked:true});
+
+                      });
+                  });
+                  
+             });
+        });
+
           socket.on('send-message', function (data, callback) {
             console.log("receving from client");
             console.log(data);
@@ -174,46 +209,6 @@ io.on('connection', function (socket,user) {
           });
 });
 
-// io.sockets
-//   .on('connection', socketioJwt.authorize({
-//     secret: config.jwtSecret,
-//     timeout: 15000
-//     })).on('authenticated', function(socket) {
-//     //this socket is authenticated, we are good to handle more events from it. 
-//     console.log('hello! ' + socket.decoded_token.name);
-//     socket.on("user-connected",function(data){
-//         console.log(data);
-//       });
-//        socket.on('send-message', function (data) {
-//         console.log("receving from client");
-//         console.log(data.text);
-//         io.emit('message', {
-//             text: data.text
-//         });
-//     });
-//   });
-
-
-// io.on('connection', function (socket) {
-//     console.log("Socket Ready");
-//    socket.on("user-connected",function(data){
-//        console.log(data);
-//    });
-//     // broadcast a user's message to other users
-//     socket.on('send-message', function (data) {
-//         console.log("receving from client");
-//         console.log(data.text);
-//         io.emit('message', {
-//             text: data.text
-//         });
-//     });
-//     socket.on("disconnected",function(){
-//         console.log("user disconnected")
-//     })
-// });
-
-// connect to the database and load models
-// require('./server/models').connect(config.dbUri);
 
 // tell the app to look for static files in these directories
 app.use(express.static('./server/static/'));
