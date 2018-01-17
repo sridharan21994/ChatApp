@@ -60,6 +60,7 @@ class Search extends React.Component {
        console.log("***********list item " , listItem );
        if(!this.props.contactList.find(list=>list.email===listItem.email)){
             this.props.actions.addContactList(listItem);
+            this.props.actions.updateActiveThread({name: listItem.name, email:listItem.email, clicked: true});
        }
      }
 

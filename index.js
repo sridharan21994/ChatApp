@@ -80,39 +80,61 @@ io.on('connection', function (socket,user) {
         console.log("disconnected and connected users list: ",users);            
         });
               
-        socket.on("block-user", function(data,callback){
-
-          for(let i=0; i < users.length; i++){
-                 if(users[i].email === data.block){
-                   socket.to(users[i].id).emit("youareblocked", 
-                     {convo_id: data.convo_id, blocked_by: data.blocked_by});
-                     break;
-                  }
-          } 
+        socket.on("block-user", function(data,callback){ 
 
              Chat.findOneAndUpdate({ _id: data.convo_id},
-                 { "initiator.block": data.block, "initiator.blocked_by": data.blocked_by },{new : true},
+                  { "initiator.block": data.block, "initiator.blocked_by": data.blocked_by },{new:true},
                  function(err, chat){
                     if(err){ console.log("error in blocking user"); return false };
                     console.log("after ", chat.initiator);
-                                      
+                    if(chat.initiator.sender_id===data.blocked_by){
+                            data.block= chat.initiator.receiver_id;
+                        for(let i=0; i < users.length; i++){
+                                  if(users[i].email === data.block){
+                                  console.log("youareblocked : ", data.block)
+                                  socket.to(users[i].id).emit("youareblocked", 
+                                  {convo_id: data.convo_id});
+                                  break;
+                                  }
+                        }                              
+                    }else if(chat.initiator.receiver_id===data.blocked_by){
+                            data.block= chat.initiator.sender_id;
+                        for(let i=0; i < users.length; i++){
+                                  if(users[i].email === data.block){
+                                  console.log("youareblocked : ", data.block)
+                                  socket.to(users[i].id).emit("youareblocked", 
+                                  {convo_id: data.convo_id});
+                                  break;
+                                  }
+                        }                              
+                    }
+                 console.log("-----------", data.block,chat.initiator.blocked_by, typeof data.block, typeof chat.initiator.blocked_by);
 
-                   User.findOneAndUpdate({email:chat.initiator.block},{"blocked_by": chat.initiator.blocked_by },
+                   User.findOneAndUpdate({email:data.block},{"blocked_by": chat.initiator.blocked_by},
                       function(err,user){
                         if(err){ console.log("error in blocking user"); return false };
 
-                      User.findOneAndUpdate({email:chat.initiator.blocked_by},{"block": chat.initiator.block },
+                      User.findOneAndUpdate({email:chat.initiator.blocked_by},{"block": data.block},
+                      function(err,user){
+                        if(err){ console.log("error in blocking user"); return false };
+                      User.findOneAndUpdate({email:data.block},{$pullAll:{convoList:[data.convo_id]} },
                       function(err,user){
                         if(err){ console.log("error in blocking user"); return false };
 
-
-                        
-                        callback({blocked:true});
+                      User.findOneAndUpdate({email:chat.initiator.blocked_by},{$pullAll:{convoList:[data.convo_id]} },
+                      function(err,user){
+                        if(err){ console.log("error in blocking user"); return false };
+                                          
 
                       });
-                  });
+                  });                    
+
+                      });
+                  }); 
                   
              });
+             callback({blocked:true,convo_id: data.convo_id});
+            // Chat.remove({_id:data.convo_id},{justOne: true});
         });
 
           socket.on('send-message', function (data, callback) {
@@ -194,12 +216,15 @@ io.on('connection', function (socket,user) {
                 console.log("****************emitting new chat: ", {convo_id:chat._id, message:chat.message}," to user: ", users[i]);
                 socket.to(users[i].id).emit("message-received", {convo_id:chat._id,
                                                                  sender_name: "ANONYMOUS", 
-                                                                 message:chat.message});  }                  
+                                                                 message:chat.message,
+                                                                 lastMessage: chat.message[chat.message.length-1]  
+                                                              });  }                  
                 });
 
                 callback({
                   convo_id: chat._id,
-                  receiver_id: chat.initiator.receiver_id
+                  receiver_id: chat.initiator.receiver_id,
+                  lastMessage: chat.message[chat.message.length-1]
                 });
               });
             }

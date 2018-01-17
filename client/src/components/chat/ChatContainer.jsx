@@ -19,7 +19,8 @@ class Chatty extends React.Component {
         this.state = {
             tempStorage: [],
             thread:{},
-            clicked: false
+            clicked: false,
+            refresh: false
         };
         this.handleMessageSubmit=this.handleMessageSubmit.bind(this);
         this.findThread=this.findThread.bind(this);
@@ -47,7 +48,7 @@ class Chatty extends React.Component {
                 if((data.sender_name)&&(data.sender_name==="ANONYMOUS")){
                     console.log("from sever: new chat: ",data)
                     this.props.actions.pushNewThread({convo_id:data.convo_id, message:data.message});
-                    this.props.actions.addContactList({convo_id:data.convo_id, name: "ANONYMOUS", email: "ANONYMOUS"});
+                    this.props.actions.addContactList({convo_id:data.convo_id, name: "ANONYMOUS", email: "ANONYMOUS", lastMessage:data.lastMessage});
                 }else{
                     this.props.actions.addMessage(data);
                 }
@@ -72,8 +73,10 @@ class Chatty extends React.Component {
         });
         
         socket.on("youareblocked", function(data){
-            
-        });
+            console.log("youareblocked ",data);
+            alert("removing: ", data.convo_id);
+            this.props.actions.removeBlockedUser(data);
+        }.bind(this));
 
         socket.on("disconnect",function(){
             socket.close();
@@ -90,7 +93,7 @@ class Chatty extends React.Component {
     }
 
     componentWillReceiveProps(nextProps){
-        if(nextProps.activeThread.clicked!==this.state.clicked){
+        if(nextProps.activeThread&&(nextProps.activeThread.clicked!==this.state.clicked)){
             this.setState({
                 clicked: nextProps.activeThread.clicked
             })
@@ -100,6 +103,11 @@ class Chatty extends React.Component {
               socket.emit("block-user", nextProps.blockedList[nextProps.blockedList.length-1], function(response){
                   console.log(response);
               });
+        }
+        if(nextProps.threadList!==this.props.threadList){
+            this.setState({
+                refresh: !this.state.refresh
+            })
         }
     }
 
@@ -164,7 +172,7 @@ class Chatty extends React.Component {
 
                     console.log("from server:", data);
                     this.props.actions.updateActiveThread({email:this.props.activeThread.email,convo_id:data.convo_id});
-                    this.props.actions.updateContactConvoId({email:this.props.activeThread.email,convo_id:data.convo_id});
+                    this.props.actions.updateContactConvoId({email: data.receiver_id,convo_id:data.convo_id, lastMessage: data.lastMessage});
                     var resultObject = this.search(data.receiver_id, this.state.tempStorage, false);
                     resultObject[0].convo_id = data.convo_id;
                     console.log("resultObject: ", resultObject);

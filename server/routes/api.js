@@ -6,7 +6,7 @@ const config = require('../../config');
 const bcrypt = require('bcrypt');
 const sample = require("../sampleData");
 const router = new express.Router();
-
+var mongoose = require("mongoose");
 
 router.get("/search",(req,res)=>{
     console.log(req.query.query);
@@ -33,12 +33,6 @@ router.get("/search",(req,res)=>{
 
 router.get('/dashboard', (req, res) => {       
   
-        //   if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(req.headers["user-agent"]) ) {
-        // console.log("mobile");
-        // }else{
-        //   console.log("web desktop")
-        // }
-
   // get the last part from a authorization header string like "bearer token-value"
   const token = req.headers.authorization.split(' ')[1];
   
@@ -46,11 +40,11 @@ router.get('/dashboard', (req, res) => {
   jwt.verify(token, config.jwtSecret, (err, decoded) => {
     // the 401 code is for unauthorized status
     if (err) { return res.status(401).end(); }
-
-    const userId = decoded.sub;
-
+   
+    var userId = decoded.sub;
+    userId = mongoose.Types.ObjectId(userId);
     // check if a user exists
-    return User.findById(userId, (userErr, user) => {
+    return User.findById( userId, (userErr, user) => {
       if (userErr || !user) {
         return res.status(401).end();
       }

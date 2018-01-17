@@ -75,7 +75,7 @@ class ListExampleMessages extends React.Component {
     this.props.actions.addBlockedList({"convo_id":contact.convo_id, "block": contact.email, "blocked_by": this.props.userDetail.email});
 
   }
-
+ 
   render(){
   
    var renderList = function(contact,i){

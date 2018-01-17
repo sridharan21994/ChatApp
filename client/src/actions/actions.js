@@ -40,6 +40,10 @@ export function addBlockedList(data){
     return { type: types.ADD_BLOCKED_LIST, data }
 }
 
+export function removeBlockedUser(data){
+    return { type: types.REMOVE_BLOCKED_USER, data }
+}
+
 // export function loadPage(){
 //         return axios.get("/api/dashboard",{headers:{'Content-type': 'application/x-www-form-urlencoded','Authorization': `bearer ${Auth.getToken()}`}})
 //         .then(response=>{
