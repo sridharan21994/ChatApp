@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import Auth from '../modules/Auth';
 import Dashboard from '../components/Dashboard.jsx';
 import { connect } from "react-redux";
@@ -37,23 +37,7 @@ class DashboardPage extends React.Component {
             return true;
             }
         })
-        .catch(error=>{throw(error);});
-    // const xhr = new XMLHttpRequest();
-    // xhr.open('get', '/api/dashboard');
-    // xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    // // set the authorization HTTP header
-    // xhr.setRequestHeader('Authorization', `bearer ${Auth.getToken()}`);
-    // xhr.responseType = 'json';
-    // xhr.addEventListener('load', () => {
-    //   if ((xhr.status >= 200 && xhr.status <= 300) || xhr.status == 304) {
-    //     console.log("setting the data: "+xhr.response.user.email)
-    //     // this.setState({
-    //     //   userData: xhr.response.user
-    //     //         });
-    //     this.props.actions.initializeUser(xhr.response.user)
-    //   }
-    // });
-    // xhr.send();
+        .catch(error=>{  Auth.deauthenticateUser(); this.context.router.replace('/login'); throw(error);        });
   }
 
   /**
@@ -74,4 +58,9 @@ function mapDispatchToProps(dispatch){
      actions: bindActionCreators( actions , dispatch )
   }
 }
+
+DashboardPage.contextTypes = {
+  router: PropTypes.object.isRequired
+};
+
 export default connect(mapStateToProps, mapDispatchToProps)(DashboardPage);
