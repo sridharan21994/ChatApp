@@ -34,7 +34,7 @@ const Chat = require('mongoose').model('Chat');
 //   timeout:15000
 // }));
 const authCheckMiddleware = require('./server/middleware/auth-check');
-const authSocketMiddleware = require('./server/middleware/auth-socket');
+// const authSocketMiddleware = require('./server/middleware/auth-socket');
 
 io.use(function (socket, next) {
   //console.log("socket for auth check", socket.id);
@@ -59,7 +59,7 @@ io.use(function (socket, next) {
 
 io.on('connection', function (socket,user) {
       //   console.log("socket connected: ", socket.id);
-         console.log('socket authenticated user: ', socket.decoded.name);
+         console.log('socket authenticated user: ', socket.decoded.email);
 
             users.unshift({
                     id : socket.id,
@@ -82,16 +82,18 @@ io.on('connection', function (socket,user) {
               
         socket.on("block-user", function(data,callback){ 
 
-             Chat.findOneAndUpdate({ _id: data.convo_id},
-                  { "initiator.block": data.block, "initiator.blocked_by": data.blocked_by },{new:true},
+console.log("blocked_by: ", socket.decoded.email, data.blocked_by);
+          
+             data.blocked_by = socket.decoded.email;
+             Chat.findOne({ _id: data.convo_id},
                  function(err, chat){
                     if(err){ console.log("error in blocking user"); return false };
-                    console.log("after ", chat.initiator);
+          //          console.log("after ", chat.initiator);
                     if(chat.initiator.sender_id===data.blocked_by){
                             data.block= chat.initiator.receiver_id;
                         for(let i=0; i < users.length; i++){
                                   if(users[i].email === data.block){
-                                  console.log("youareblocked : ", data.block)
+              //                    console.log("youareblocked : ", data.block)
                                   socket.to(users[i].id).emit("youareblocked", 
                                   {convo_id: data.convo_id});
                                   break;
@@ -101,28 +103,23 @@ io.on('connection', function (socket,user) {
                             data.block= chat.initiator.sender_id;
                         for(let i=0; i < users.length; i++){
                                   if(users[i].email === data.block){
-                                  console.log("youareblocked : ", data.block)
+         //                         console.log("youareblocked : ", data.block)
                                   socket.to(users[i].id).emit("youareblocked", 
                                   {convo_id: data.convo_id});
                                   break;
                                   }
                         }                              
                     }
-                 console.log("-----------", data.block,chat.initiator.blocked_by, typeof data.block, typeof chat.initiator.blocked_by);
+      //           console.log("-----------", data.block,chat.initiator.blocked_by, typeof data.block, typeof chat.initiator.blocked_by, data.convo_id);
 
-                   User.findOneAndUpdate({email:data.block},{"blocked_by": chat.initiator.blocked_by},
-                      function(err,user){
+                   User.findOneAndUpdate({email: data.block}, {$push: {"blocked_by": data.blocked_by}},function(err,user){
                         if(err){ console.log("error in blocking user"); return false };
-
-                      User.findOneAndUpdate({email:chat.initiator.blocked_by},{"block": data.block},
-                      function(err,user){
+                   User.findOneAndUpdate({email: data.blocked_by}, {$push: {"block": data.block}},function(err,user){
                         if(err){ console.log("error in blocking user"); return false };
-                      User.findOneAndUpdate({email:data.block},{$pullAll:{convoList:[data.convo_id]} },
-                      function(err,user){
+                     data.convo_id = mongoose.Types.ObjectId(data.convo_id);
+                   User.findOneAndUpdate({email: data.block},{$pull:{"convoList":data.convo_id} },function(err,user){
                         if(err){ console.log("error in blocking user"); return false };
-
-                      User.findOneAndUpdate({email:chat.initiator.blocked_by},{$pullAll:{convoList:[data.convo_id]} },
-                      function(err,user){
+                   User.findOneAndUpdate({email: data.blocked_by},{$pull:{"convoList":data.convo_id} },function(err,user){
                         if(err){ console.log("error in blocking user"); return false };
                                           
 
@@ -130,16 +127,18 @@ io.on('connection', function (socket,user) {
                   });                    
 
                       });
-                  }); 
+                  });  
                   
              });
-             callback({blocked:true,convo_id: data.convo_id});
-            // Chat.remove({_id:data.convo_id},{justOne: true});
+              Chat.findOneAndRemove({_id:data.convo_id},function(err,chat){
+                if(err){console.log("error in blocking user"); return false};
+                callback({blocked:true,convo_id: data.convo_id});
+              });
         });
 
           socket.on('send-message', function (data, callback) {
-            console.log("receving from client");
-            console.log(data);
+        //    console.log("receving from client");
+         //   console.log(data);
 
             if (data.convo_id) {
               Chat.findById(data.convo_id,function(err,value){
@@ -206,11 +205,17 @@ io.on('connection', function (socket,user) {
 
               newChat.save((err, chat) => {
                 if (err) {console.log(err);return false;}
-                console.log(chat);
+            //    console.log(chat);
 
-             
-                User.update({email:{$in:[chat.initiator.sender_id,chat.initiator.receiver_id]}},{$push:{convoList:{$each:[chat._id],$position: 0}}},{multi:true},function(err,user){
+                User.update({email:{$in:[chat.initiator.sender_id,chat.initiator.receiver_id]}},{$push:{convoList: chat._id}},{multi:true},function(err,user){
                   if(err){console.log(err); return false;}
+console.log("new chat", user.block, user.blocked_by,chat.initiator.sender_id,chat.initiator.receiver_id);
+                      if((user.block&&user.block.indexOf(chat.initiator.sender_id)!==-1)||
+                      (user.block&&user.block.indexOf(chat.initiator.receiver_id)!==-1)||
+                      (user.blocked_by&&user.blocked_by.indexOf(chat.initiator.sender_id)!==-1)||
+                      (user.blocked_by&&user.blocked_by.indexOf(chat.initiator.receiver_id)!==-1)){
+                           console.log("-*-*-* hack true");
+                      }
 
                 if(users[i]){
                 console.log("****************emitting new chat: ", {convo_id:chat._id, message:chat.message}," to user: ", users[i]);

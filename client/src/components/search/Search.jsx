@@ -106,7 +106,7 @@ function mapStateToProps(state, ownProps){
    return {
      searchList: state.myStore.searchList,
      contactList: state.myStore.contactList
-   }
+  }
 }
 function mapDispatchToProps(dispatch){
   return{

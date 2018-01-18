@@ -53279,7 +53279,7 @@
 
 	            socket.on("youareblocked", function (data) {
 	                console.log("youareblocked ", data);
-	                alert("removing: ", data.convo_id);
+	                alert("youareblocked event triggered by other user");
 	                this.props.actions.removeBlockedUser(data);
 	            }.bind(this));
 
@@ -53307,7 +53307,8 @@
 	            if (nextProps.blockedList !== this.props.blockedList) {
 	                socket.emit("block-user", nextProps.blockedList[nextProps.blockedList.length - 1], function (response) {
 	                    console.log(response);
-	                });
+	                    this.props.actions.removeBlockedUser(response);
+	                }.bind(this));
 	            }
 	            if (nextProps.threadList !== this.props.threadList) {
 	                this.setState({

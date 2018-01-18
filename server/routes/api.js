@@ -9,9 +9,21 @@ const router = new express.Router();
 var mongoose = require("mongoose");
 
 router.get("/search",(req,res)=>{
-    console.log(req.query.query);
+//    console.log(req.query.query);
     var patt = new RegExp("^"+req.query.query);
-    User.find( { name: { $regex: patt, $options: "i"  } },{_id:0,password:0,__v:0, convoList:0},(err,value)=>{
+//    console.log(res.locals.user);
+    let blockers=[];
+    if(res.locals.user.block&&res.locals.user.blocked_by){
+      blockers=[...res.locals.user.block, ...res.locals.user.blocked_by, res.locals.user.email];
+    }else if(res.locals.user.block&&(!res.locals.user.blocked_by)){
+      blockers=[...res.locals.user.block, res.locals.user.email];      
+    }else if(res.locals.user.blocked_by&&(!res.locals.user.block)){
+      blockers=[...res.locals.user.blocked_by, res.locals.user.email];      
+    }else{
+      blockers=[res.locals.user.email];
+    }
+    blockers=[res.locals.user.email];
+    User.find( { name: { $regex: patt, $options: "i"  }, email: { $nin: blockers } },{_id:0,password:0,__v:0, convoList:0},(err,value)=>{
       if(err) { return res.status(401).end(); }
       return res.status(200).json({result:value});
     } );

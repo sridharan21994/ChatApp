@@ -26,7 +26,10 @@ module.exports = (req, res, next) => {
       if (userErr || !user) {
         return res.status(401).end();
       }
-
+      res.locals.user = {email: user.email,
+                         block: user.block, 
+                         blocked_by: user.blocked_by 
+                         };
       return next();
     });
   });
