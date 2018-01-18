@@ -14,8 +14,12 @@ case types.INITIALIZE_USER:
     
 case types.ADD_MESSAGE:
 console.log("reducer add message: ",action.data);
-    return Object.assign({}, state, {threadList: state.threadList.map((content, index)=> (content.convo_id===action.data.convo_id) ? 
+    return Object.assign({}, state, 
+        {threadList: state.threadList.map((content, index)=> (content.convo_id===action.data.convo_id) ? 
         Object.assign({}, content, {message:[...content.message,action.data.message]})
+        :content)},
+        {contactList: state.contactList.map((content, index)=> (content.convo_id===action.data.convo_id) ? 
+        Object.assign({}, content, {lastMessage: action.data.message})
         :content)});
 
 case types.ADD_SUGGESTIONS:

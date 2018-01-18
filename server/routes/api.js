@@ -22,7 +22,7 @@ router.get("/search",(req,res)=>{
     }else{
       blockers=[res.locals.user.email];
     }
-    blockers=[res.locals.user.email];
+  //  blockers=[res.locals.user.email];
     User.find( { name: { $regex: patt, $options: "i"  }, email: { $nin: blockers } },{_id:0,password:0,__v:0, convoList:0},(err,value)=>{
       if(err) { return res.status(401).end(); }
       return res.status(200).json({result:value});
