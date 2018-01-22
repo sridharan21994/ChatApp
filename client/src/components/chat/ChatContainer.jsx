@@ -8,7 +8,9 @@ import { bindActionCreators } from "redux";
 import Auth from '../../modules/Auth';
 import io from 'socket.io-client';
 import ArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
+import moment from 'moment-timezone';
 
+console.log(moment().zone(new Date().getTimezoneOffset()).format("YYYY MM DD"));
 var socket;
 
 class Chatty extends React.Component {
