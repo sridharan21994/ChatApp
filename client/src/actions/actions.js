@@ -9,8 +9,12 @@ export function initializeUser(userDetail){
 
         userDetail.contactList.sort(function (a, b){
             return ((new Date(a.lastMessage.time)) < (new Date(b.lastMessage.time))) ? 1 : (((new Date(b.lastMessage.time)) < (new Date(a.lastMessage.time))) ? -1 : 0);} );
-
-        userDetail.activeThread= userDetail.contactList[0];
+        if(isDesktop){
+            userDetail.activeThread= userDetail.contactList[0];
+            // userDetail.contactList[0].read=true;
+        }else{
+            userDetail.activeThread={};
+        }
     }
 
     return { type: types.INITIALIZE_USER, userDetail };
@@ -35,6 +39,10 @@ export function updateActiveThread(thread_id){
 export function addMessage(data){
     console.log("add message action ", data);
     return {type: types.ADD_MESSAGE, data};
+}
+
+export function updateUnread(data){
+    return { type: types.UPDATE_UNREAD, data};
 }
 
 export function pushNewThread(data){

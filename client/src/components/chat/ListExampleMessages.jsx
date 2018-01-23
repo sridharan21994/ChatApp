@@ -57,6 +57,7 @@ class ListExampleMessages extends React.Component {
     //  }else{
        contact.clicked = true;
        this.props.actions.updateActiveThread(contact);
+       this.props.actions.updateUnread({convo_id:contact.convo_id})
      //}
   }
 
@@ -94,6 +95,9 @@ class ListExampleMessages extends React.Component {
                         primaryText={
                           <div style={{textAlign:"left"}}>
                           {contact.name}
+                          {((contact.unread&&contact.lastMessage.receiver_id&&(contact.lastMessage.receiver_id===this.props.userDetail.email))||
+                          (contact.unread&&contact.lastMessage.sender_id&&(contact.lastMessage.sender_id!==this.props.userDetail.email)))
+                          ?"new":""}
                           </div>
                           }
                         secondaryText={

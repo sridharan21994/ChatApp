@@ -83,12 +83,14 @@ router.get('/dashboard', (req, res) => {
                                         contactList.push({convo_id: content._id, 
                                                           name:content.initiator.receiver_name,
                                                           email:content.initiator.receiver_id,
-                                                          lastMessage});
+                                                          lastMessage,
+                                                          unread: content.unread});
                                       }else{
                                         contactList.push({convo_id: content._id, 
                                                           name:"ANONYMOUS",
                                                           email: "ANONYMOUS",
-                                                          lastMessage});      
+                                                          lastMessage,
+                                                          unread: content.unread});      
                                       }
                                       
                                       });

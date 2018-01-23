@@ -5,7 +5,8 @@ const ChatSchema = new mongoose.Schema({
   message:Array,
   initiator: Object,
   block: Array,
-  blocked_by: Array
+  blocked_by: Array,
+  unread: Boolean
 });
 
 

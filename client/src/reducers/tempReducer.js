@@ -19,8 +19,14 @@ console.log("reducer add message: ",action.data);
         Object.assign({}, content, {message:[...content.message,action.data.message]})
         :content)},
         {contactList: state.contactList.map((content, index)=> (content.convo_id===action.data.convo_id) ? 
-        Object.assign({}, content, {lastMessage: action.data.message})
-        :content)});
+        Object.assign({}, content, {lastMessage: action.data.message, unread: action.data.unread})
+        :content)});      
+
+case types.UPDATE_UNREAD:
+    return Object.assign({},state, 
+        {contactList: state.contactList.map((content, index)=> (content.convo_id===action.data.convo_id) ? 
+        Object.assign({}, content, {unread: false})
+        :content)})        
 
 case types.ADD_SUGGESTIONS:
     return Object.assign({}, state, {searchList: action.list} );

@@ -56,8 +56,9 @@ class Chatty extends React.Component {
                 if((data.sender_name)&&(data.sender_name==="ANONYMOUS")){
                     console.log("from sever: new chat: ",data);
                     this.props.actions.pushNewThread({convo_id:data.convo_id, message:data.message});
-                    this.props.actions.addContactList({convo_id:data.convo_id, name: "ANONYMOUS", email: "ANONYMOUS", lastMessage:data.lastMessage});
+                    this.props.actions.addContactList({convo_id:data.convo_id, name: "ANONYMOUS", email: "ANONYMOUS", lastMessage:data.lastMessage, unread: true});
                 }else{
+                    data.unread=true;
                     this.props.actions.addMessage(data);
                 }
                 // console.log("from other user: ",data);
@@ -105,9 +106,13 @@ class Chatty extends React.Component {
             this.setState({
                 clicked: nextProps.activeThread.clicked
             });
-            if(nextProps.activeThread.convo_id){
-               socket.emit("readStatus", {convo_id: nextProps.activeThread.convo_id});
-            }
+            // if(nextProps.activeThread.convo_id){
+            //    socket.emit("readStatus", {convo_id: nextProps.activeThread.convo_id});
+            // }
+        }
+        if(nextProps.activeThread.unread===true){
+            console.log("------read: ", nextProps.activeThread);
+            socket.emit("unread",{convo_id: nextProps.activeThread.convo_id});
         }
 
         if(nextProps.blockedList!==this.props.blockedList){
@@ -149,14 +154,14 @@ class Chatty extends React.Component {
                     sender_id: this.props.userDetail.email,
                     text: message.text,
                     time: moment().utc().format(),
-                    readStatus: 1
+                    unread: true
                 };
             }else{
                 packet = {
                     receiver_id: this.props.activeThread.email,
                     text: message.text,
                     time: moment().utc().format(),
-                    readStatus: 1
+                    unread: true
                 };
             }
           
