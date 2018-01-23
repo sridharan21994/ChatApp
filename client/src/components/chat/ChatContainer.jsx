@@ -10,7 +10,13 @@ import io from 'socket.io-client';
 import ArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 import moment from 'moment-timezone';
 
-console.log(moment().zone(new Date().getTimezoneOffset()).format("YYYY MM DD"));
+var localMoment = moment().zone(new Date().getTimezoneOffset());
+var localMomentFormatted = localMoment.format("hh:mma, DD MMM");
+var utcMoment = moment().utc().format();
+console.log(localMoment);
+var mmc = moment.utc(localMoment).format();
+console.log(mmc, moment(mmc).local().format("hh:mma, DD MMM"), moment().utc().format());
+
 var socket;
 
 class Chatty extends React.Component {
@@ -48,7 +54,7 @@ class Chatty extends React.Component {
 
             socket.on("message-received",function(data){
                 if((data.sender_name)&&(data.sender_name==="ANONYMOUS")){
-                    console.log("from sever: new chat: ",data)
+                    console.log("from sever: new chat: ",data);
                     this.props.actions.pushNewThread({convo_id:data.convo_id, message:data.message});
                     this.props.actions.addContactList({convo_id:data.convo_id, name: "ANONYMOUS", email: "ANONYMOUS", lastMessage:data.lastMessage});
                 }else{
@@ -98,7 +104,10 @@ class Chatty extends React.Component {
         if(nextProps.activeThread&&(nextProps.activeThread.clicked!==this.state.clicked)){
             this.setState({
                 clicked: nextProps.activeThread.clicked
-            })
+            });
+            if(nextProps.activeThread.convo_id){
+               socket.emit("readStatus", {convo_id: nextProps.activeThread.convo_id});
+            }
         }
 
         if(nextProps.blockedList!==this.props.blockedList){
@@ -131,18 +140,23 @@ class Chatty extends React.Component {
         //   messages: [...prevState.messages, message]
         //              }));
         // this.props.actions.addMessage(message.text);
+
         message.text=message.text.trim();
         if(this.props.activeThread.email&&message.text){
             let packet={};
             if(this.props.activeThread.email==="ANONYMOUS"){
                 packet={
                     sender_id: this.props.userDetail.email,
-                    text: message.text
+                    text: message.text,
+                    time: moment().utc().format(),
+                    readStatus: 1
                 };
             }else{
                 packet = {
                     receiver_id: this.props.activeThread.email,
-                    text: message.text
+                    text: message.text,
+                    time: moment().utc().format(),
+                    readStatus: 1
                 };
             }
           

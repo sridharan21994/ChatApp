@@ -145,25 +145,25 @@ console.log("blocked_by: ", socket.decoded.email, data.blocked_by);
                   if(err){console.log("error in data.convo_id: ", err.name); return false;}
 
                   if(socket.decoded.email===value.initiator.sender_id){
-                      Chat.findOneAndUpdate({_id: data.convo_id}, {$push: {message: {receiver_id: value.initiator.receiver_id , text: data.message.text}}}, 
+                      Chat.findOneAndUpdate({_id: data.convo_id}, {$push: {message: {receiver_id: value.initiator.receiver_id , text: data.message.text, time: data.message.time}}}, 
                         function (err, chat) {if(err){console.log(err);return false;}
 
                           for(let i=0; i < users.length; i++){
                             if(users[i].email === value.initiator.receiver_id){
                               console.log("****************emitting old chat", {convo_id:chat._id, message: {receiver_id: value.initiator.receiver_id , text: data.message.text}}, "to user: ", users[i]);
-                                socket.to(users[i].id).emit("message-received", {convo_id:chat._id, message: {receiver_id: value.initiator.receiver_id , text: data.message.text}});
+                                socket.to(users[i].id).emit("message-received", {convo_id:chat._id, message: {receiver_id: value.initiator.receiver_id , text: data.message.text, time: data.message.time}});
                                 break;
                             }
                           }
                         });
                   }else if(socket.decoded.email===value.initiator.receiver_id){
-                      Chat.findOneAndUpdate({_id: data.convo_id}, {$push: {message: {sender_id: value.initiator.receiver_id , text: data.message.text}}}, 
+                      Chat.findOneAndUpdate({_id: data.convo_id}, {$push: {message: {sender_id: value.initiator.receiver_id , text: data.message.text, time: data.message.time}}}, 
                         function (err, chat) {if(err){console.log(err);return false;}
                            
                            for(let i=0; i < users.length; i++){
                             if(users[i].email === value.initiator.sender_id){
                               console.log("****************emitting old chat", {convo_id:chat._id, message: {sender_id: value.initiator.receiver_id , text: data.message.text}}, "to user: ", users[i]);
-                                socket.to(users[i].id).emit("message-received", {convo_id:chat._id, message: {sender_id: value.initiator.receiver_id , text: data.message.text}});
+                                socket.to(users[i].id).emit("message-received", {convo_id:chat._id, message: {sender_id: value.initiator.receiver_id , text: data.message.text, time: data.message.time}});
                                 break;
                             }
                           }
@@ -193,7 +193,8 @@ console.log("blocked_by: ", socket.decoded.email, data.blocked_by);
               var newChat = new Chat({
                 message: {
                    receiver_id: data.message.receiver_id,
-                   text: data.message.text
+                   text: data.message.text,
+                   time: data.message.time
                 },
                 initiator: {
                   sender_id: socket.decoded.email,

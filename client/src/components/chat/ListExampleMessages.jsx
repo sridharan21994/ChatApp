@@ -13,6 +13,7 @@ import * as actions from "../../actions/actions.js";
 import { bindActionCreators } from "redux";
 import axios from "axios";
 import Auth from '../../modules/Auth';
+import moment from 'moment-timezone';
 
 
 const iconButtonElement = (
@@ -98,6 +99,7 @@ class ListExampleMessages extends React.Component {
                         secondaryText={
                           <p style={{textAlign:"left", fontStyle: contact.lastMessage?"normal":"italic"}}>
                             {contact.lastMessage?contact.lastMessage.text:""}
+                            {contact.lastMessage&&contact.lastMessage.time? moment(contact.lastMessage.time).local().format("hh:mma, DD MMM"): ""}
                           </p>
                         }
                         secondaryTextLines={1}

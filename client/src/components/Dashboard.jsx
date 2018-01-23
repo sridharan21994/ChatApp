@@ -3,7 +3,6 @@ import { Card, CardTitle, CardText } from 'material-ui/Card';
 import Chatty from './chat/ChatContainer.jsx';
 import Search from './search/Search.jsx';
 import ListExampleMessages from "./chat/ListExampleMessages.jsx";
-import ThreadList from "./chat/ThreadList.jsx";
 import FbPlugin from './fb/fbPlugin.jsx';
 import Paper from "material-ui/Paper";
 import TabsControl from './Mobile/TabsControl.jsx';

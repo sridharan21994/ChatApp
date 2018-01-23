@@ -1,10 +1,15 @@
 import * as types from "./types.js";
+
 // import axios from "axios";
 // import Auth from '../modules/Auth';
 
 export function initializeUser(userDetail){
     console.log("calling intiliase user actions", userDetail);
     if((userDetail.threadList.length>0)&&(userDetail.contactList.length>0)){
+
+        userDetail.contactList.sort(function (a, b){
+            return ((new Date(a.lastMessage.time)) < (new Date(b.lastMessage.time))) ? 1 : (((new Date(b.lastMessage.time)) < (new Date(a.lastMessage.time))) ? -1 : 0);} );
+
         userDetail.activeThread= userDetail.contactList[0];
     }
 
@@ -28,7 +33,7 @@ export function updateActiveThread(thread_id){
 }
 
 export function addMessage(data){
-            console.log("add message action ", data);
+    console.log("add message action ", data);
     return {type: types.ADD_MESSAGE, data};
 }
 
