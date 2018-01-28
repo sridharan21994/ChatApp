@@ -199,3 +199,14 @@ a:hover {
   text-align: center;
   background-color: #689f38;
 }
+
+.new-icon{
+    color: #fff;
+    border: 1px solid green;
+    border-radius: 3px;
+    background-color: green;
+    font-size: 12px;
+    line-height: 12px;
+    font-weight: 600;
+    float: right;
+}

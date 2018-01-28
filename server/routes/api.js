@@ -8,10 +8,9 @@ const sample = require("../sampleData");
 const router = new express.Router();
 var mongoose = require("mongoose");
 
-router.get("/search",(req,res)=>{
-//    console.log(req.query.query);
+router.get("/search",(req,res)=>{ 
     var patt = new RegExp("^"+req.query.query);
-//    console.log(res.locals.user);
+ //    console.log(res.locals.user);
     let blockers=[];
     if(res.locals.user.block&&res.locals.user.blocked_by){
       blockers=[...res.locals.user.block, ...res.locals.user.blocked_by, res.locals.user.email];
@@ -226,34 +225,6 @@ router.post('/editprofile', (req, res) => {
   //   });
 });
 
-// router.get('/block', (req,res) => {
-            
-//              var query = JSON.parse(req.query.query);
-//               console.log(query.block);
-//              Chat.findOneAndUpdate({ _id: query.convo_id},
-//                  { "initiator.block": query.block, "initiator.blocked_by": query.blocked_by },{new : true},
-//                  function(err, chat){
-//                     if(err){ console.log("error in blocking user"); return res.status(401).end(); };
-//                     console.log("after ", chat.initiator);
-
-//                    User.findOneAndUpdate({email:chat.initiator.block},{"blocked_by": chat.initiator.blocked_by },
-//                       function(err,user){
-//                         if(err){ console.log("error in blocking user"); return res.status(401).end(); };
-
-//                       User.findOneAndUpdate({email:chat.initiator.blocked_by},{"block": chat.initiator.block },
-//                       function(err,user){
-//                         if(err){ console.log("error in blocking user"); return res.status(401).end(); };
-                        
-//                         return res.status(200).json({blocked: true});
-
-//                       });
-//                   });
-                  
-//              });
-
-           
-
-// });
 
 
 

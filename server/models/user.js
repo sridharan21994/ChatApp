@@ -11,7 +11,9 @@ const UserSchema = new mongoose.Schema({
   name: String,
   convoList: Array,
   block: Array,
-  blocked_by: Array
+  blocked_by: Array,
+  reset_password_expires: Date,
+  reset_password_token: String
 });
 
 

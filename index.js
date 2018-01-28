@@ -95,7 +95,7 @@ console.log("blocked_by: ", socket.decoded.email, data.blocked_by);
                                   if(users[i].email === data.block){
               //                    console.log("youareblocked : ", data.block)
                                   socket.to(users[i].id).emit("youareblocked", 
-                                  {convo_id: data.convo_id});
+                                    {convo_id: data.convo_id});
                                   break;
                                   }
                         }                              
@@ -178,19 +178,6 @@ console.log("blocked_by: ", socket.decoded.email, data.blocked_by);
                   }
               });
 
-              // Chat.findOneAndUpdate({_id: data.convo_id}, {$push: {message: data.message}}, 
-              //   function (err, chat) {
-              //       if(err){console.log(err);return false;}
-              //       for(let i=0; i < users.length; i++){
-              //         if(users[i].email === data.message.receiver_id){
-              //           console.log("****************emitting old chat", {convo_id:chat._id, message:data.message}, "to user: ", users[i]);
-              //             socket.to(users[i].id).emit("message-received", {convo_id:chat._id, message:data.message});
-              //             break;
-              //         }
-              //       }
-
-              //   // callback("updated");
-              // })
             } else {
                for(var i=0; i < users.length; i++){
                       if(users[i].email === data.message.receiver_id){
@@ -243,9 +230,6 @@ console.log("new chat", user.block, user.blocked_by,chat.initiator.sender_id,cha
                 });
               });
             }
-            // io.emit('message', {
-            //     text: data.text
-            // });
           });
 });
 

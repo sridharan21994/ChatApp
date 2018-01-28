@@ -1,8 +1,29 @@
 const express = require('express');
 const validator = require('validator');
 const passport = require('passport');
-
+const path = require('path');
 const router = new express.Router();
+var async = require('async');
+const User = require('mongoose').model('User');
+const crypto = require('crypto');
+// var hbs = require('nodemailer-express-handlebars'),
+var email = process.env.MAILER_EMAIL_ID || 'sridharan.219@gmail.com',
+  pass = process.env.MAILER_PASSWORD || 'lushwave21994',
+  nodemailer = require('nodemailer');
+var smtpTransport = nodemailer.createTransport({
+  service: process.env.MAILER_SERVICE_PROVIDER || 'Gmail',
+  auth: {
+    user: email,
+    pass: pass
+  } 
+});
+// var handlebarsOptions = {
+//   viewEngine: 'handlebars',
+//   viewPath: path.resolve('./'),
+//   extName: '.html'
+// };
+// smtpTransport.use('compile', hbs(handlebarsOptions));  
+
 
 /**
  * Validate the sign up form
@@ -153,5 +174,108 @@ router.post('/login', (req, res, next) => {
     });
   })(req, res, next);
 });
+
+router.post('/forgot-password', function(req, res) {
+  async.waterfall([
+    function(done) {
+      User.findOne({
+        email: req.body.email
+      }).exec(function(err, user) {
+        if (user) {
+          done(err, user);
+        } else {
+          done('User not found.');
+        }
+      });
+    },
+    function(user, done) {
+      // create the random token
+      crypto.randomBytes(20, function(err, buffer) {
+        var token = buffer.toString('hex');
+        done(err, user, token);
+      });
+    },
+    function(user, token, done) {
+      User.findByIdAndUpdate({ _id: user._id }, { reset_password_token: token, reset_password_expires: Date.now() + 86400000 }, { upsert: true, new: true }).exec(function(err, new_user) {
+        done(err, token, new_user);
+      });
+    },
+    function(token, user, done) {
+      // var email = 'sridharan.219@gmail.com',
+      // pass = 'lushwave21994';
+      var url= 'http://localhost:3000/auth/reset-password?token=' + token;
+      var data = {
+        to: "sridharan.213@gmail.com",
+        from: email,
+        subject: 'Password help has arrived!',
+        text: "hi: "+ url
+      };
+
+      smtpTransport.sendMail(data, function(err) {
+        if (!err) {
+          return res.json({ message: 'Kindly check your email for further instructions' });
+        } else {
+          return done(err);
+        }
+      });
+    }
+  ], function(err) {
+    return res.status(422).json({ message: err });
+  });
+});    
+router.post('/reset-password',function(req, res, next) {
+  User.findOne({
+    reset_password_token: req.body.token,
+    reset_password_expires: {
+      $gt: Date.now()
+    }
+  }).exec(function(err, user) {
+    if (!err && user) {
+      if (req.body.newPassword === req.body.verifyPassword) {
+          // user.password = bcrypt.hashSync(req.body.newPassword, 10);
+            user.password = req.body.newPassword;
+
+            user.reset_password_token = undefined;
+            user.reset_password_expires = undefined;
+            user.save(function(err) { 
+              if (err) {
+                return res.status(422).send({
+                  message: err
+                });
+              } else {
+                var data = {
+                  to: "sridharan.213@gmail.com",
+                  from: email,
+                  subject: 'Password Reset Confirmation',
+                  text: "reset done!!!"
+                };
+
+                smtpTransport.sendMail(data, function(err) {
+                  if (!err) {
+                    return res.json({ message: 'Password reset' });
+                  } else {
+                    return done(err);
+                  }
+                });
+              }
+            });
+        
+      } else {
+        return res.status(422).send({
+          message: 'Passwords do not match'
+        });
+      }
+    } else {
+      return res.status(400).send({
+        message: 'Password reset token is invalid or has expired.'
+      });
+    }
+  });
+});
+
+router.get('/reset-password',function(req, res) {
+  return res.sendFile(path.resolve('./reset-password.html'))});
+router.get('/forgot-password',function(req, res) { 
+  return res.sendFile(path.resolve('./forgot-password.html'))});  
 
 module.exports = router;

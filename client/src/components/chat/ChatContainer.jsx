@@ -110,7 +110,7 @@ class Chatty extends React.Component {
             //    socket.emit("readStatus", {convo_id: nextProps.activeThread.convo_id});
             // }
         }
-        if(nextProps.activeThread.unread===true){
+        if(nextProps.activeThread&&nextProps.activeThread.unread){
             console.log("------read: ", nextProps.activeThread);
             socket.emit("unread",{convo_id: nextProps.activeThread.convo_id});
         }

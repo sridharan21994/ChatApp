@@ -93,17 +93,21 @@ class ListExampleMessages extends React.Component {
                                           <MenuItem style={{zIndex: 9999}} onClick={(e)=>this.blockUser(e, contact)}>Block&Delete</MenuItem>
                                         </IconMenu>}
                         primaryText={
-                          <div style={{textAlign:"left"}}>
-                          {contact.name}
-                          {((contact.unread&&contact.lastMessage.receiver_id&&(contact.lastMessage.receiver_id===this.props.userDetail.email))||
-                          (contact.unread&&contact.lastMessage.sender_id&&(contact.lastMessage.sender_id!==this.props.userDetail.email)))
-                          ?"new":""}
+                          <div style={{textAlign: "left"}}>
+                          <span style={{display:"inline-block", width:"240px", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>{contact.name}</span>
+                          <span style={{fontSize:12, float:"right"}}>{contact.lastMessage&&contact.lastMessage.time? moment(contact.lastMessage.time).local().format("hh:mma, DD MMM"): ""}</span>                          
                           </div>
                           }
                         secondaryText={
                           <p style={{textAlign:"left", fontStyle: contact.lastMessage?"normal":"italic"}}>
-                            {contact.lastMessage?contact.lastMessage.text:""}
-                            {contact.lastMessage&&contact.lastMessage.time? moment(contact.lastMessage.time).local().format("hh:mma, DD MMM"): ""}
+                            <span style={{display:"inline-block", width:"300px", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>
+                              {contact.lastMessage?contact.lastMessage.text:""}
+                            </span>
+                            <span className={((contact.unread&&contact.lastMessage.receiver_id&&(contact.lastMessage.receiver_id===this.props.userDetail.email))||
+                              (contact.unread&&contact.lastMessage.sender_id&&(contact.lastMessage.sender_id!==this.props.userDetail.email)))
+                              ?"new-icon":"hide"}>
+                              &nbsp;new&nbsp;
+                            </span>
                           </p>
                         }
                         secondaryTextLines={1}

@@ -63,16 +63,16 @@ const routes = {
         replace('/');
       }
     },
-    {
-      path:'/*',
-      getComponent: (location, callback,replace) => {
-        if (Auth.isUserAuthenticated()) {
-          callback(null, DashboardPage);
-        } else {
-          callback(null, SignUpPage);
-        }
-      }
-    }
+    // {
+    //   path:'/*',
+    //   getComponent: (location, callback,replace) => {
+    //     if (Auth.isUserAuthenticated()) {
+    //       callback(null, DashboardPage);
+    //     } else {
+    //       callback(null, SignUpPage);
+    //     }
+    //   }
+    // }
 
   ]
 };
