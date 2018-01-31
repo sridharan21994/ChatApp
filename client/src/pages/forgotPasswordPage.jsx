@@ -1,70 +1,83 @@
 import React from 'react';
 import axios from 'axios';
-axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+import { Card } from 'material-ui/Card';
+import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField';
 
 class forgotPasswordPage extends React.Component{
    constructor(props){
        super(props);
 
-       state={
+       this.state={
            email: ""
        };
+       this.onChange = this.onChange.bind(this);
+       this.submitForgotPassword = this.submitForgotPassword.bind(this);
    }
 
 
-submitForgotPassword(){
-
-	    function forgotPasswordClicked(event) {
-	        event.preventDefault();
+submitForgotPassword(e){
+            e.preventDefault();
             var data = "email=" + this.state.email;
-            axios.post("/auth/forgot-password",
-            {email:this.state
-            .email})
+            console.log(this.state.email);
+            if(this.state.email){
+            axios.get("/auth/forgot-password",
+            {params:{email:this.state.email},headers:{'Content-type': 'application/x-www-form-urlencoded'}})
             .then(response=>{
+                console.log("response")
                 if(response.status===200){
-                    alert('sucessfully sent');
+                   this.setState({
+                       success: "Link to reset password was sent to your registered email address"
+                   })
                 }else{
+                    this.setState({
+                        error: response.message
+                    })
                     alert('Error', status);
                 }
             })
-            .catch(err=>console.log(err));
+            .catch(err=>{console.log(err);
+              this.setState({
+                  error: err.name
+              })  
+          });
+        }else{
+            this.setState({
+                error: "Field cannot be empty"
+            })
+        }
 
-	        // ajaxCall(data, "http://localhost:3000/auth/forgot-password", function(status, response) {
-	        //     if (status == 200) {
-	        //         alert('successfully sent');
-	        //     } else {
-	        //         alert('Error', status)
-	        //     }
-	        // });
-	    
-
-	    // function ajaxCall(data, url, callback) {
-	    //     var xhttp = new XMLHttpRequest();
-	    //     xhttp.open("POST", url, true);
-	    //     xhttp.onreadystatechange = function() {
-	    //         if (this.readyState == 4) {
-	    //             return callback(this.status, JSON.parse(xhttp.response));
-	    //         }
-	    //     }
-	    //     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	    //     xhttp.send(data);
-	    // }
-   }
 }
 
 onChange(event){
     this.setState({
-        email: event.target.value
+        email: event.target.value,
+        success:"",
+        error:""
     });
 }
 
    render(){
        return(
-                <form>
-                    <label for="email"></label>
-                    <input type="email" onChange={this.onChange.bind(this)}  name="email" required/>
-                    <input type="submit" name="submit" action="/" onSubmit={this.submitForgotPassword.bind(this)} value="Send"/>
+           <Card className="container">
+                <form onSubmit={e=>this.submitForgotPassword(e)}>
+                          {this.state.success && <p className="success-message">{this.state.success}</p>}
+                          {this.state.error && <p className="error-message">{this.state.error}</p>}
+                        <div className="field-line">
+                            <TextField
+                            hintText="Email"
+                            floatingLabelFixed={true}
+                            floatingLabelText="Email"
+                            name="email"
+                            onChange={e=>this.onChange(e)}
+                            value={this.state.email}
+                            />
+                        </div>
+                        <div className="button-line">
+                            <RaisedButton type="submit" label="Submit" primary />
+                        </div>
                 </form>
+           </Card>
        );
    }
 }

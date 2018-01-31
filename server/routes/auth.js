@@ -175,11 +175,11 @@ router.post('/login', (req, res, next) => {
   })(req, res, next);
 });
 
-router.post('/forgot-password', function(req, res) {
+router.get('/forgot-password', function(req, res) {
   async.waterfall([
     function(done) {
       User.findOne({
-        email: req.body.email
+        email: req.query.email
       }).exec(function(err, user) {
         if (user) {
           done(err, user);
@@ -203,7 +203,7 @@ router.post('/forgot-password', function(req, res) {
     function(token, user, done) {
       // var email = 'sridharan.219@gmail.com',
       // pass = 'lushwave21994';
-      var url= 'http://localhost:3000/auth/reset-password?token=' + token;
+      var url= 'http://localhost:3000/reset-password?token=' + token;
       var data = {
         to: "sridharan.213@gmail.com",
         from: email,
@@ -223,17 +223,17 @@ router.post('/forgot-password', function(req, res) {
     return res.status(422).json({ message: err });
   });
 });    
-router.post('/reset-password',function(req, res, next) {
+router.get('/reset-password',function(req, res, next) {
   User.findOne({
-    reset_password_token: req.body.token,
+    reset_password_token: req.query.token,
     reset_password_expires: {
       $gt: Date.now()
     }
   }).exec(function(err, user) {
     if (!err && user) {
-      if (req.body.newPassword === req.body.verifyPassword) {
+      if (req.query.newPassword === req.query.verifyPassword) {
           // user.password = bcrypt.hashSync(req.body.newPassword, 10);
-            user.password = req.body.newPassword;
+            user.password = req.query.newPassword;
 
             user.reset_password_token = undefined;
             user.reset_password_expires = undefined;
@@ -273,9 +273,5 @@ router.post('/reset-password',function(req, res, next) {
   });
 });
 
-router.get('/reset-password',function(req, res) {
-  return res.sendFile(path.resolve('./reset-password.html'))});
-router.get('/forgot-password',function(req, res) { 
-  return res.sendFile(path.resolve('./forgot-password.html'))});  
 
 module.exports = router;

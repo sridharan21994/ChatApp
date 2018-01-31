@@ -1,77 +1,99 @@
 import React from 'react';
 import axios from 'axios';
-axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+import { Card } from 'material-ui/Card';
+import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField';
 
 class resetPasswordPage extends React.Component{
    constructor(props){
        super(props);
 
-       state={
-           email: ""
+       this.state={
+           newPassword: "",
+           verifyPassword: ""       
        };
+       this.onChange = this.onChange.bind(this);
+       this.submitResetPassword = this.submitResetPassword.bind(this);
    }
 
 
-submitForgotPassword(){
-
-	    function forgotPasswordClicked(event) {
-	        event.preventDefault();
-            var data = "email=" + this.state.email;
-            axios.post("/auth/forgot-password",
-            {email:this.state
-            .email})
-            .then(response=>{
+submitResetPassword(e){
+           e.preventDefault();
+          let token = document.location.href.split('token=')[1];
+	      if(this.state.newPassword&&this.state.verifyPassword){
+            axios.get("/auth/reset-password",
+            {params:{token:token, newPassword:this.state.newPassword,verifyPassword:this.state.verifyPassword},headers:{'Content-type': 'application/x-www-form-urlencoded'}})
+             .then(response=>{
+                console.log("response")
                 if(response.status===200){
-                    alert('sucessfully sent');
+                   this.setState({
+                       success: "password is changed successfully!"
+                   })
                 }else{
+                    this.setState({
+                        error: response.message
+                    })
                     alert('Error', status);
                 }
             })
-            .catch(err=>console.log(err));
-
-	        // ajaxCall(data, "http://localhost:3000/auth/forgot-password", function(status, response) {
-	        //     if (status == 200) {
-	        //         alert('successfully sent');
-	        //     } else {
-	        //         alert('Error', status)
-	        //     }
-	        // });
-	    
-
-	    // function ajaxCall(data, url, callback) {
-	    //     var xhttp = new XMLHttpRequest();
-	    //     xhttp.open("POST", url, true);
-	    //     xhttp.onreadystatechange = function() {
-	    //         if (this.readyState == 4) {
-	    //             return callback(this.status, JSON.parse(xhttp.response));
-	    //         }
-	    //     }
-	    //     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	    //     xhttp.send(data);
-	    // }
-   }
+            .catch(err=>{console.log(err);
+              this.setState({
+                  error: err.name
+              })  
+          });
+        }else{
+            this.setState({
+                error: "Field cannot be empty"
+            })
+        }
 }
 
-onChange(event){
+onChange(e){
     this.setState({
-        email: event.target.value
-    });
+        success:"",
+        error:""
+    })
+     if(e.target.name==="newPassword"){
+          this.setState({
+              newPassword: e.target.value
+          })
+     }else if(e.target.name==="verifyPassword"){
+        this.setState({
+            verifyPassword: e.target.value
+        }) 
+     }
 }
-
    render(){
        return(
-                <form>
-                    <label for="email"></label>
-                    <input type="email" onChange={this.onChange.bind(this)}  name="email" required/>
-                    <input type="submit" name="submit" action="/" onSubmit={this.submitForgotPassword.bind(this)} value="Send"/>
-                <form>
-            <label for="newPassword">New Password</label>
-            <input type="text" name="newPassword" id="newPassword" required/>
-            <label for="verifyPassword">Confirm Password</label>
-            <input type="text" name="verifyPassword" id="verifyPassword" required/>
-            <input type="submit" name="submit" id="resetPasswordClickEvt" value="Reset Password"/>
-            </form>
+           <Card className="container">
+                <form onSubmit={e=>this.submitResetPassword(e)}>
+                    {this.state.success && <p className="success-message">{this.state.success}</p>}
+                    {this.state.error && <p className="error-message">{this.state.error}</p>}
+                    <div className="field-line">
+                        <TextField
+                        hintText="New Password"
+                        floatingLabelFixed={true}
+                        floatingLabelText="New Password"
+                        name="newPassword"
+                        onChange={e=>this.onChange(e)}
+                        value={this.state.newPassword}
+                        />
+                    </div>
+                    <div className="field-line">
+                        <TextField
+                        hintText="Confirm New Password"
+                        floatingLabelFixed={true}
+                        floatingLabelText="Confirm New Password"
+                        name="verifyPassword"
+                        onChange={e=>this.onChange(e)}
+                        value={this.state.verifyPassword}
+                        />
+                    </div>
+                    <div className="button-line">
+                            <RaisedButton type="submit" label="Reset Password" primary />
+                    </div>
                 </form>
+            </Card>
        );
    }
 }

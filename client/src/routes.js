@@ -1,6 +1,8 @@
 import Base from './components/Base.jsx';
 import HomePage from './components/HomePage.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
+import forgotPasswordPage from './pages/forgotPasswordPage.jsx';
+import resetPasswordPage from './pages/resetPasswordPage.jsx';
 import ProfilePage from './pages/ProfilePage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import SignUpPage from './pages/SignUpPage.jsx';
@@ -63,16 +65,36 @@ const routes = {
         replace('/');
       }
     },
-    // {
-    //   path:'/*',
-    //   getComponent: (location, callback,replace) => {
-    //     if (Auth.isUserAuthenticated()) {
-    //       callback(null, DashboardPage);
-    //     } else {
-    //       callback(null, SignUpPage);
-    //     }
-    //   }
-    // }
+        {
+      path:'/forgot-password',
+      getComponent: (location, callback,replace) => {
+        if (Auth.isUserAuthenticated()) {
+          callback(null, DashboardPage);
+        } else {
+          callback(null, forgotPasswordPage);
+        }
+      }
+    },
+        {
+      path:'/reset-password',
+      getComponent: (location, callback,replace) => {
+        if (Auth.isUserAuthenticated()) {
+          callback(null, DashboardPage);
+        } else {
+          callback(null, resetPasswordPage);
+        }
+      }
+    },
+    {
+      path:'/*',
+      getComponent: (location, callback,replace) => {
+        if (Auth.isUserAuthenticated()) {
+          callback(null, DashboardPage);
+        } else {
+          callback(null, SignUpPage);
+        }
+      }
+    }
 
   ]
 };

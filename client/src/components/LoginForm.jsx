@@ -47,7 +47,7 @@ const LoginForm = ({
       <div className="button-line">
         <RaisedButton type="submit" label="Log in" primary />
       </div>
-
+        <Link to={'/forgot-password'}>Forgot Password?</Link>
       <CardText>Don't have an account? <Link to={'/signup'}>Create one</Link>.</CardText>
     </form>
   </Card>
