@@ -1,7 +1,7 @@
 {
-  "name": "authentication-in-react-apps",
+  "name": "react-chat-app",
   "version": "1.0.0",
-  "description": "Authentication in React Applications, Part 2: JSON Web Token (JWT)",
+  "description": "React chat App",
   "main": "index.js",
   "scripts": {
     "start": "nodemon --use-strict index.js",
