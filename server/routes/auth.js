@@ -196,7 +196,7 @@ router.get('/forgot-password', function(req, res) {
       });
     },
     function(user, token, done) {
-      User.findByIdAndUpdate({ _id: user._id }, { reset_password_token: token, reset_password_expires: Date.now() + 86400000 }, { upsert: true, new: true }).exec(function(err, new_user) {
+      User.findByIdAndUpdate({ _id: user._id }, { reset_password_token: token, reset_password_expires: Date.now() + 86400000 }, { new: true }).exec(function(err, new_user) {
         done(err, token, new_user);
       });
     },

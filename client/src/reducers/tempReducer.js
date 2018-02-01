@@ -14,13 +14,21 @@ case types.INITIALIZE_USER:
     
 case types.ADD_MESSAGE:
 console.log("reducer add message: ",action.data);
+    for(let i = 0; i<state.contactList.length;i++ ){
+        if(state.contactList[i].convo_id===action.data.convo_id){
+             action.data.newContent= state.contactList[i];
+             action.data.newContent.lastMessage= action.data.message;
+             action.data.newContent.unread= action.data.unread;
+             action.data.newIndex= i;
+             break;
+        }
+    }
+
     return Object.assign({}, state, 
         {threadList: state.threadList.map((content, index)=> (content.convo_id===action.data.convo_id) ? 
         Object.assign({}, content, {message:[...content.message,action.data.message]})
         :content)},
-        {contactList: state.contactList.map((content, index)=> (content.convo_id===action.data.convo_id) ? 
-        Object.assign({}, content, {lastMessage: action.data.message, unread: action.data.unread})
-        :content)});      
+        {contactList: [ action.data.newContent, ...state.contactList.slice(0, action.data.newIndex), ...state.contactList.slice( action.data.newIndex+1)]});      
 
 case types.UPDATE_UNREAD:
     return Object.assign({},state, 
@@ -44,7 +52,7 @@ case types.UPDATE_ACTIVE_THREAD:
     return Object.assign({}, state, {activeThread: action.thread_id});  
     
 case types.PUSH_NEW_THREAD:
-    return Object.assign({}, state, {threadList:[...state.threadList,action.data]});
+    return Object.assign({}, state, {threadList:[action.data, ...state.threadList]});
 
 case types.ADD_BLOCKED_LIST:
     return Object.assign({}, state, {blockedList: [...state.blockedList, action.data]});    

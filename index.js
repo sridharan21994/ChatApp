@@ -203,9 +203,10 @@ console.log("blocked_by: ", socket.decoded.email, data.blocked_by);
                 if (err) {console.log(err);return false;}
             //    console.log(chat);
 
-                User.update({email:{$in:[chat.initiator.sender_id,chat.initiator.receiver_id]}},{$push:{convoList: chat._id}},{multi:true},function(err,user){
+                User.update({email:{$in:[chat.initiator.sender_id,chat.initiator.receiver_id]}},{$push:{convoList: chat._id}},{multi:true,new: true},function(err,user){
                   if(err){console.log(err); return false;}
-console.log("new chat", user.block, user.blocked_by,chat.initiator.sender_id,chat.initiator.receiver_id);
+                  console.log("--------",user);
+                       console.log("new chat", user.block, user.blocked_by,chat.initiator.sender_id,chat.initiator.receiver_id);
                       if((user.block&&user.block.indexOf(chat.initiator.sender_id)!==-1)||
                       (user.block&&user.block.indexOf(chat.initiator.receiver_id)!==-1)||
                       (user.blocked_by&&user.blocked_by.indexOf(chat.initiator.sender_id)!==-1)||
@@ -213,16 +214,19 @@ console.log("new chat", user.block, user.blocked_by,chat.initiator.sender_id,cha
                            console.log("-*-*-* hack true");
                       }
 
-                if(users[i]){
-                console.log("****************emitting new chat: ", {convo_id:chat._id, message:chat.message}," to user: ", users[i]);
-                socket.to(users[i].id).emit("message-received", {convo_id:chat._id,
-                                                                 sender_name: "ANONYMOUS", 
-                                                                 message:chat.message,
-                                                                 lastMessage: chat.message[chat.message.length-1],
-                                                                 unread: chat.unread  
-                                                              });  }                  
+                  if(users[i]){
+                  console.log("****************emitting new chat: ", {convo_id:chat._id, message:chat.message}," to user: ", users[i]);
+                  socket.to(users[i].id).emit("message-received", {convo_id:chat._id,
+                                                                  sender_name: "ANONYMOUS", 
+                                                                  message:chat.message,
+                                                                  lastMessage: chat.message[chat.message.length-1],
+                                                                  unread: chat.unread  
+                                                                });  }                  
                 });
 
+               
+               
+               
                 callback({
                   convo_id: chat._id,
                   receiver_id: chat.initiator.receiver_id,
