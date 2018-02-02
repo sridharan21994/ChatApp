@@ -9,7 +9,8 @@ case types.INITIALIZE_USER:
     return Object.assign({}, state, {userDetail: {"name":action.userDetail.name, "email": action.userDetail.email },
                                      threadList: action.userDetail.threadList,
                                      contactList: action.userDetail.contactList,
-                                     activeThread: action.userDetail.activeThread
+                                     activeThread: action.userDetail.activeThread,
+                                     friendsList: action.userDetail.friendsList
                                     } );
     
 case types.ADD_MESSAGE:
@@ -59,7 +60,11 @@ case types.ADD_BLOCKED_LIST:
 
 case types.REMOVE_BLOCKED_USER:
     return Object.assign({}, state, {contactList: state.contactList.filter((content,index)=>content.convo_id!==action.data.convo_id)},  
-     {threadList: state.threadList.filter((content,index)=>content.convo_id!==action.data.convo_id)});    
+     {threadList: state.threadList.filter((content,index)=>content.convo_id!==action.data.convo_id)});  
+
+case types.ADD_FRIENDSLIST:
+console.log("reducer", action.data);
+     return Object.assign({}, state, {friendsList: action.data});
 
 default:
     return state;

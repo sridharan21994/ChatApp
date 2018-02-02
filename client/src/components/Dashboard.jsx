@@ -3,9 +3,10 @@ import { Card, CardTitle, CardText } from 'material-ui/Card';
 import Chatty from './chat/ChatContainer.jsx';
 import Search from './search/Search.jsx';
 import ListExampleMessages from "./chat/ListExampleMessages.jsx";
-import FbPlugin from './fb/fbPlugin.jsx';
+import FbPlugin from './fb/FbPlugin.jsx';
 import Paper from "material-ui/Paper";
 import TabsControl from './Mobile/TabsControl.jsx';
+import FriendsList from './friends/FriendsList.jsx';
 
 const Dashboard = ({ userData }) => (
     isDesktop?(<div className="dashboard">
@@ -16,6 +17,7 @@ const Dashboard = ({ userData }) => (
           <Chatty  />
       </Paper>
       <FbPlugin/>  
+      <FriendsList/>
     </div>):(
       <div className="dashboard-sm">
         <TabsControl/>

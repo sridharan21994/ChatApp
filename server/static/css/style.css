@@ -210,3 +210,9 @@ a:hover {
     font-weight: 600;
     float: right;
 }
+
+.fb-friends-list{
+  position: fixed;
+  right: 0;
+  bottom: 22px;
+}

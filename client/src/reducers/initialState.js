@@ -4,5 +4,6 @@ export default {
     contactList:[],
     activeThread: {},
     threadList:[],
-    blockedList: []
+    blockedList: [],
+    friendsList: []
 };

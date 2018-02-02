@@ -1,9 +1,15 @@
 import React from 'react';
 import {Facebook, FacebookApiException} from 'fb';
 var fb = new Facebook();
+import axios from "axios";
+import Auth from '../../modules/Auth';
+import { connect } from "react-redux";
+import * as actions from "../../actions/actions.js";
+import { bindActionCreators } from "redux";
 
 // FB.options({version: 'v2.4'}); var fooApp = FB.extend({appId:
 // '699842020201353', appSecret: 'e660c421be3ee1b4fe036286ce651fc3'});
+
 
 class FbPlugin extends React.Component {
     constructor(props) {
@@ -14,8 +20,18 @@ class FbPlugin extends React.Component {
         FB.api('/me', { access_token },function (response) {
             console.log('Successful login for: ' + response.name, response);
         });
-        FB.api('/me/picture', 'GET', {height: 99999}, function(response){
-            console.log("friends list: ", response);
+        FB.api('/me?fields=friends,picture', 'GET', {height: 99999}, function(response){
+            console.log("fb info list: ", response);
+           var data= {friendsList: response.friends.data, id:response.id, picUrl:response.picture.data.url};
+           this.props.actions.addFriendsList(data.friendsList);
+           axios.post("/api/fb-info",data,{headers:{'Content-type': 'application/json','Authorization': `bearer ${Auth.getToken()}`}})
+               .then(response=>{
+                    console.log("success fb info");
+               })
+               .catch(err=>{console.log("err")});
+        }.bind(this));
+        FB.api('/100001442496884?fields=picture', 'GET', {height: 99999}, function(response){
+            console.log("photos: ", response);
         });
     }
 
@@ -31,6 +47,7 @@ class FbPlugin extends React.Component {
             FB.login(function(response){
                 if(response.status=== "connected"){
                    this.testAPI(response.authResponse.accessToken);
+                   console.log(response);
                 }
             }.bind(this),{scope: 'public_profile,email,user_friends,publish_actions'});
         }
@@ -126,4 +143,14 @@ class FbPlugin extends React.Component {
     }
 
 }
-export default FbPlugin;
+function mapStateToProps(state, ownProps) {
+        return {
+            friendsList: state.myStore.friendsList
+        }
+}
+function mapDispatchToProps(dispatch) {
+    return {
+        actions: bindActionCreators(actions, dispatch)
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(FbPlugin);

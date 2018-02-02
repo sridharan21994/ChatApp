@@ -81,6 +81,7 @@ class ListExampleMessages extends React.Component {
   render(){
   
    var renderList = function(contact,i){
+          
             return (<ListItem
                         key={i}
                         onClick={(e)=>this.openThread(e,contact)} 

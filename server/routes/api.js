@@ -7,6 +7,15 @@ const bcrypt = require('bcrypt');
 const sample = require("../sampleData");
 const router = new express.Router();
 var mongoose = require("mongoose");
+ 
+
+router.post("/fb-info",(req,res)=>{
+         console.log(res.locals.user.email, req.body.friendsList);
+         User.findOneAndUpdate({email: res.locals.user.email}, {fb_details: req.body},function(err,value){
+           if(err){console.log("fb error",err.name); return res.status(400).end();}
+           res.send({status:"ok"});
+         })
+});
 
 router.get("/search",(req,res)=>{ 
     var patt = new RegExp("^"+req.query.query);
@@ -22,8 +31,9 @@ router.get("/search",(req,res)=>{
       blockers=[res.locals.user.email];
     }
   //  blockers=[res.locals.user.email];
-    User.find( { name: { $regex: patt, $options: "i"  }, email: { $nin: blockers } },{_id:0,password:0,__v:0, convoList:0},(err,value)=>{
+    User.find( { name: { $regex: patt, $options: "i"  }, email: { $nin: blockers } },{name:1,email:1},(err,value)=>{
       if(err) { return res.status(401).end(); }
+   //   console.log(value);
       return res.status(200).json({result:value});
     } );
 });
@@ -65,7 +75,8 @@ router.get('/dashboard', (req, res) => {
         name: user.name,
         email: user.email,
         threadList: [],
-        contactList:[]
+        contactList:[],
+        friendsList: (user.fb_details&&user.fb_details.friendsList)?user.fb_details.friendsList:[]
       });
       }else if(user.convoList.length>0){
          Chat.find({_id:{$in:user.convoList}},{ __v:0},function(err, data){
@@ -91,14 +102,15 @@ router.get('/dashboard', (req, res) => {
                                                           lastMessage,
                                                           unread: content.unread});      
                                       }
-                                      
+                                       
                                       });
  //console.log("dashboard data",{name: user.name,email: user.email,threadList: threadList,contactList: contactList});
            return res.status(200).json({
               name: user.name,
               email: user.email,
               threadList: threadList,
-              contactList: contactList
+              contactList: contactList,
+              friendsList: (user.fb_details&&user.fb_details.friendsList)?user.fb_details.friendsList:[]
             });
          })
       }  
