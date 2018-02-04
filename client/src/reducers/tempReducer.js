@@ -6,7 +6,7 @@ switch(action.type){
 
 case types.INITIALIZE_USER:
     console.log("init reducer ", action.userDetail);  
-    return Object.assign({}, state, {userDetail: {"name":action.userDetail.name, "email": action.userDetail.email },
+    return Object.assign({}, state, {userDetail: {"name":action.userDetail.name, "email": action.userDetail.email,"fb_details":action.userDetail.fb_details },
                                      threadList: action.userDetail.threadList,
                                      contactList: action.userDetail.contactList,
                                      activeThread: action.userDetail.activeThread,
@@ -50,7 +50,7 @@ case types.UPDATE_CONTACT_CONVO_ID:
     });
 
 case types.UPDATE_ACTIVE_THREAD:
-    return Object.assign({}, state, {activeThread: action.thread_id});  
+    return Object.assign({}, state, {activeThread: action.data});  
     
 case types.PUSH_NEW_THREAD:
     return Object.assign({}, state, {threadList:[action.data, ...state.threadList]});
@@ -65,6 +65,12 @@ case types.REMOVE_BLOCKED_USER:
 case types.ADD_FRIENDSLIST:
 console.log("reducer", action.data);
      return Object.assign({}, state, {friendsList: action.data});
+
+case types.NEW_FB_THREAD:
+    return Object.assign({}, state, {contactList: state.contactList.map((content,index)=>(content.fb_id===action.data.fb_id)?
+    Object.assign({}, content, action.data )
+    :content)
+    });
 
 default:
     return state;

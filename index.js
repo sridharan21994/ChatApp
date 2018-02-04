@@ -179,7 +179,9 @@ console.log("blocked_by: ", socket.decoded.email, data.blocked_by);
               });
 
             } else {
-               for(var i=0; i < users.length; i++){
+            
+          function execute(){
+             for(var i=0; i < users.length; i++){
                       if(users[i].email === data.message.receiver_id){
                         break;
                       }
@@ -188,14 +190,17 @@ console.log("blocked_by: ", socket.decoded.email, data.blocked_by);
                 message: {
                    receiver_id: data.message.receiver_id,
                    text: data.message.text,
-                   time: data.message.time,
-                   unread: data.message.unread
+                   time: data.message.time
                 },
                 initiator: {
                   sender_id: socket.decoded.email,
                   sender_name: socket.decoded.name,
                   receiver_id: data.message.receiver_id,
                   receiver_name: data.message.receiver_name
+                },
+                unread: data.message.unread,
+                fb_details:{
+                  receiver_id: data.fb_id?data.fb_id:undefined
                 }
               });
 
@@ -230,9 +235,27 @@ console.log("blocked_by: ", socket.decoded.email, data.blocked_by);
                 callback({
                   convo_id: chat._id,
                   receiver_id: chat.initiator.receiver_id,
-                  lastMessage: chat.message[chat.message.length-1]
+                  lastMessage: chat.message[chat.message.length-1],
+                  fb_id: data.fb_id
                 });
               });
+          }
+
+
+
+
+             if(data.fb_id){
+            User.findOne({"fb_details.id" : data.fb_id},function(err,user){
+                 if(err){console.log(err); return false;}
+                 console.log(user);
+                 data.message.receiver_id = user.email;
+                //  data.message.receiver_name = user.name;
+                 execute();
+            })}else{
+              execute();
+            }
+
+              
             }
           });
 });

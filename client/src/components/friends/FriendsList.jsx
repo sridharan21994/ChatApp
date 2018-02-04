@@ -6,7 +6,6 @@ import Avatar from 'material-ui/Avatar';
 import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import Divider from 'material-ui/Divider';
-import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
 
 class FriendsList extends React.Component {
 constructor(props){
@@ -14,6 +13,7 @@ constructor(props){
     this.state={
         refresh: false
     }
+    this.listItemClicked = this.listItemClicked.bind(this);
 }
 
 componentWillReceiveProps(nextProps){
@@ -24,14 +24,22 @@ componentWillReceiveProps(nextProps){
        }
 }
 
+listItemClicked(e, friend){
+       console.log("***********list item " , friend );
+       if(!this.props.contactList.find(list=>list.fb_id===friend.id)){
+            this.props.actions.addContactList({fb_id: friend.id, name:friend.name, image:"https://graph.facebook.com/"+friend.id+"/picture", fb: true });
+            this.props.actions.updateActiveThread({name: friend.name, email:"",fb_id: friend.id, clicked: false});
+       }
+     }
+
 render() {
        var renderList = function(friend,i){
               return(
               <ListItem
                 key={i}
+                onMouseDown ={(e) => this.listItemClicked(e, friend)}
                 primaryText={friend.name}
                 leftAvatar={<Avatar alt={friend.name.charAt(0)+friend.name.charAt(friend.name.indexOf(" ")+1)} src={"https://graph.facebook.com/"+friend.id+"/picture"} />}
-                rightIcon={<CommunicationChatBubble />}
             />
         )
          
@@ -47,7 +55,8 @@ render() {
 function mapStateToProps(state, ownProps) {
     console.log("dom", state.myStore)
         return {
-            friendsList: state.myStore.friendsList
+            friendsList: state.myStore.friendsList,
+            contactList: state.myStore.contactList
         }
 }
 function mapDispatchToProps(dispatch) {

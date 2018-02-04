@@ -74,14 +74,13 @@ router.get('/dashboard', (req, res) => {
         return res.status(200).json({
         name: user.name,
         email: user.email,
+        fb_details: user.fb_details,
         threadList: [],
-        contactList:[],
-        friendsList: (user.fb_details&&user.fb_details.friendsList)?user.fb_details.friendsList:[]
+        contactList:[]
       });
       }else if(user.convoList.length>0){
          Chat.find({_id:{$in:user.convoList}},{ __v:0},function(err, data){
            if(err){console.log("error in dashboard: ", err.name); return res.status(401).end();}
-
            
            let contactList=[];
            let threadList=[];
@@ -93,6 +92,7 @@ router.get('/dashboard', (req, res) => {
                                         contactList.push({convo_id: content._id, 
                                                           name:content.initiator.receiver_name,
                                                           email:content.initiator.receiver_id,
+                                                          fb_id: (content.fb_details&&content.fb_details.receiver_id)?content.fb_details.receiver_id:"",
                                                           lastMessage,
                                                           unread: content.unread});
                                       }else{
@@ -108,9 +108,9 @@ router.get('/dashboard', (req, res) => {
            return res.status(200).json({
               name: user.name,
               email: user.email,
+              fb_details: user.fb_details,
               threadList: threadList,
-              contactList: contactList,
-              friendsList: (user.fb_details&&user.fb_details.friendsList)?user.fb_details.friendsList:[]
+              contactList: contactList
             });
          })
       }  

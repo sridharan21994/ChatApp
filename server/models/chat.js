@@ -4,8 +4,7 @@ const mongoose = require('mongoose');
 const ChatSchema = new mongoose.Schema({
   message:Array,
   initiator: Object,
-  block: Array,
-  blocked_by: Array,
+  fb_details: Object,
   unread: Boolean
 });
 

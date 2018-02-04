@@ -102,7 +102,7 @@ a:hover {
   display: inline-block;
   vertical-align: text-top;
   position: relative;
-  z-index: 9;
+  z-index: 10;
 }
 
 .chatty{

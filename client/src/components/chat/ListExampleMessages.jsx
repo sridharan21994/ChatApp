@@ -81,7 +81,7 @@ class ListExampleMessages extends React.Component {
   render(){
   
    var renderList = function(contact,i){
-          
+           (contact.fb_id||contact.email==="ANONYMOUS") ? contact.image = "https://graph.facebook.com/"+contact.fb_id+"/picture":"";
             return (<ListItem
                         key={i}
                         onClick={(e)=>this.openThread(e,contact)} 
@@ -118,7 +118,9 @@ return (
 <div>
       <List>
         {/* <Subheader>LIST</Subheader> */}
-        {this.props.contactList&&this.props.contactList.map(renderList,this)}
+        {this.props.contactList.length?
+        this.props.contactList.map(renderList,this)
+        :"You don't have any conversation to show... Please start a new conversation by adding your Facebook account..."}
          {/* <Divider inset={true} />  */}
       </List>
   </div>);

@@ -15,8 +15,15 @@ export function initializeUser(userDetail){
         }else{
             userDetail.activeThread={};
         }
+    }else{
+    userDetail.activeThread={};
     }
-
+    if(userDetail.fb_details&&userDetail.fb_details.friendsList){
+        userDetail.friendsList=userDetail.fb_details.friendsList;
+        delete userDetail.fb_details.friendsList;
+    }else{
+        userDetail.friendsList=[];
+    }
     return { type: types.INITIALIZE_USER, userDetail };
 }
 
@@ -32,8 +39,8 @@ export function updateContactConvoId(data){
     return { type: types.UPDATE_CONTACT_CONVO_ID, data }    
 }
 
-export function updateActiveThread(thread_id){
-    return { type: types.UPDATE_ACTIVE_THREAD, thread_id};
+export function updateActiveThread(data){
+    return { type: types.UPDATE_ACTIVE_THREAD, data};
 }
 
 export function addMessage(data){
@@ -59,6 +66,10 @@ export function removeBlockedUser(data){
 
 export function addFriendsList(data){
     return { type: types.ADD_FRIENDSLIST, data }
+}
+
+export function newFbThread(data){
+    return { type: types.NEW_FB_THREAD, data }
 }
 
 // export function loadPage(){

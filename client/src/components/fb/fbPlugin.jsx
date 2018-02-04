@@ -20,9 +20,9 @@ class FbPlugin extends React.Component {
         FB.api('/me', { access_token },function (response) {
             console.log('Successful login for: ' + response.name, response);
         });
-        FB.api('/me?fields=friends,picture', 'GET', {height: 99999}, function(response){
+        FB.api('/me?fields=friends,picture,name', 'GET', {height: 99999}, function(response){
             console.log("fb info list: ", response);
-           var data= {friendsList: response.friends.data, id:response.id, picUrl:response.picture.data.url};
+           var data= {friendsList: response.friends.data, id:response.id, name:response.name, picUrl:response.picture.data.url};
            this.props.actions.addFriendsList(data.friendsList);
            axios.post("/api/fb-info",data,{headers:{'Content-type': 'application/json','Authorization': `bearer ${Auth.getToken()}`}})
                .then(response=>{
@@ -30,9 +30,9 @@ class FbPlugin extends React.Component {
                })
                .catch(err=>{console.log("err")});
         }.bind(this));
-        FB.api('/100001442496884?fields=picture', 'GET', {height: 99999}, function(response){
-            console.log("photos: ", response);
-        });
+        // FB.api('/100001442496884?fields=picture', 'GET', {height: 99999}, function(response){
+        //     console.log("photos: ", response);
+        // });
     }
 
     statusChangeCallback(response) {
