@@ -71,9 +71,10 @@ class Search extends React.Component {
   render() {
 
         var renderList = function(list,i){
-            if(list.fb_details&&list.fb_details.name){
-              list.name = list.fb_details.name;
-            }
+            // if(list.fb_details&&list.fb_details.name){
+              
+            //   list.name = list.fb_details.name;
+            // }
             if(list.fb_details&&list.fb_details.id){
               list.fb_id = list.fb_details.id;
             }

@@ -11,7 +11,7 @@ var mongoose = require("mongoose");
 
 router.post("/fb-info",(req,res)=>{
          console.log(res.locals.user.email, req.body.friendsList);
-         User.findOneAndUpdate({email: res.locals.user.email}, {fb_details: req.body},function(err,value){
+         User.findOneAndUpdate({email: res.locals.user.email}, {name: req.body.name,fb_details: req.body},function(err,value){
            if(err){console.log("fb error",err.name); return res.status(400).end();}
            res.send({status:"ok"});
          })
@@ -31,7 +31,7 @@ router.get("/search",(req,res)=>{
       blockers=[res.locals.user.email];
     }
   //  blockers=[res.locals.user.email];
-    User.find( { $or :[{ name: { $regex: patt, $options: "i"  }},{"fb_details.name": { $regex: patt, $options: "i"  }}], email: { $nin: blockers } },{name:1,email:1, "fb_details.id":1,"fb_details.name":1 },(err,value)=>{
+    User.find( { name: { $regex: patt, $options: "i"  }, email: { $nin: blockers } },{name:1,email:1, "fb_details.id":1,"fb_details.name":1 },(err,value)=>{
       if(err) { return res.status(401).end(); }
    //   console.log(value);
       return res.status(200).json({result:value});
