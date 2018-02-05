@@ -78,8 +78,8 @@ a:hover {
 
 
 .containerText{
-    border-radius: 5px;
-    background-color: #f1f1f1;
+    border-radius: 10px 10px 1px 10px;
+    background-color: #dedede;
     width: max-content;
     max-width: 400px;
     line-height: 30px;
@@ -88,8 +88,10 @@ a:hover {
     float: right;
     margin: 1px 5px;
     margin-left: 100%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 .other-user{
+    border-radius: 10px 10px 10px 1px;
     text-align: left;
     float: left;
     border: 1px solid #f1f1f1;
@@ -112,7 +114,7 @@ a:hover {
 .chatty-sm{
   position: absolute;
   top: 0;
-  z-index: 9;
+  z-index: 9999;
   width: 100%;
   background: #fff;
 }
@@ -161,12 +163,14 @@ a:hover {
   outline: 1px solid slategrey;
 }*/
 .message-ul-list::-webkit-scrollbar,
-.name-list-item::-webkit-scrollbar {
+.name-list-item::-webkit-scrollbar,
+.fb-friends-list::-webkit-scrollbar  {
     width: 5px;
     background-color: #FFFFFF;
 } 
 .message-ul-list::-webkit-scrollbar-thumb ,
-.name-list-item::-webkit-scrollbar-thumb {
+.name-list-item::-webkit-scrollbar-thumb,
+.fb-friends-list::-webkit-scrollbar-thumb {
     background-color: #dedede;
 }
 
@@ -212,7 +216,25 @@ a:hover {
 }
 
 .fb-friends-list{
+  border: 1px solid #dedede;
   position: fixed;
   right: 0;
   bottom: 22px;
+  max-height: 300px;
+  max-width: 250px;
+  overflow-y: scroll;
+}
+
+.friends-name{
+    display: inline-block;
+    width: 170px;
+    max-width: 170px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: left;
+}
+
+.highlight{
+  background-color: #dedede !important;
 }

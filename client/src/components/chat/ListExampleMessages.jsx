@@ -57,7 +57,7 @@ class ListExampleMessages extends React.Component {
     //  }else{
        contact.clicked = true;
        this.props.actions.updateActiveThread(contact);
-       this.props.actions.updateUnread({convo_id:contact.convo_id})
+       this.props.actions.updateUnread({convo_id:contact.convo_id});
      //}
   }
 
@@ -84,6 +84,7 @@ class ListExampleMessages extends React.Component {
            (contact.fb_id||contact.email==="ANONYMOUS") ? contact.image = "https://graph.facebook.com/"+contact.fb_id+"/picture":"";
             return (<ListItem
                         key={i}
+                        className={(isDesktop)&&((this.props.activeThread.convo_id&&(this.props.activeThread.convo_id===contact.convo_id))||((contact.email!=="ANONYMOUS")&&this.props.activeThread.email&&(this.props.activeThread.email===contact.email))||(this.props.activeThread.fb_id&&(this.props.activeThread.fb_id===contact.fb_id)))?"highlight":""}
                         onClick={(e)=>this.openThread(e,contact)} 
                         leftAvatar={contact.image?
                           <Avatar alt={contact.name.charAt(0)+contact.name.charAt(contact.name.indexOf(" ")+1)} src={contact.image} />
@@ -91,7 +92,7 @@ class ListExampleMessages extends React.Component {
                           }
                         rightIconButton={<IconMenu iconButtonElement={iconButtonElement}>
                                           <MenuItem>Report</MenuItem>
-                                          <MenuItem style={{zIndex: 9999}} onClick={(e)=>this.blockUser(e, contact)}>Block&Delete</MenuItem>
+                                          <MenuItem style={{zIndex: 99}} onClick={(e)=>this.blockUser(e, contact)}>Block&Delete</MenuItem>
                                         </IconMenu>}
                         primaryText={
                           <div style={{textAlign: "left"}}>
@@ -130,7 +131,7 @@ return (
 function mapStateToProps(state, ownProps){
    return {
      contactList: state.myStore.contactList,
-     threadList: state.myStore.threadList,
+     activeThread: state.myStore.activeThread,
      userDetail: state.myStore.userDetail
    }
 }

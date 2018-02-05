@@ -31,7 +31,7 @@ router.get("/search",(req,res)=>{
       blockers=[res.locals.user.email];
     }
   //  blockers=[res.locals.user.email];
-    User.find( { name: { $regex: patt, $options: "i"  }, email: { $nin: blockers } },{name:1,email:1},(err,value)=>{
+    User.find( { $or :[{ name: { $regex: patt, $options: "i"  }},{"fb_details.name": { $regex: patt, $options: "i"  }}], email: { $nin: blockers } },{name:1,email:1, "fb_details.id":1,"fb_details.name":1 },(err,value)=>{
       if(err) { return res.status(401).end(); }
    //   console.log(value);
       return res.status(200).json({result:value});

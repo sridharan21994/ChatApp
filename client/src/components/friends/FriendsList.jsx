@@ -38,7 +38,7 @@ render() {
               <ListItem
                 key={i}
                 onMouseDown ={(e) => this.listItemClicked(e, friend)}
-                primaryText={friend.name}
+                primaryText={<span className="friends-name">{friend.name}</span>}
                 leftAvatar={<Avatar alt={friend.name.charAt(0)+friend.name.charAt(friend.name.indexOf(" ")+1)} src={"https://graph.facebook.com/"+friend.id+"/picture"} />}
             />
         )

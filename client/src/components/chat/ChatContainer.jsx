@@ -153,11 +153,23 @@ class Chatty extends React.Component {
         if((this.props.activeThread.email&&message.text)||(this.props.activeThread.fb_id&&message.text)){
           
         if (this.props.activeThread.convo_id) {
-         let packet={
+         let packet = {};
+           if(this.props.activeThread.email==="ANONYMOUS"){
+             packet={
+                    sender_id: this.props.userDetail.email,
                     text: message.text,
                     time: moment().utc().format(),
                     unread: true
             }
+           }else{
+             packet={
+                    receiver_id: this.props.activeThread.email,
+                    text: message.text,
+                    time: moment().utc().format(),
+                    unread: true
+            }
+           }
+            
             console.log("emitting OLD socket message: ", {convo_id: this.props.activeThread.convo_id, message: packet});
             socket.emit('send-message', {
                 convo_id: this.props.activeThread.convo_id, message: packet

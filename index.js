@@ -24,7 +24,7 @@ mongoose.connection.on('error', (err) => {
 require('./server/models/user');
 require("./server/models/chat");
 
-const User = require('mongoose').model('User');
+const User = require('mongoose').model('User'); 
 const Chat = require('mongoose').model('Chat');
 
 

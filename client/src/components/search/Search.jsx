@@ -6,7 +6,6 @@ import { bindActionCreators } from "redux";
 import axios from "axios";
 import Avatar from 'material-ui/Avatar';
 import {List, ListItem} from 'material-ui/List';
-import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
 import TextField from 'material-ui/TextField';
 import Card from "material-ui/Card";
 
@@ -51,16 +50,16 @@ class Search extends React.Component {
     }
 
 
-    insideIconClicked(e,listItem){
-      e.stopPropagation();
-      console.log("**********inside icon ",  listItem );
-    }
+    // insideIconClicked(e,listItem){
+    //   e.stopPropagation();
+    //   console.log("**********inside icon ",  listItem );
+    // }
 
      listItemClicked(e, listItem){
        console.log("***********list item " , listItem );
        if(!this.props.contactList.find(list=>list.email===listItem.email)){
             this.props.actions.addContactList(listItem);
-            this.props.actions.updateActiveThread({name: listItem.name, email:listItem.email, clicked: false});
+            this.props.actions.updateActiveThread({name: listItem.name, email:listItem.email, fb_id:listItem.fb_id, clicked: false});
        }
      }
 
@@ -72,14 +71,21 @@ class Search extends React.Component {
   render() {
 
         var renderList = function(list,i){
+            if(list.fb_details&&list.fb_details.name){
+              list.name = list.fb_details.name;
+            }
+            if(list.fb_details&&list.fb_details.id){
+              list.fb_id = list.fb_details.id;
+            }
+            delete list.fb_details;
             return <ListItem key={i} 
                 id="listId"
+                leftAvatar={list.fb_id?
+                          <Avatar alt={list.name.charAt(0)+list.name.charAt(list.name.indexOf(" ")+1)} src={"https://graph.facebook.com/"+list.fb_id+"/picture"} />
+                          :<Avatar>{list.name.charAt(0)+list.name.charAt(list.name.indexOf(" ")+1)}</Avatar>
+                          }                
                 primaryText={list.name}
                 onMouseDown ={(e) => this.listItemClicked(e, list)}
-                rightIcon={
-                <div style={{margin:0,padding:12}} onMouseDown ={(e) => this.insideIconClicked(e, list)}>
-              <CommunicationChatBubble/>
-              </div>}
               />
        }
 
