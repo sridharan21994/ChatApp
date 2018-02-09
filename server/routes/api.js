@@ -11,7 +11,7 @@ var mongoose = require("mongoose");
 
 router.post("/fb-info",(req,res)=>{
          console.log(res.locals.user.email, req.body.friendsList);
-         User.findOneAndUpdate({email: res.locals.user.email}, {name: req.body.name,fb_details: req.body},function(err,value){
+         User.findOneAndUpdate({email: res.locals.user.email}, {name: req.body.name, fb_details: req.body},function(err,value){
            if(err){console.log("fb error",err.name); return res.status(400).end();}
            res.send({status:"ok"});
          })

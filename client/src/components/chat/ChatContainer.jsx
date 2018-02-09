@@ -307,11 +307,11 @@ class Chatty extends React.Component {
     }
 
     render() {
-
+ 
         return (
             isDesktop?(<div className="chatty">
                     <MessageList thread={this.findThread(this.props.activeThread,this.props.threadList)} />
-                   {this.props.threadList.length?
+                   {this.props.contactList.length?
                    <MessageForm className="input-form" submitfnc={this.handleMessageSubmit} buffer={this.state.buffer}/>
                    :""}
                 </div>
@@ -335,7 +335,8 @@ function mapStateToProps(state, ownProps) {
             activeThread: state.myStore.activeThread,
             userDetail: state.myStore.userDetail,
             threadList: state.myStore.threadList,
-            blockedList: state.myStore.blockedList
+            blockedList: state.myStore.blockedList,
+            contactList: state.myStore.contactList
         }
 }
 function mapDispatchToProps(dispatch) {

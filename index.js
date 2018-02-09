@@ -8,7 +8,8 @@ var io = require('socket.io')(server);
 // var socketioJwt   = require("socketio-jwt");
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
-var users=[];
+// var users=[];
+var clients={};
 
 mongoose.connect(config.dbUri);
 // plug in the promise library:
@@ -48,7 +49,7 @@ io.use(function (socket, next) {
           return next(new Error('Authentication error'));
         }
         socket.decoded = user;
-        // console.log(user);
+       // console.log("decoded: ",user);
         return next();
       });
     });
@@ -60,24 +61,35 @@ io.use(function (socket, next) {
 io.on('connection', function (socket,user) {
       //   console.log("socket connected: ", socket.id);
          console.log('socket authenticated user: ', socket.decoded.email);
+         clients[socket.decoded.email] = {
+              "socket": socket.id
+            };
 
-            users.unshift({
-                    id : socket.id,
-                    email : socket.decoded.email
-                  });
+            // users.unshift({
+            //         id : socket.id,
+            //         email : socket.decoded.email
+            //       });
                   // let len = users.length;
                   // len--;
-      console.log("connected users list: ",users);
+      console.log("connected users list: ",clients);
               // 	io.emit('userList', users, users[len].id); 
 
         socket.on('disconnect',()=>{
-		      	for(let i=0; i < users.length; i++){
-		        	if(users[i].id === socket.id){
-               users.splice(i,1);  
-               break;
-              }     
-            }
-        console.log("disconnected and connected users list: ",users);            
+
+           for(var name in clients) {
+                if(clients[name].socket === socket.id) {
+                  delete clients[name];
+                  break;
+                }
+              }	
+
+		      	// for(let i=0; i < users.length; i++){
+		        // 	if(users[i].id === socket.id){
+            //    users.splice(i,1);  
+            //    break;
+            //   }     
+            // }
+        console.log("disconnected removed and updated users list: ",clients);            
         });
               
         socket.on("block-user", function(data,callback){ 
@@ -91,24 +103,34 @@ console.log("blocked_by: ", socket.decoded.email, data.blocked_by);
           //          console.log("after ", chat.initiator);
                     if(chat.initiator.sender_id===data.blocked_by){
                             data.block= chat.initiator.receiver_id;
-                        for(let i=0; i < users.length; i++){
-                                  if(users[i].email === data.block){
-              //                    console.log("youareblocked : ", data.block)
-                                  socket.to(users[i].id).emit("youareblocked", 
+
+                            if(clients[data.block]){
+                              socket.to(clients[data.block].socket).emit("youareblocked", 
                                     {convo_id: data.convo_id});
-                                  break;
-                                  }
-                        }                              
+                            }
+              //           for(let i=0; i < users.length; i++){
+              //                     if(users[i].email === data.block){
+              // //                    console.log("youareblocked : ", data.block)
+              //                     socket.to(users[i].id).emit("youareblocked", 
+              //                       {convo_id: data.convo_id});
+              //                     break;
+              //                     }
+              //           }                              
                     }else if(chat.initiator.receiver_id===data.blocked_by){
                             data.block= chat.initiator.sender_id;
-                        for(let i=0; i < users.length; i++){
-                                  if(users[i].email === data.block){
-         //                         console.log("youareblocked : ", data.block)
-                                  socket.to(users[i].id).emit("youareblocked", 
-                                  {convo_id: data.convo_id});
-                                  break;
-                                  }
-                        }                              
+
+                            if(clients[data.block]){
+                              socket.to(clients[data.block].socket).emit("youareblocked", 
+                                     {convo_id: data.convo_id});
+                            }
+        //                 for(let i=0; i < users.length; i++){
+        //                           if(users[i].email === data.block){
+        //  //                         console.log("youareblocked : ", data.block)
+        //                           socket.to(users[i].id).emit("youareblocked", 
+        //                           {convo_id: data.convo_id});
+        //                           break;
+        //                           }
+        //                 }                              
                     }
       //           console.log("-----------", data.block,chat.initiator.blocked_by, typeof data.block, typeof chat.initiator.blocked_by, data.convo_id);
 
@@ -154,26 +176,33 @@ console.log("blocked_by: ", socket.decoded.email, data.blocked_by);
                   if(socket.decoded.email===value.initiator.sender_id){
                       Chat.findOneAndUpdate({_id: data.convo_id}, {unread: data.message.unread, $push: {message: {receiver_id: value.initiator.receiver_id , text: data.message.text, time: data.message.time}}}, 
                         function (err, chat) {if(err){console.log(err);return false;}
-
-                          for(let i=0; i < users.length; i++){
-                            if(users[i].email === value.initiator.receiver_id){
-                              console.log("****************emitting old chat", {convo_id:chat._id, message: {receiver_id: value.initiator.receiver_id , text: data.message.text}}, "to user: ", users[i]);
-                                socket.to(users[i].id).emit("message-received", {convo_id:chat._id, message: {receiver_id: value.initiator.receiver_id , text: data.message.text, time: data.message.time, unread: data.message.unread}});
-                                break;
-                            }
+                       
+         console.log("****************emitting old chat", value.initiator.receiver_id );
+                       if (clients[value.initiator.receiver_id]){
+                                socket.to(clients[value.initiator.receiver_id].socket).emit("message-received", {convo_id:chat._id, message: {receiver_id: value.initiator.receiver_id , text: data.message.text, time: data.message.time, unread: data.message.unread}});
                           }
+                          // for(let i=0; i < users.length; i++){
+                          //   if(users[i].email === value.initiator.receiver_id){
+                          //     console.log("****************emitting old chat", {convo_id:chat._id, message: {receiver_id: value.initiator.receiver_id , text: data.message.text}}, "to user: ", users[i]);
+                          //       socket.to(users[i].id).emit("message-received", {convo_id:chat._id, message: {receiver_id: value.initiator.receiver_id , text: data.message.text, time: data.message.time, unread: data.message.unread}});
+                          //       break;
+                          //   }
+                          // }
                         });
                   }else if(socket.decoded.email===value.initiator.receiver_id){
                       Chat.findOneAndUpdate({_id: data.convo_id}, {unread: data.message.unread, $push: {message: {sender_id: value.initiator.receiver_id , text: data.message.text, time: data.message.time}}}, 
                         function (err, chat) {if(err){console.log(err);return false;}
-                           
-                           for(let i=0; i < users.length; i++){
-                            if(users[i].email === value.initiator.sender_id){
-                              console.log("****************emitting old chat", {convo_id:chat._id, message: {sender_id: value.initiator.receiver_id , text: data.message.text}}, "to user: ", users[i]);
-                                socket.to(users[i].id).emit("message-received", {convo_id:chat._id, message: {sender_id: value.initiator.receiver_id , text: data.message.text, time: data.message.time, unread: data.message.unread}});
-                                break;
-                            }
+                           console.log("****************emitting old chat", value.initiator.sender_id );
+                            if (clients[value.initiator.sender_id]){
+                       socket.to(clients[value.initiator.sender_id].socket).emit("message-received", {convo_id:chat._id, message: {sender_id: value.initiator.receiver_id , text: data.message.text, time: data.message.time, unread: data.message.unread}});
                           }
+                          //  for(let i=0; i < users.length; i++){
+                          //   if(users[i].email === value.initiator.sender_id){
+                          //     console.log("****************emitting old chat", {convo_id:chat._id, message: {sender_id: value.initiator.receiver_id , text: data.message.text}}, "to user: ", users[i]);
+                          //       socket.to(users[i].id).emit("message-received", {convo_id:chat._id, message: {sender_id: value.initiator.receiver_id , text: data.message.text, time: data.message.time, unread: data.message.unread}});
+                          //       break;
+                          //   }
+                          // }
                         });
                   }
               });
@@ -181,11 +210,11 @@ console.log("blocked_by: ", socket.decoded.email, data.blocked_by);
             } else {
             
           function execute(){
-             for(var i=0; i < users.length; i++){
-                      if(users[i].email === data.message.receiver_id){
-                        break;
-                      }
-              }
+            //  for(var i=0; i < users.length; i++){
+            //           if(users[i].email === data.message.receiver_id){
+            //             break;
+            //           }
+            //   }
               var newChat = new Chat({
                 message: {
                    receiver_id: data.message.receiver_id,
@@ -211,22 +240,32 @@ console.log("blocked_by: ", socket.decoded.email, data.blocked_by);
                 User.update({email:{$in:[chat.initiator.sender_id,chat.initiator.receiver_id]}},{$push:{convoList: chat._id}},{multi:true,new: true},function(err,user){
                   if(err){console.log(err); return false;}
                   console.log("--------",user);
-                       console.log("new chat", user.block, user.blocked_by,chat.initiator.sender_id,chat.initiator.receiver_id);
+                       console.log("hack check new chat", user.block, user.blocked_by,chat.initiator.sender_id,chat.initiator.receiver_id);
                       if((user.block&&user.block.indexOf(chat.initiator.sender_id)!==-1)||
                       (user.block&&user.block.indexOf(chat.initiator.receiver_id)!==-1)||
                       (user.blocked_by&&user.blocked_by.indexOf(chat.initiator.sender_id)!==-1)||
                       (user.blocked_by&&user.blocked_by.indexOf(chat.initiator.receiver_id)!==-1)){
                            console.log("-*-*-* hack true");
                       }
-
-                  if(users[i]){
-                  console.log("****************emitting new chat: ", {convo_id:chat._id, message:chat.message}," to user: ", users[i]);
-                  socket.to(users[i].id).emit("message-received", {convo_id:chat._id,
+  
+                   if(clients[data.message.receiver_id]){
+                     console.log("****************emitting new chat: ", {convo_id:chat._id, message:chat.message}," to user: ", data.message.receiver_id, clients[data.message.receiver_id].socket);
+                  socket.to(clients[data.message.receiver_id].socket).emit("message-received", {convo_id:chat._id,
                                                                   sender_name: "ANONYMOUS", 
                                                                   message:chat.message,
                                                                   lastMessage: chat.message[chat.message.length-1],
                                                                   unread: chat.unread  
-                                                                });  }                  
+                                                                }); 
+                   }
+                    
+                  // if(users[i]){
+                  // console.log("****************emitting new chat: ", {convo_id:chat._id, message:chat.message}," to user: ", users[i]);
+                  // socket.to(users[i].id).emit("message-received", {convo_id:chat._id,
+                  //                                                 sender_name: "ANONYMOUS", 
+                  //                                                 message:chat.message,
+                  //                                                 lastMessage: chat.message[chat.message.length-1],
+                  //                                                 unread: chat.unread  
+                  //                                               });  }                  
                 });
 
                
