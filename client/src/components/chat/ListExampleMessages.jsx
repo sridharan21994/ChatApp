@@ -83,6 +83,7 @@ class ListExampleMessages extends React.Component {
    var renderList = function(contact,i){
            (contact.fb_id||contact.email==="ANONYMOUS") ? contact.image = "https://graph.facebook.com/"+contact.fb_id+"/picture":"";
             return (<ListItem
+                        id="contactListItem"
                         key={i}
                         className={(isDesktop)&&((this.props.activeThread.convo_id&&(this.props.activeThread.convo_id===contact.convo_id))||((contact.email!=="ANONYMOUS")&&this.props.activeThread.email&&(this.props.activeThread.email===contact.email))||(this.props.activeThread.fb_id&&(this.props.activeThread.fb_id===contact.fb_id)))?"highlight":""}
                         onClick={(e)=>this.openThread(e,contact)} 
@@ -95,20 +96,21 @@ class ListExampleMessages extends React.Component {
                                           <MenuItem style={{zIndex: 99}} onClick={(e)=>this.blockUser(e, contact)}>Block&Delete</MenuItem>
                                         </IconMenu>}
                         primaryText={
-                          <div style={{textAlign: "left"}}>
-                          <span style={{display:"inline-block", width:"240px", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>{contact.name}</span>
-                          <span style={{fontSize:12, float:"right"}}>{contact.lastMessage&&contact.lastMessage.time? moment(contact.lastMessage.time).local().format("hh:mma, DD MMM"): ""}</span>                          
+                          <div style={{textAlign:"left"}}>
+                          <p style={{margin:0, maxWidth:"calc(100% - 40px)", width:"calc(100% - 40px)",display:"inline-block",textAlign: "left", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{contact.name}
+                          </p>
+                          <span className={((contact.unread&&contact.lastMessage.receiver_id&&(contact.lastMessage.receiver_id===this.props.userDetail.email))||
+                              (contact.unread&&contact.lastMessage.sender_id&&(contact.lastMessage.sender_id!==this.props.userDetail.email)))
+                              ?"new-icon":"hide"}>
+                              &nbsp;new&nbsp;
+                            </span>
+                          
                           </div>
                           }
                         secondaryText={
                           <p style={{textAlign:"left", fontStyle: contact.lastMessage?"normal":"italic"}}>
-                            <span style={{display:"inline-block", width:"300px", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis"}}>
+                            <span>
                               {contact.lastMessage?contact.lastMessage.text:""}
-                            </span>
-                            <span className={((contact.unread&&contact.lastMessage.receiver_id&&(contact.lastMessage.receiver_id===this.props.userDetail.email))||
-                              (contact.unread&&contact.lastMessage.sender_id&&(contact.lastMessage.sender_id!==this.props.userDetail.email)))
-                              ?"new-icon":"hide"}>
-                              &nbsp;new&nbsp;
                             </span>
                           </p>
                         }

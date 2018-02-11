@@ -59,7 +59,7 @@ onChange(event){
 
    render(){
        return(
-           <Card className="container">
+           <Card className={isDesktop?"container":"container-sm"}>
                 <form onSubmit={e=>this.submitForgotPassword(e)}>
                           {this.state.success && <p className="success-message">{this.state.success}</p>}
                           {this.state.error && <p className="error-message">{this.state.error}</p>}
@@ -71,10 +71,15 @@ onChange(event){
                             name="email"
                             onChange={e=>this.onChange(e)}
                             value={this.state.email}
+                            fullWidth={isDesktop?false:true}
                             />
                         </div>
                         <div className="button-line">
-                            <RaisedButton type="submit" label="Submit" primary />
+                            <RaisedButton
+                             fullWidth={isDesktop?false:true}
+                             type="submit" 
+                             label="Submit" 
+                             primary />
                         </div>
                 </form>
            </Card>

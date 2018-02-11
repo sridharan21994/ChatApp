@@ -12,7 +12,7 @@ const LoginForm = ({
   successMessage,
   user
 }) => (
-  <Card className="container">
+  <Card className={isDesktop?"container":"container-sm"}>
     <form action="/" onSubmit={onSubmit}>
       <h2 className="card-heading">Login</h2>
 
@@ -28,6 +28,7 @@ const LoginForm = ({
           errorText={errors.email}
           onChange={onChange}
           value={user.email}
+          fullWidth={isDesktop?false:true}
         />
       </div>
 
@@ -41,11 +42,17 @@ const LoginForm = ({
           onChange={onChange}
           errorText={errors.password}
           value={user.password}
+          fullWidth={isDesktop?false:true}
         />
       </div>
 
       <div className="button-line">
-        <RaisedButton type="submit" label="Log in" primary />
+        <RaisedButton 
+        fullWidth={isDesktop?false:true}
+        type="submit" 
+        label="Log in" 
+        primary 
+        />
       </div>
         <Link to={'/forgot-password'}>Forgot Password?</Link>
       <CardText>Don't have an account? <Link to={'/signup'}>Create one</Link>.</CardText>

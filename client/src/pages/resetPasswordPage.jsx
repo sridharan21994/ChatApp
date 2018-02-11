@@ -65,7 +65,7 @@ onChange(e){
 }
    render(){
        return(
-           <Card className="container">
+           <Card className={isDesktop?"container":"container-sm"}>
                 <form onSubmit={e=>this.submitResetPassword(e)}>
                     {this.state.success && <p className="success-message">{this.state.success}</p>}
                     {this.state.error && <p className="error-message">{this.state.error}</p>}
@@ -77,6 +77,7 @@ onChange(e){
                         name="newPassword"
                         onChange={e=>this.onChange(e)}
                         value={this.state.newPassword}
+                        fullWidth={isDesktop?false:true}
                         />
                     </div>
                     <div className="field-line">
@@ -87,10 +88,15 @@ onChange(e){
                         name="verifyPassword"
                         onChange={e=>this.onChange(e)}
                         value={this.state.verifyPassword}
+                        fullWidth={isDesktop?false:true}
                         />
                     </div>
                     <div className="button-line">
-                            <RaisedButton type="submit" label="Reset Password" primary />
+                            <RaisedButton 
+                            fullWidth={isDesktop?false:true}
+                            type="submit" 
+                            label="Reset Password" 
+                            primary />
                     </div>
                 </form>
             </Card>

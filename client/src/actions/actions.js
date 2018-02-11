@@ -11,6 +11,7 @@ export function initializeUser(userDetail){
             return ((new Date(a.lastMessage.time)) < (new Date(b.lastMessage.time))) ? 1 : (((new Date(b.lastMessage.time)) < (new Date(a.lastMessage.time))) ? -1 : 0);} );
         if(isDesktop){
             userDetail.activeThread= userDetail.contactList[0];
+            updateUnread({ convo_id: userDetail.contactList[0].convo_id });
             // userDetail.contactList[0].read=true;
         }else{
             userDetail.activeThread={};

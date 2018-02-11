@@ -62,14 +62,14 @@ class Chatty extends React.Component {
                     this.props.actions.addContactList({convo_id:data.convo_id, name: "ANONYMOUS", email: "ANONYMOUS", lastMessage:data.lastMessage, unread: true});
                     if(this.props.activeThread.convo_id===data.convo_id){
                       clearTimeout(clearUnread);
-                      let clearUnread = setTimeout(function() { this.props.actions.updateUnread({convo_id:data.convo_id}); }.bind(this), 1500);
+                      let clearUnread = setTimeout(function() { this.props.actions.updateUnread({convo_id:data.convo_id}); }.bind(this), 2500);
                     }
                 }else{
                     data.unread=true;
                     this.props.actions.addMessage(data);
                     if(this.props.activeThread.convo_id===data.convo_id){
                       clearTimeout(clearUnread);
-                      let clearUnread = setTimeout(function() { this.props.actions.updateUnread({convo_id:data.convo_id}); }.bind(this), 1500);
+                      let clearUnread = setTimeout(function() { this.props.actions.updateUnread({convo_id:data.convo_id}); }.bind(this), 2500);
                     }
                 }
                 // console.log("from other user: ",data);

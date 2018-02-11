@@ -3,6 +3,7 @@ import {Tabs, Tab} from 'material-ui/Tabs';
 import ListExampleMessages from "../chat/ListExampleMessages.jsx";
 import Paper from "material-ui/Paper";
 import Chatty from "../chat/ChatContainer.jsx";
+import FriendsList from '../friends/FriendsList.jsx';
 
 const styles = {
   headline: {
@@ -44,7 +45,7 @@ class TabsControl extends React.Component {
         </Tab>
         <Tab label="Tab B" value="b">
           <div>
-            
+            <FriendsList/>
           </div>
         </Tab>
       </Tabs>

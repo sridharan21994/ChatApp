@@ -4,6 +4,7 @@ import Auth from '../modules/Auth';
 import LeftDrawer from './Mobile/LeftDrawer.jsx'
 import MenuIcon from 'material-ui/svg-icons/navigation/menu';
 import Search from './search/Search.jsx';
+import Home from 'material-ui/svg-icons/action/home';
 
 var menus=[{text:"profile", icon: "", link:"/profile"},
             {text:"login", icon: "", link:"/login"},
@@ -33,20 +34,24 @@ class Base extends React.Component{
     })
   }
 
+  toHomePage(){
+    this.context.router.replace("/");
+  }
+
   render(){
     return(
     isDesktop?(<div>
       {Auth.isUserAuthenticated() ? (
         <div className="top-bar">        
           <div className="top-bar-left">
-            <IndexLink className="logo" to="/">My App</IndexLink>
-            <div className="search">
+            {/* <Home className="home-logo" onMouseDown={this.toHomePage.bind(this)} to="/"></Home> */}
+            <div className={isDesktop?"search":"search-sm"}>
               <Search/>              
             </div>
           </div>
           <div className="top-bar-right">
             <Link to="/logout">Log out</Link>
-            <Link to="/profile">Profile</Link>
+            {/* <Link to="/profile">Profile</Link> */}
           </div>
         </div>
       ) : (
@@ -64,12 +69,12 @@ class Base extends React.Component{
 
     { /* child component will be rendered here */ }
       {this.props.children}
-      <div className="footer">
+      <div className="hide">
         footer
       </div>
   </div>):(<div onClick={this.closeMenu.bind(this)} >
      
-     <MenuIcon style={{height: '32px', width: '32px'}} onClick={this.toggleMenu.bind(this)}/>
+     <MenuIcon style={{height: '35px', width: '35px', padding:"6px 10px 6px 6px"}} onClick={this.toggleMenu.bind(this)}/>
      {Auth.isUserAuthenticated()?(
       <div className="search">
          <Search/>
@@ -80,7 +85,6 @@ class Base extends React.Component{
        </p>
      )}
       <LeftDrawer
-          style={{position: "relative", zIndex: "99"}}
           navDrawerOpen={this.state.navDrawerOpen}        
           menus={menus}
           username="User Admin"/>
@@ -92,6 +96,9 @@ class Base extends React.Component{
 
 Base.propTypes = {
   children: PropTypes.object.isRequired
+};
+Base.contextTypes = {
+  router: PropTypes.object.isRequired
 };
 
 export default Base;

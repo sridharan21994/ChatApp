@@ -1,4 +1,13 @@
+ html{
+  background-image: url("./wordcloud.svg"); 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+} 
+
 body {
+  height: 100%;
   margin: 0;
   font-size: 16px;
 }
@@ -25,8 +34,6 @@ a:hover {
 .top-bar {
   padding: 0;
   margin-bottom: 50px;
-  /*background-color: #689f38;*/
-  /* border: 1px solid #689f38; */
 }
 .top-bar::after {
   content: '';
@@ -58,6 +65,12 @@ a:hover {
   width: 1100px;
 }
 
+.container-sm{
+  margin: 0 auto;
+  text-align: center;
+  width: 95%;
+}
+
 .card-heading {
   padding: 16px;
 }
@@ -79,7 +92,9 @@ a:hover {
 
 .containerText{
     border-radius: 10px 10px 1px 10px;
+    border: 1px solid #8c8686;
     background-color: #dedede;
+    color: #001c00;
     width: max-content;
     max-width: 400px;
     line-height: 30px;
@@ -88,23 +103,35 @@ a:hover {
     float: right;
     margin: 1px 5px;
     margin-left: 100%;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    /* box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); */
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
 }
 .other-user{
     border-radius: 10px 10px 10px 1px;
     text-align: left;
     float: left;
-    border: 1px solid #f1f1f1;
+    border: 1px solid #a1a1a1;
     background-color: #fff;
     margin-left: 5px;
     margin-right: 100%;
 }
 
+.search-sm{
+  display: inline-block;
+  vertical-align: text-top;
+  position: absolute;
+  top: 0;
+  z-index: 99999;
+  width: calc(100% - 70px);
+}
+
 .search{
   display: inline-block;
   vertical-align: text-top;
-  position: relative;
-  z-index: 10;
+  position: absolute;
+  top: 0;
+  z-index: 99999;
+  padding: 5px;
 }
 
 .chatty{
@@ -129,18 +156,20 @@ a:hover {
   display: flex;
   margin: 0 auto;
   width: 1000px;
+  height: 500px;
   text-align: center;
   position: absolute;
-  top: 68px;
+  top: 55px;
   left: 0;
 }
 
 .dashboard-sm{
   position: absolute;
-  top: 100px;
+  top: 50px;
   left: 0;
   text-align: center;
   width: 100%;
+  height: 100%;
 }
 
 .message-ul-list{
@@ -224,6 +253,9 @@ a:hover {
   max-width: 250px;
   overflow-y: scroll;
 }
+.fb-friends-list-sm{
+  overflow-y: scroll;
+}
 
 .friends-name{
     display: inline-block;
@@ -237,4 +269,19 @@ a:hover {
 
 .highlight{
   background-color: #dedede !important;
+}
+
+.left-drawer{
+  position: relative;
+  z-index: 999999;
+}
+
+.home-logo{
+  height: 40px !important;
+  width: 40px !important;
+  padding: 10px 5px 5px 5px;
+}
+
+.home-logo:hover{
+  cursor: pointer;
 }

@@ -10,10 +10,10 @@ import FriendsList from './friends/FriendsList.jsx';
 
 const Dashboard = ({ userData }) => (
     isDesktop?(<div className="dashboard">
-      <Paper className="name-list-item" style={{flex:1, height:500, width:500, overflowY:"scroll" }}>
+      <Paper className="name-list-item" style={{flex:1, height:"100%", width:500, overflowY:"scroll" }}>
           <ListExampleMessages/>
       </Paper>
-      <Paper style={{flex:1,height:500, width:500}}>
+      <Paper style={{flex:1,height:"100%", width:500}}>
           <Chatty  />
       </Paper>
       <FbPlugin/>  

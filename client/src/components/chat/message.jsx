@@ -25,7 +25,7 @@ componentDidUpdate() {
             :(this.props.msg.receiver_id)?"containerText":"containerText other-user"
             }>
             <span>{this.props.msg.text}</span>
-            <span style={{lineHeight:"12px",fontSize:12, display:"block"}}>{this.props.msg.time ? moment(this.props.msg.time).local().format("hh:mma, DD MMM") : ""}</span>
+            <span style={{lineHeight:"12px",fontSize:12, display:"block", color:"rgba(0,0,0,0.66)"}}>{this.props.msg.time ? moment(this.props.msg.time).local().format("hh:mma, DD MMM") : ""}</span>
             <div style={{ float:"left", clear: "both" }}
              ref={(el) => { this.messagesEnd = el; }}>
             </div>

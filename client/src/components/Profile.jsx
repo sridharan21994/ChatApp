@@ -12,7 +12,7 @@ const Profile = ({
   user,
   userDetail
 }) => (
-  <Card className="container">
+  <Card className={isDesktop?"container":"container-sm"}>
     <form action="/" onSubmit={onSubmit}>
       <h2 className="card-heading">Edit Profile</h2>
 

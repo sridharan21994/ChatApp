@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="3000px" height="2250px" viewBox="0 0 3000 2250">
+ <defs>
+<style type="text/css"> 
+@font-face{
+font-family:"Pacifico";
+src: url('Pacifico.ttf') format('truetype');
+}
+</style>
+</defs> 
+<clipPath id="cp2">
+<path d="M 0,0 L 3000,0 L3000,2250 L 0,2250 z M 0,0 L 3375,0 L 3375,2538 L 0,2538 z" fill-rule="evenodd">
+</path>
+</clipPath>
+<g clip-path="url(#cp2)">
+</g>
+<rect x="0" y="0" width="3375" height="2538" opacity="1" fill="rgb(208,209,212)" fill-opacity="1" stroke="none">
+</rect>
+<text x="-980.115478515625" y="27.389162499999998" font-family="Pacifico" font-size="273px" font-weight="normal" text-anchor="start" dy="108.25755928853756" opacity="1" fill="rgb(58,58,59)" fill-opacity="1" stroke="none" transform="translate(1500, 1128) rotate(-12959.999999999998)">acknowledgement</text>
+<text x="-850.1546020507812" y="27.389162499999998" font-family="Pacifico" font-size="273px" font-weight="normal" text-anchor="start" dy="108.25755928853756" opacity="1" fill="rgb(58,58,59)" fill-opacity="1" stroke="none" transform="translate(1516, 864) rotate(-17639.999999999996)">heart-to-heart</text>
+<text x="-751.691162109375" y="27.389162499999998" font-family="Pacifico" font-size="273px" font-weight="normal" text-anchor="start" dy="108.25755928853756" opacity="1" fill="rgb(58,58,59)" fill-opacity="1" stroke="none" transform="translate(1560, 1400) rotate(-7200)">unpredictable</text>
+<text x="-699.51513671875" y="27.389162499999998" font-family="Pacifico" font-size="273px" font-weight="normal" text-anchor="start" dy="108.25755928853756" opacity="1" fill="rgb(58,58,59)" fill-opacity="1" stroke="none" transform="translate(1532, 608) rotate(-2520)">conversation</text>
+<text x="-689.6550903320312" y="27.389162499999998" font-family="Pacifico" font-size="273px" font-weight="normal" text-anchor="start" dy="108.25755928853756" opacity="1" fill="rgb(58,58,59)" fill-opacity="1" stroke="none" transform="translate(1536, 1648) rotate(-10799.999999999998)">contentment</text>
+<text x="-610.3639526367188" y="27.389162499999998" font-family="Pacifico" font-size="273px" font-weight="normal" text-anchor="start" dy="108.25755928853756" opacity="1" fill="rgb(58,58,59)" fill-opacity="1" stroke="none" transform="translate(1492, 1792) rotate(-6120.000000000001)">one-on-one</text>
+<text x="-548.3278198242188" y="27.389162499999998" font-family="Pacifico" font-size="273px" font-weight="normal" text-anchor="start" dy="108.25755928853756" opacity="1" fill="rgb(58,58,59)" fill-opacity="1" stroke="none" transform="translate(1268, 464) rotate(-3239.9999999999995)">corrective</text>
+<text x="-492.5912170410156" y="27.389162499999998" font-family="Pacifico" font-size="273px" font-weight="normal" text-anchor="start" dy="108.25755928853756" opacity="1" fill="rgb(58,58,59)" fill-opacity="1" stroke="none" transform="translate(1428, 224) rotate(-9360.000000000002)">felicitate</text>
+<text x="-572.43017578125" y="27.389162499999998" font-family="Pacifico" font-size="273px" font-weight="normal" text-anchor="start" dy="108.25755928853756" opacity="1" fill="rgb(58,58,59)" fill-opacity="1" stroke="none" transform="translate(1604, 1936) rotate(-2520)">experience</text>
+<text x="-522.1713256835938" y="27.389162499999998" font-family="Pacifico" font-size="273px" font-weight="normal" text-anchor="start" dy="108.25755928853756" opacity="1" fill="rgb(58,58,59)" fill-opacity="1" stroke="none" transform="translate(2444, 272) rotate(-11880.000000000002)">gratitude</text>
+<text x="-403.1661071777344" y="27.389162499999998" font-family="Pacifico" font-size="273px" font-weight="normal" text-anchor="start" dy="108.25755928853756" opacity="1" fill="rgb(58,58,59)" fill-opacity="1" stroke="none" transform="translate(428, 1296) rotate(-12240.000000000002)">endless</text>
+<text x="-408.5069274902344" y="27.389162499999998" font-family="Pacifico" font-size="273px" font-weight="normal" text-anchor="start" dy="108.25755928853756" opacity="1" fill="rgb(58,58,59)" fill-opacity="1" stroke="none" transform="translate(464, 1544) rotate(-2160)">genuine</text>
+<text x="-393.03216552734375" y="27.389162499999998" font-family="Pacifico" font-size="273px" font-weight="normal" text-anchor="start" dy="108.25755928853756" opacity="1" fill="rgb(58,58,59)" fill-opacity="1" stroke="none" transform="translate(640, 1936) rotate(-15120.000000000002)">confess</text>
+<text x="-397.0035705566406" y="27.389162499999998" font-family="Pacifico" font-size="273px" font-weight="normal" text-anchor="start" dy="108.25755928853756" opacity="1" fill="rgb(58,58,59)" fill-opacity="1" stroke="none" transform="translate(2604, 528) rotate(-360)">texting</text>
+<text x="-439.5934753417969" y="27.389162499999998" font-family="Pacifico" font-size="273px" font-weight="normal" text-anchor="start" dy="108.25755928853756" opacity="1" fill="rgb(58,58,59)" fill-opacity="1" stroke="none" transform="translate(488, 320) rotate(-7560.000000000001)">support</text>
+<text x="-389.6085205078125" y="27.389162499999998" font-family="Pacifico" font-size="273px" font-weight="normal" text-anchor="start" dy="108.25755928853756" opacity="1" fill="rgb(58,58,59)" fill-opacity="1" stroke="none" transform="translate(2196, 2080) rotate(-14400)">revival</text>
+<text x="-349.89447021484375" y="27.389162499999998" font-family="Pacifico" font-size="273px" font-weight="normal" text-anchor="start" dy="108.25755928853756" opacity="1" fill="rgb(58,58,59)" fill-opacity="1" stroke="none" transform="translate(2612, 1272) rotate(-3959.9999999999995)">casual</text>
+<text x="-367.2865295410156" y="27.389162499999998" font-family="Pacifico" font-size="273px" font-weight="normal" text-anchor="start" dy="108.25755928853756" opacity="1" fill="rgb(58,58,59)" fill-opacity="1" stroke="none" transform="translate(2600, 1656) rotate(-16200.000000000002)">honest</text>
+<text x="-373.31207275390625" y="27.389162499999998" font-family="Pacifico" font-size="273px" font-weight="normal" text-anchor="start" dy="108.25755928853756" opacity="1" fill="rgb(58,58,59)" fill-opacity="1" stroke="none" transform="translate(396, 600) rotate(-5760)">change</text>
+<text x="-420.83203125" y="27.389162499999998" font-family="Pacifico" font-size="273px" font-weight="normal" text-anchor="start" dy="108.25755928853756" opacity="1" fill="rgb(58,58,59)" fill-opacity="1" stroke="none" transform="translate(516, 112) rotate(-9720)">memoir</text>
+<text x="-297.71844482421875" y="27.389162499999998" font-family="Pacifico" font-size="273px" font-weight="normal" text-anchor="start" dy="108.25755928853756" opacity="1" fill="rgb(58,58,59)" fill-opacity="1" stroke="none" transform="translate(2664, 912) rotate(-10799.999999999998)">relief</text>
+<text x="-297.8553771972656" y="27.389162499999998" font-family="Pacifico" font-size="273px" font-weight="normal" text-anchor="start" dy="108.25755928853756" opacity="1" fill="rgb(58,58,59)" fill-opacity="1" stroke="none" transform="translate(380, 860)">story</text>
+<text x="-235.68234252929688" y="27.389162499999998" font-family="Pacifico" font-size="273px" font-weight="normal" text-anchor="start" dy="108.25755928853756" opacity="1" fill="rgb(58,58,59)" fill-opacity="1" stroke="none" transform="translate(2100, 104) rotate(-6839.999999999999)">true</text>
+<text x="-228.56118774414062" y="27.389162499999998" font-family="Pacifico" font-size="273px" font-weight="normal" text-anchor="start" dy="108.25755928853756" opacity="1" fill="rgb(58,58,59)" fill-opacity="1" stroke="none" transform="translate(412, 1744) rotate(-5040)">gain</text>
+<text x="-227.73953247070312" y="27.389162499999998" font-family="Pacifico" font-size="273px" font-weight="normal" text-anchor="start" dy="108.25755928853756" opacity="1" fill="rgb(58,58,59)" fill-opacity="1" stroke="none" transform="translate(2508, 1792) rotate(-4320)">may</text>
+</svg>

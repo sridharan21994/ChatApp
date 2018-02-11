@@ -62,15 +62,9 @@ class LeftDrawer extends React.Component {
 
         return (
             <Drawer 
+            className="left-drawer"
             open={this.state.navDrawerOpen}
             >
-                {/* <div style={styles.logo}>
-                    Material Admin
-                </div> */}
-                {/* <div style={styles.avatar.div}>
-                    <Avatar src="" size={50} style={styles.avatar.icon}/>
-                    <span style={styles.avatar.span}>{this.props.username}</span>
-                </div> */}
                 <div>
                     {this.props
                         .menus

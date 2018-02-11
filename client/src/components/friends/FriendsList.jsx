@@ -45,7 +45,7 @@ render() {
          
   }
         return(
-            <List className="fb-friends-list">
+            <List className={isDesktop?"fb-friends-list":"fb-friends-list-sm"}>
               {this.props.friendsList&&this.props.friendsList.map(renderList,this)}
             </List>
         );
