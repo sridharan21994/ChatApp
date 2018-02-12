@@ -37,7 +37,7 @@ export function addContactList(list){
 }
 
 export function updateContactConvoId(data){
-    return { type: types.UPDATE_CONTACT_CONVO_ID, data }    
+    return { type: types.UPDATE_CONTACT_CONVO_ID, data };    
 }
 
 export function updateActiveThread(data){
@@ -54,23 +54,23 @@ export function updateUnread(data){
 }
 
 export function pushNewThread(data){
-    return { type: types.PUSH_NEW_THREAD, data }
+    return { type: types.PUSH_NEW_THREAD, data };
 }
 
 export function addBlockedList(data){
-    return { type: types.ADD_BLOCKED_LIST, data }
+    return { type: types.ADD_BLOCKED_LIST, data };
 }
 
 export function removeBlockedUser(data){
-    return { type: types.REMOVE_BLOCKED_USER, data }
+    return { type: types.REMOVE_BLOCKED_USER, data };
 }
 
 export function addFriendsList(data){
-    return { type: types.ADD_FRIENDSLIST, data }
+    return { type: types.ADD_FRIENDSLIST, data };
 }
 
 export function newFbThread(data){
-    return { type: types.NEW_FB_THREAD, data }
+    return { type: types.NEW_FB_THREAD, data };
 }
 
 // export function loadPage(){

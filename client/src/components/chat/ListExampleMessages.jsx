@@ -118,8 +118,8 @@ class ListExampleMessages extends React.Component {
                   />)
         }
 return ( 
-<div>
-      <List>
+<div >
+      <List className={isDesktop?"contact-list":"contact-list-sm"}>
         {/* <Subheader>LIST</Subheader> */}
         {this.props.contactList.length?
         this.props.contactList.map(renderList,this)

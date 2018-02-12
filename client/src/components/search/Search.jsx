@@ -98,7 +98,7 @@ class Search extends React.Component {
            onBlur={(e)=>this.blur(e)}
            value={this.state.text}
            fullWidth={isDesktop?false:true}
-           underlineFocusStyle={{color:"red", "border-bottom": "2px solid red"}}
+           underlineFocusStyle={{"border-bottom": "2px solid red"}}
           />
           <Card zDepth={3}>
             {this.props.searchList.map(renderList, this)}

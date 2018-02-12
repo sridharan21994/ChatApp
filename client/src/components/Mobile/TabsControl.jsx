@@ -37,7 +37,7 @@ class TabsControl extends React.Component {
       >
         <Tab label="Tab A" value="a">
           <div>
-            <Paper style={{height: 500, overflow: "scroll"}}>
+            <Paper>
              <ListExampleMessages/>
              <Chatty/>
             </Paper> 

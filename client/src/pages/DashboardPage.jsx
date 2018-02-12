@@ -44,15 +44,11 @@ class DashboardPage extends React.Component {
    * Render the component.
    */
   render() {
-    return (<Dashboard userData={this.props.data} />);
+    return (<Dashboard/>);
   }
 
 }
-function mapStateToProps(state, ownProps){
-   return {
-     data: state.myStore
-   }
-}
+
 function mapDispatchToProps(dispatch){
   return{
      actions: bindActionCreators( actions , dispatch )
@@ -63,4 +59,4 @@ DashboardPage.contextTypes = {
   router: PropTypes.object.isRequired
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(DashboardPage);
+export default connect(null, mapDispatchToProps)(DashboardPage);

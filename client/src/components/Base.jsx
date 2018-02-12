@@ -72,11 +72,11 @@ class Base extends React.Component{
       <div className="hide">
         footer
       </div>
-  </div>):(<div onClick={this.closeMenu.bind(this)} >
+  </div>):(<div className="header-sm" onClick={this.closeMenu.bind(this)} >
      
      <MenuIcon style={{height: '35px', width: '35px', padding:"6px 10px 6px 6px"}} onClick={this.toggleMenu.bind(this)}/>
      {Auth.isUserAuthenticated()?(
-      <div className="search">
+      <div className={isDesktop?"search":"search-sm"}>
          <Search/>
       </div>   
      ):(

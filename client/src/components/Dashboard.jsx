@@ -8,13 +8,24 @@ import Paper from "material-ui/Paper";
 import TabsControl from './Mobile/TabsControl.jsx';
 import FriendsList from './friends/FriendsList.jsx';
 
-const Dashboard = ({ userData }) => (
-    isDesktop?(<div className="dashboard">
+class Dashboard extends React.Component {
+
+  /**
+   * Class constructor.
+   */
+  constructor(props) {
+    super(props);
+
+    this.state = {};  
+  }
+
+render(){
+    return( isDesktop?(<div className="dashboard">
       <Paper className="name-list-item" style={{flex:1, height:"100%", width:500, overflowY:"scroll" }}>
           <ListExampleMessages/>
       </Paper>
       <Paper style={{flex:1,height:"100%", width:500}}>
-          <Chatty  />
+          <Chatty/>
       </Paper>
       <FbPlugin/>  
       <FriendsList/>
@@ -22,9 +33,10 @@ const Dashboard = ({ userData }) => (
       <div className="dashboard-sm">
         <TabsControl/>
       </div>   
-    )
-);
-
+    ))
+  
+}
+}
 // Dashboard.propTypes = {
 //   userData: PropTypes.string.isRequired
 // };
