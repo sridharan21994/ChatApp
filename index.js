@@ -8,8 +8,14 @@ var io = require('socket.io')(server);
 // var socketioJwt   = require("socketio-jwt");
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
+var favicon = require('serve-favicon');
+var path = require('path');
+
+
 // var users=[];
 var clients={};
+
+app.use(favicon(path.join(__dirname, 'favicon.ico')));
 
 mongoose.connect(config.dbUri);
 // plug in the promise library:
