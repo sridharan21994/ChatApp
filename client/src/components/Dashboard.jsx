@@ -30,7 +30,7 @@ render(){
       <FbPlugin/>  
       <FriendsList/>
     </div>):(
-      <div className="dashboard-sm">
+      <div className="dashboard">
         <TabsControl/>
       </div>   
     ))

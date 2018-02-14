@@ -73,6 +73,10 @@ export function newFbThread(data){
     return { type: types.NEW_FB_THREAD, data };
 }
 
+export function changeMobileTab(data){
+    return { type: types.CHANGE_MOBILE_TAB, data };
+}
+
 // export function loadPage(){
 //         return axios.get("/api/dashboard",{headers:{'Content-type': 'application/x-www-form-urlencoded','Authorization': `bearer ${Auth.getToken()}`}})
 //         .then(response=>{

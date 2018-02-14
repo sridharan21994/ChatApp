@@ -29,6 +29,7 @@ listItemClicked(e, friend){
        if(!this.props.contactList.find(list=>list.fb_id===friend.id)){
             this.props.actions.addContactList({fb_id: friend.id, name:friend.name, image:"https://graph.facebook.com/"+friend.id+"/picture", fb: true });
             this.props.actions.updateActiveThread({name: friend.name, email:"",fb_id: friend.id, clicked: false});
+            this.props.actions.changeMobileTab({value: "a"});
        }
      }
 
@@ -45,7 +46,7 @@ render() {
          
   }
         return(
-            <List className={isDesktop?"fb-friends-list":"fb-friends-list-sm"}>
+            <List className="fb-friends-list">
               {this.props.friendsList&&this.props.friendsList.map(renderList,this)}
             </List>
         );

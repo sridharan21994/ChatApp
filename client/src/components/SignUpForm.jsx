@@ -11,7 +11,7 @@ const SignUpForm = ({
   errors,
   user,
 }) => (
-  <Card className={isDesktop?"container":"container-sm"}>
+  <Card className="container">
     <form action="/" onSubmit={onSubmit}>
       <h2 className="card-heading">Sign Up</h2>
 

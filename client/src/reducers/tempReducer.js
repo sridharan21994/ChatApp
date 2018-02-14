@@ -70,7 +70,10 @@ case types.NEW_FB_THREAD:
     return Object.assign({}, state, {contactList: state.contactList.map((content,index)=>(content.fb_id===action.data.fb_id)?
     Object.assign({}, content, action.data )
     :content)
-    });
+});
+
+case types.CHANGE_MOBILE_TAB:
+    return Object.assign({}, state, {mobileTab: action.data.value});
 
 default:
     return state;

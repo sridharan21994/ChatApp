@@ -5,5 +5,6 @@ export default {
     activeThread: {},
     threadList:[],
     blockedList: [],
-    friendsList: []
+    friendsList: [],
+    mobileTab: ""
 };

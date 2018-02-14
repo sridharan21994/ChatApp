@@ -59,7 +59,7 @@ onChange(event){
 
    render(){
        return(
-           <Card className={isDesktop?"container":"container-sm"}>
+           <Card className="container">
                 <form onSubmit={e=>this.submitForgotPassword(e)}>
                           {this.state.success && <p className="success-message">{this.state.success}</p>}
                           {this.state.error && <p className="error-message">{this.state.error}</p>}

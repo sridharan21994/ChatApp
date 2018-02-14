@@ -315,13 +315,13 @@ class Chatty extends React.Component {
                    <MessageForm className="input-form" submitfnc={this.handleMessageSubmit} buffer={this.state.buffer}/>
                    :""}
                 </div>
-                ):(<div className={this.state.clicked?"chatty-sm":"hide"}>
-                    <div className="chatty-sm-header">
-                        <ArrowBack className="arrow-back-sm" onClick={this.arrowBack.bind(this)}/>
+                ):(<div className={this.state.clicked?"chatty":"hide"}>
+                    <div className="chatty-header">
+                        <ArrowBack className="arrow-back" onClick={this.arrowBack.bind(this)}/>
                         {this.props.activeThread.name}
                     </div>
                     <MessageList thread={this.findThread(this.props.activeThread,this.props.threadList)} />
-                    <MessageForm className="input-form" submitfnc={this.handleMessageSubmit} buffer={this.state.buffer}/>
+                    <MessageForm submitfnc={this.handleMessageSubmit} buffer={this.state.buffer}/>
                 </div>
                 )           
         );

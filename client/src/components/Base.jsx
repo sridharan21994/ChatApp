@@ -45,7 +45,7 @@ class Base extends React.Component{
         <div className="top-bar">        
           <div className="top-bar-left">
             {/* <Home className="home-logo" onMouseDown={this.toHomePage.bind(this)} to="/"></Home> */}
-            <div className={isDesktop?"search":"search-sm"}>
+            <div className="search">
               <Search/>              
             </div>
           </div>
@@ -72,11 +72,11 @@ class Base extends React.Component{
       <div className="hide">
         footer
       </div>
-  </div>):(<div className="header-sm" onClick={this.closeMenu.bind(this)} >
-     
-     <MenuIcon style={{height: '35px', width: '35px', padding:"6px 10px 6px 6px"}} onClick={this.toggleMenu.bind(this)}/>
+  </div>):(<div className="mobile-view" onClick={this.closeMenu.bind(this)} >
+     <div className="header">
+     <MenuIcon style={{height: '50px', width: '50px', padding:"6px 10px 6px 6px"}} onClick={this.toggleMenu.bind(this)}/>
      {Auth.isUserAuthenticated()?(
-      <div className={isDesktop?"search":"search-sm"}>
+      <div className="search">
          <Search/>
       </div>   
      ):(
@@ -84,6 +84,7 @@ class Base extends React.Component{
          Welcome to the App
        </p>
      )}
+     </div>
       <LeftDrawer
           navDrawerOpen={this.state.navDrawerOpen}        
           menus={menus}
