@@ -31,7 +31,7 @@ router.get("/search",(req,res)=>{
       blockers=[res.locals.user.email];
     }
   //  blockers=[res.locals.user.email];
-    User.find( { name: { $regex: patt, $options: "i"  }, email: { $nin: blockers } },{name:1,email:1, "fb_details.id":1,"fb_details.name":1 },(err,value)=>{
+    User.find( { name: { $regex: patt, $options: "i"  }, email: { $nin: blockers } },{name:1,email:1, "fb_details.id":1,"fb_details.name":1 }).lean().exec((err,value)=>{
       if(err) { return res.status(401).end(); }
    //   console.log(value);
       return res.status(200).json({result:value});
@@ -54,32 +54,16 @@ router.get("/search",(req,res)=>{
 
 router.get('/dashboard', (req, res) => {       
   
-  // get the last part from a authorization header string like "bearer token-value"
-  const token = req.headers.authorization.split(' ')[1];
-  
-  //decode the token and verify
-  jwt.verify(token, config.jwtSecret, (err, decoded) => {
-    // the 401 code is for unauthorized status
-    if (err) { return res.status(401).end(); }
-   
-    var userId = decoded.sub;
-    userId = mongoose.Types.ObjectId(userId);
-    // check if a user exists
-    return User.findById( userId, (userErr, user) => {
-      if (userErr || !user) {
-        return res.status(401).end();
-      }
-        
-      if(user.convoList.length===0){
+      if(res.locals.user.convoList.length===0){
         return res.status(200).json({
-        name: user.name,
-        email: user.email,
-        fb_details: user.fb_details,
+        name: res.locals.user.name,
+        email:res.locals.user.email,
+        fb_details: res.locals.user.fb_details,
         threadList: [],
         contactList:[]
       });
-      }else if(user.convoList.length>0){
-         Chat.find({_id:{$in:user.convoList}},{ __v:0},function(err, data){
+      }else if(res.locals.user.convoList.length>0){
+         Chat.find({_id:{$in:res.locals.user.convoList}},{ __v:0},function(err, data){
            if(err){console.log("error in dashboard: ", err.name); return res.status(401).end();}
            
            let contactList=[];
@@ -88,7 +72,7 @@ router.get('/dashboard', (req, res) => {
                                         threadList[index]["convo_id"]= content._id;
                                         threadList[index].message=content.message;
                                         let lastMessage = threadList[index].message[threadList[index].message.length-1];
-                                      if(content.initiator.sender_id===user.email){
+                                      if(content.initiator.sender_id===res.locals.user.email){
                                         contactList.push({convo_id: content._id, 
                                                           name:content.initiator.receiver_name,
                                                           email:content.initiator.receiver_id,
@@ -106,9 +90,9 @@ router.get('/dashboard', (req, res) => {
                                       });
  //console.log("dashboard data",{name: user.name,email: user.email,threadList: threadList,contactList: contactList});
            return res.status(200).json({
-              name: user.name,
-              email: user.email,
-              fb_details: user.fb_details,
+              name: res.locals.user.name,
+              email: res.locals.user.email,
+              fb_details: res.locals.user.fb_details,
               threadList: threadList,
               contactList: contactList
             });
@@ -118,8 +102,7 @@ router.get('/dashboard', (req, res) => {
       //   name: user.name,
       //   email: user.email
       // }});
-    });
-  });
+   
   
   
   // res.status(200).json({

@@ -22,14 +22,11 @@ module.exports = (req, res, next) => {
     const userId = decoded.sub;
 
     // check if a user exists
-    return User.findById(userId, (userErr, user) => {
+    return User.find({_id:userId}).limit(1).lean().exec((userErr, user) => {
       if (userErr || !user) {
         return res.status(401).end();
       }
-      res.locals.user = {email: user.email,
-                         block: user.block, 
-                         blocked_by: user.blocked_by 
-                         };
+      res.locals.user = user[0];
       return next();
     });
   });

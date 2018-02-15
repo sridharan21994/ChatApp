@@ -49,13 +49,13 @@ io.use(function (socket, next) {
     jwt.verify(socket.handshake.query.token, config.jwtSecret, function (err, decoded) {
       if (err) return next(new Error('Authentication error'));
       // console.log("check ",decoded);
-      User.findById(decoded.sub, (userErr, user) => {
+      User.find({_id:decoded.sub}).limit(1).lean().exec((userErr, user) => {
         if (userErr || !user) {
           console.log("error");
           return next(new Error('Authentication error'));
         }
-        socket.decoded = user;
-       // console.log("decoded: ",user);
+        socket.decoded = user[0];
+        console.log("decoded socket email: ", user[0].email);
         return next();
       });
     });
@@ -103,12 +103,12 @@ io.on('connection', function (socket,user) {
 console.log("blocked_by: ", socket.decoded.email, data.blocked_by);
           
              data.blocked_by = socket.decoded.email;
-             Chat.findOne({ _id: data.convo_id},
+             Chat.find({ _id: data.convo_id}).limit(1).lean().exec(
                  function(err, chat){
                     if(err){ console.log("error in blocking user"); return false };
           //          console.log("after ", chat.initiator);
-                    if(chat.initiator.sender_id===data.blocked_by){
-                            data.block= chat.initiator.receiver_id;
+                    if(chat[0].initiator.sender_id===data.blocked_by){
+                            data.block= chat[0].initiator.receiver_id;
 
                             if(clients[data.block]){
                               socket.to(clients[data.block].socket).emit("youareblocked", 
@@ -122,8 +122,8 @@ console.log("blocked_by: ", socket.decoded.email, data.blocked_by);
               //                     break;
               //                     }
               //           }                              
-                    }else if(chat.initiator.receiver_id===data.blocked_by){
-                            data.block= chat.initiator.sender_id;
+                    }else if(chat[0].initiator.receiver_id===data.blocked_by){
+                            data.block= chat[0].initiator.sender_id;
 
                             if(clients[data.block]){
                               socket.to(clients[data.block].socket).emit("youareblocked", 
@@ -165,27 +165,28 @@ console.log("blocked_by: ", socket.decoded.email, data.blocked_by);
         });
           
         socket.on("unread",function(data,callback){
-             Chat.findByIdAndUpdate(data.convo_id,{unread:false},function(err,res){
+             Chat.findOneAndUpdate({_id:data.convo_id},{unread:false},function(err,res){
                if(err){console.log("error in unread: ", err.name); return false;}
              })
         });
-
+ 
 
           socket.on('send-message', function (data, callback) {
         //    console.log("receving from client");
          //   console.log(data);
 
             if (data.convo_id) {
-              Chat.findById(data.convo_id,function(err,value){
+              Chat.find({_id:data.convo_id}).limit(1).lean().exec(function(err,value){
                   if(err){console.log("error in data.convo_id: ", err.name); return false;}
 
-                  if(socket.decoded.email===value.initiator.sender_id){
-                      Chat.findOneAndUpdate({_id: data.convo_id}, {unread: data.message.unread, $push: {message: {receiver_id: value.initiator.receiver_id , text: data.message.text, time: data.message.time}}}, 
-                        function (err, chat) {if(err){console.log(err);return false;}
+                  if(socket.decoded.email===value[0].initiator.sender_id){
+                      Chat.findOneAndUpdate({_id: data.convo_id}, {unread: data.message.unread, $push: {message: {receiver_id: value[0].initiator.receiver_id , text: data.message.text, time: data.message.time}}},
+                      function (err, chat) {
+                        if(err){console.log(err);return false;}
                        
-         console.log("****************emitting old chat", value.initiator.receiver_id );
-                       if (clients[value.initiator.receiver_id]){
-                                socket.to(clients[value.initiator.receiver_id].socket).emit("message-received", {convo_id:chat._id, message: {receiver_id: value.initiator.receiver_id , text: data.message.text, time: data.message.time, unread: data.message.unread}});
+         console.log("****************emitting old chat", value[0].initiator.receiver_id );
+                       if (clients[value[0].initiator.receiver_id]){
+                                socket.to(clients[value[0].initiator.receiver_id].socket).emit("message-received", {convo_id:chat._id, message: {receiver_id: value[0].initiator.receiver_id , text: data.message.text, time: data.message.time, unread: data.message.unread}});
                           }
                           // for(let i=0; i < users.length; i++){
                           //   if(users[i].email === value.initiator.receiver_id){
@@ -195,12 +196,13 @@ console.log("blocked_by: ", socket.decoded.email, data.blocked_by);
                           //   }
                           // }
                         });
-                  }else if(socket.decoded.email===value.initiator.receiver_id){
-                      Chat.findOneAndUpdate({_id: data.convo_id}, {unread: data.message.unread, $push: {message: {sender_id: value.initiator.receiver_id , text: data.message.text, time: data.message.time}}}, 
-                        function (err, chat) {if(err){console.log(err);return false;}
-                           console.log("****************emitting old chat", value.initiator.sender_id );
-                            if (clients[value.initiator.sender_id]){
-                       socket.to(clients[value.initiator.sender_id].socket).emit("message-received", {convo_id:chat._id, message: {sender_id: value.initiator.receiver_id , text: data.message.text, time: data.message.time, unread: data.message.unread}});
+                  }else if(socket.decoded.email===value[0].initiator.receiver_id){
+                      Chat.findOneAndUpdate({_id: data.convo_id}, {unread: data.message.unread, $push: {message: {sender_id: value[0].initiator.receiver_id , text: data.message.text, time: data.message.time}}},
+                      function (err, chat) {
+                        if(err){console.log(err);return false;}
+                           console.log("****************emitting old chat", value[0].initiator.sender_id );
+                            if (clients[value[0].initiator.sender_id]){
+                       socket.to(clients[value[0].initiator.sender_id].socket).emit("message-received", {convo_id:chat._id, message: {sender_id: value[0].initiator.receiver_id , text: data.message.text, time: data.message.time, unread: data.message.unread}});
                           }
                           //  for(let i=0; i < users.length; i++){
                           //   if(users[i].email === value.initiator.sender_id){
@@ -290,10 +292,10 @@ console.log("blocked_by: ", socket.decoded.email, data.blocked_by);
 
 
              if(data.fb_id){
-            User.findOne({"fb_details.id" : data.fb_id},function(err,user){
+            User.find({"fb_details.id" : data.fb_id}).limit(1).lean().exec(function(err,user){
                  if(err){console.log(err); return false;}
-                 console.log(user);
-                 data.message.receiver_id = user.email;
+                 console.log(user[0]);
+                 data.message.receiver_id = user[0].email;
                 //  data.message.receiver_name = user.name;
                  execute();
             })}else{
@@ -305,6 +307,13 @@ console.log("blocked_by: ", socket.decoded.email, data.blocked_by);
           });
 });
 
+
+   Chat.collection.indexes(function(error, indexes){
+     if(error){console.log(error);}
+    console.log("indexes:", indexes);
+    // ...
+});
+console.log("*******", User.collection.getIndexes({full:true}) );
 
 // tell the app to look for static files in these directories
 app.use(express.static('./server/static/'));
