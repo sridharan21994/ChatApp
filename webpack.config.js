@@ -29,7 +29,9 @@ module.exports = {
       query: {
         presets: ["react", "es2015"]
       }
-    }],
+    },
+    { test: /\.svg$/,
+        loader: 'svg-loader' }],
   },
   node: {
     console: true,

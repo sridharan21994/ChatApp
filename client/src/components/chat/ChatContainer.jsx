@@ -9,13 +9,7 @@ import Auth from '../../modules/Auth';
 import io from 'socket.io-client';
 import ArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 import moment from 'moment-timezone';
-
-var localMoment = moment().zone(new Date().getTimezoneOffset());
-var localMomentFormatted = localMoment.format("hh:mma, DD MMM");
-var utcMoment = moment().utc().format();
-console.log(localMoment);
-var mmc = moment.utc(localMoment).format();
-console.log(mmc, moment(mmc).local().format("hh:mma, DD MMM"), moment().utc().format());
+import Snackbar from 'material-ui/Snackbar';
 
 var socket;
 
@@ -28,7 +22,9 @@ class Chatty extends React.Component {
             thread:{},
             clicked: false,
             refresh: false,
-            buffer: false
+            buffer: false,
+            openSnackbar: false,
+            snackbarMessage: ""
         };
         this.handleMessageSubmit=this.handleMessageSubmit.bind(this);
         this.findThread=this.findThread.bind(this);
@@ -47,7 +43,13 @@ class Chatty extends React.Component {
         socket = io("http://localhost:3000", {transports: ['websocket'], upgrade: false,
         'query': {'token': localStorage.getItem("token")}
         }); 
-         
+            var localMoment = moment().zone(new Date().getTimezoneOffset());
+            var localMomentFormatted = localMoment.format("hh:mma, DD MMM");
+            var utcMoment = moment().utc().format();
+            console.log(localMoment);
+            var mmc = moment.utc(localMoment).format();
+            console.log(mmc, moment(mmc).local().format("hh:mma, DD MMM"), moment().utc().format());
+
     socket.on('connect', function () {
             console.log("socket connnected ", socket.id);
             socket.emit("user-connected", this.props.userDetail);
@@ -130,6 +132,10 @@ class Chatty extends React.Component {
               socket.emit("block-user", nextProps.blockedList[nextProps.blockedList.length-1], function(response){
                 console.log(response);
                 this.props.actions.removeBlockedUser(response);
+                this.setState({
+                    snackbarMessage: "successfully blocked and deleted",
+                    openSnackbar: true
+                })
               }.bind(this));
         }
         if(nextProps.threadList!==this.props.threadList){
@@ -305,6 +311,13 @@ class Chatty extends React.Component {
     arrowBack(){
         this.props.actions.updateActiveThread({clicked:false});
     }
+    goBack(e){
+        console.log(e);
+    }
+
+    handleRequestClose(){
+    this.setState({openSnackbar: false});
+    }
 
     render() {
  
@@ -314,14 +327,26 @@ class Chatty extends React.Component {
                    {this.props.contactList.length?
                    <MessageForm className="input-form" submitfnc={this.handleMessageSubmit} buffer={this.state.buffer}/>
                    :""}
+                   <Snackbar
+                    open={this.state.openSnackbar}
+                    message={this.state.snackbarMessage}
+                    autoHideDuration={3000}
+                    onRequestClose={this.handleRequestClose.bind(this)}
+                    />
                 </div>
-                ):(<div className={this.state.clicked?"chatty":"hide"}>
+                ):(<div onKeyDown={e=>this.goBack.bind(this,e)} className={this.state.clicked?"chatty":"hide"}>
                     <div className="chatty-header">
                         <ArrowBack className="arrow-back" onClick={this.arrowBack.bind(this)}/>
                         {this.props.activeThread.name}
                     </div>
                     <MessageList thread={this.findThread(this.props.activeThread,this.props.threadList)} />
                     <MessageForm submitfnc={this.handleMessageSubmit} buffer={this.state.buffer}/>
+                    <Snackbar
+                        open={this.state.openSnackbar}
+                        message={this.state.snackbarMessage}
+                        autoHideDuration={3000}
+                        onRequestClose={this.handleRequestClose.bind(this)}
+                        />
                 </div>
                 )           
         );

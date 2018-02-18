@@ -100,28 +100,30 @@ io.on('connection', function (socket,user) {
               
         socket.on("block-user", function(data,callback){ 
 
-console.log("blocked_by: ", socket.decoded.email, data.blocked_by);
+       console.log("blocked_by: ", socket.decoded.email, data.blocked_by);
           
              data.blocked_by = socket.decoded.email;
              Chat.find({ _id: data.convo_id}).limit(1).lean().exec(
                  function(err, chat){
                     if(err){ console.log("error in blocking user"); return false };
-          //          console.log("after ", chat.initiator);
-                    if(chat[0].initiator.sender_id===data.blocked_by){
+                      console.log("after ", chat);
+
+                 if(chat)
+                  {   if(chat[0].initiator.sender_id===data.blocked_by){
                             data.block= chat[0].initiator.receiver_id;
 
                             if(clients[data.block]){
                               socket.to(clients[data.block].socket).emit("youareblocked", 
                                     {convo_id: data.convo_id});
                             }
-              //           for(let i=0; i < users.length; i++){
-              //                     if(users[i].email === data.block){
-              // //                    console.log("youareblocked : ", data.block)
-              //                     socket.to(users[i].id).emit("youareblocked", 
-              //                       {convo_id: data.convo_id});
-              //                     break;
-              //                     }
-              //           }                              
+                          //           for(let i=0; i < users.length; i++){
+                          //                     if(users[i].email === data.block){
+                          // //                    console.log("youareblocked : ", data.block)
+                          //                     socket.to(users[i].id).emit("youareblocked", 
+                          //                       {convo_id: data.convo_id});
+                          //                     break;
+                          //                     }
+                          //           }                              
                     }else if(chat[0].initiator.receiver_id===data.blocked_by){
                             data.block= chat[0].initiator.sender_id;
 
@@ -155,7 +157,10 @@ console.log("blocked_by: ", socket.decoded.email, data.blocked_by);
                   });                    
 
                       });
-                  });  
+                  });        
+                   }else{
+                      callback({blocked:false});
+                   }
                   
              });
               Chat.findOneAndRemove({_id:data.convo_id},function(err,chat){

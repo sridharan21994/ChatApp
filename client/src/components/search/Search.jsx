@@ -8,6 +8,7 @@ import Avatar from 'material-ui/Avatar';
 import {List, ListItem} from 'material-ui/List';
 import TextField from 'material-ui/TextField';
 import Card from "material-ui/Card";
+import Snackbar from 'material-ui/Snackbar';
 
 class Search extends React.Component {
 
@@ -18,7 +19,8 @@ class Search extends React.Component {
     super(props);
 
     this.state = {
-      text: ''
+      text: '',
+      open: false
     };  
   }
 
@@ -60,13 +62,21 @@ class Search extends React.Component {
        if(!this.props.contactList.find(list=>list.email===listItem.email)){
             this.props.actions.addContactList(listItem);
             this.props.actions.updateActiveThread({name: listItem.name, email:listItem.email, fb_id:listItem.fb_id, clicked: false});
+       }else{
+         this.setState({
+           open: true
+         })
        }
      }
 
     blur(e){
        this.props.actions.addSuggestions([]);
     }
-
+  handleRequestClose(){
+    this.setState({
+      open: false,
+    });
+  };
 
   render() {
 
@@ -105,7 +115,12 @@ class Search extends React.Component {
           </Card>
       </List>
 
-         {/*<SearchList list={this.props.list} />*/}
+        <Snackbar
+                open={this.state.open}
+                message="Already added to your convo list"
+                autoHideDuration={3000}
+                onRequestClose={this.handleRequestClose.bind(this)}
+        />
       </div>
     );
   }

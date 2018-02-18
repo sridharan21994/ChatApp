@@ -6,12 +6,14 @@ import Avatar from 'material-ui/Avatar';
 import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import Divider from 'material-ui/Divider';
+import Snackbar from 'material-ui/Snackbar';
 
 class FriendsList extends React.Component {
 constructor(props){
     super(props);
     this.state={
-        refresh: false
+        refresh: false,
+        open: false
     }
     this.listItemClicked = this.listItemClicked.bind(this);
 }
@@ -30,8 +32,17 @@ listItemClicked(e, friend){
             this.props.actions.addContactList({fb_id: friend.id, name:friend.name, image:"https://graph.facebook.com/"+friend.id+"/picture", fb: true });
             this.props.actions.updateActiveThread({name: friend.name, email:"",fb_id: friend.id, clicked: false});
             this.props.actions.changeMobileTab({value: "a"});
+       }else{
+            this.setState({
+                          open: true,
+                        });
        }
      }
+    handleRequestClose(){
+    this.setState({
+      open: false,
+    });
+  };
 
 render() {
        var renderList = function(friend,i){
@@ -46,9 +57,17 @@ render() {
          
   }
         return(
+            <div>
             <List className="fb-friends-list">
               {this.props.friendsList&&this.props.friendsList.map(renderList,this)}
             </List>
+             <Snackbar
+                open={this.state.open}
+                message="Already added to your convo list"
+                autoHideDuration={3000}
+                onRequestClose={this.handleRequestClose.bind(this)}
+                />
+            </div>
         );
     }
 }

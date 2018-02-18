@@ -11,12 +11,19 @@
   -o-background-size: cover;
   background-size: cover;*/
    /*height: 100%; min-height: 100%;*/
+    /* background: url("./background.svg"); */
+    /* object-fit: cover;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover; */
  }
 
  body {
    height: 100%;
    margin: 0;
    font-size: 16px;
+   width: 100%;
  }
 
  a {
@@ -35,7 +42,7 @@
  }
 
  .hide {
-   display: none;
+   display: none !important;
  }
 
  .top-bar {
@@ -95,12 +102,12 @@
  .container-text {
    border-radius: 10px 10px 1px 10px;
    border: 1px solid #8c8686;
-   background-color: #dedede;
+   background-color: white;
    color: #001c00;
    width: max-content;
-   max-width: calc(100% - 50px);
+   max-width: calc(100% - 70px);
    line-height: 30px;
-   text-align: right;
+   text-align: left;
    padding: 0 10px;
    float: right;
    margin: 1px 5px;
@@ -111,10 +118,9 @@
 
  .other-user {
    border-radius: 10px 10px 10px 1px;
-   text-align: left;
    float: left;
-   border: 1px solid #a1a1a1;
-   background-color: #fff;
+   border: 1px solid #ccc;
+   background-color: #f5f5f5;
    margin-left: 5px;
    margin-right: 100%;
  }
@@ -252,7 +258,7 @@
    cursor: pointer;
  }
 
- @media only screen and (max-width: 768px) {
+ @media only screen and (max-width: 991px) {
    .contact-list {
      max-height: 100%;
      overflow-y: scroll;
@@ -285,10 +291,16 @@
      background: #fff;
    }
    .chatty-header {
-     height: 48px;
-     border: 1px solid #000;
+     height: 36px;
+     line-height: 36px;
+     border-bottom: 1px solid #f1eaea;
      text-align: center;
    }
+    .arrow-back{
+      float: left;
+      height: 36px !important;
+      width: 30px !important;
+    }
    .dashboard {
      position: absolute;
      top: 50px;
@@ -302,8 +314,9 @@
    .message-ul-list {
      list-style-type: none;
      padding: 0;
-     height: calc(100% - 120px);
+     height: calc(100% - 86px);
      overflow-y: scroll;
+     margin-top: 0;
    }
    .fb-friends-list {
      max-height: calc(100% - 100px);

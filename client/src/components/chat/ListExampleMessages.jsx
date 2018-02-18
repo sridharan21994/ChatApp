@@ -14,7 +14,10 @@ import { bindActionCreators } from "redux";
 import axios from "axios";
 import Auth from '../../modules/Auth';
 import moment from 'moment-timezone';
-
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
+import Snackbar from 'material-ui/Snackbar';
 
 const iconButtonElement = (
   <IconButton
@@ -35,8 +38,12 @@ class ListExampleMessages extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {};  
-    this.blockUser = this.blockUser.bind(this);
+    this.state = {
+      openDialog: false,
+      openSnackbar: false,
+      block: {},
+      snackbarMessage:""
+    };  
   }
 
     //   search(nameKey, myArray, stop) {
@@ -61,24 +68,44 @@ class ListExampleMessages extends React.Component {
      //}
   }
 
-  blockUser(e, contact){
+  openBlockUserDialog(e, contact){
     e.preventDefault();
     e.stopPropagation();
-    console.log("block user: ", contact);
-    // axios.get("/api/block", {params:{query:{convo_id:contact.convo_id, block: contact.email, blocked_by: this.props.userDetail.email}},
-    // headers:{'Content-type': 'application/x-www-form-urlencoded','Authorization': `bearer ${Auth.getToken()}`}})
-    // .then(response=>{
-    //         if ((response.status >= 200 && response.status <= 300) || response.status == 304) {
-    //         console.log("axios after block: ", response);
-    //         return true;
-    //         }
-    //     })
-    //   .catch(error=>{throw(error);});
-    this.props.actions.addBlockedList({"convo_id":contact.convo_id, "block": contact.email, "blocked_by": this.props.userDetail.email});
+    this.setState({openDialog:true, block: contact});
+    
+  }
 
+  handleClose(){
+    this.setState({openDialog: false});
+  };
+
+  handleBlockUserSubmit(){
+    let contact = this.state.block;
+      console.log("block user: ", contact);
+    this.setState({openDialog: false, block:{}});
+    if(contact.convo_id&&contact.email==="ANONYMOUS"){
+      this.props.actions.addBlockedList({"convo_id":contact.convo_id, "block": contact.email, "blocked_by": this.props.userDetail.email});
+    }else{
+      this.setState({snackbarMessage:"cannot block random user", openSnackbar:true})
+    }
+  }
+  handleRequestClose(){
+    this.setState({openSnackbar: false});
   }
  
   render(){
+    const actions = [
+      <FlatButton
+        label="Cancel"
+        onClick={this.handleClose.bind(this)}
+      />,
+      <RaisedButton
+        label="Submit"
+        primary={true}
+        keyboardFocused={true}
+        onClick={this.handleBlockUserSubmit.bind(this)}
+      />
+    ];
   
    var renderList = function(contact,i){
            (contact.fb_id||contact.email==="ANONYMOUS") ? contact.image = "https://graph.facebook.com/"+contact.fb_id+"/picture":"";
@@ -91,9 +118,8 @@ class ListExampleMessages extends React.Component {
                           <Avatar alt={contact.name.charAt(0)+contact.name.charAt(contact.name.indexOf(" ")+1)} src={contact.image} />
                           :<Avatar>{contact.name.charAt(0)+contact.name.charAt(contact.name.indexOf(" ")+1)}</Avatar>
                           }
-                        rightIconButton={<IconMenu iconButtonElement={iconButtonElement}>
-                                          <MenuItem>Report</MenuItem>
-                                          <MenuItem style={{zIndex: 99}} onClick={(e)=>this.blockUser(e, contact)}>Block&Delete</MenuItem>
+                        rightIconButton={<IconMenu className={contact.email==="ANONYMOUS"?"":"hide"} iconButtonElement={iconButtonElement}>
+                                          <MenuItem style={{zIndex: 99}} onClick={(e)=>this.openBlockUserDialog(e, contact)}>Block & Delete</MenuItem>
                                         </IconMenu>}
                         primaryText={
                           <div style={{textAlign:"left"}}>
@@ -126,6 +152,21 @@ return (
         :"You don't have any conversation to show... Please start a new conversation by adding your Facebook account..."}
          {/* <Divider inset={true} />  */}
       </List>
+      <Dialog
+          title="Are you sure?"
+          actions={actions}
+          modal={true}
+          open={this.state.openDialog}
+          style={{zIndex: 99999}}
+          >
+          This user will be permanently blocked and deleted. Are you sure to proceed?
+          </Dialog>
+      <Snackbar
+                open={this.state.openSnackbar}
+                message={this.state.snackbarMessage}
+                autoHideDuration={3000}
+                onRequestClose={this.handleRequestClose.bind(this)}
+                />
   </div>);
   }
 }

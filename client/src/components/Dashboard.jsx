@@ -32,6 +32,7 @@ render(){
     </div>):(
       <div className="dashboard">
         <TabsControl/>
+        <FbPlugin/>  
       </div>   
     ))
   

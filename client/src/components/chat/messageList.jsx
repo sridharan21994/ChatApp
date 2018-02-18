@@ -24,7 +24,6 @@ render() {
 
 function mapStateToProps(state, ownProps) {
         return {
-            threadList: state.myStore.threadList,
             userDetail: state.myStore.userDetail
         }
 }
