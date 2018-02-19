@@ -130,6 +130,13 @@ class FbPlugin extends React.Component {
                 if(response.status=== "connected"){
                    this.testAPI(response.authResponse.accessToken);
                    console.log(response);
+                   FB.ui({
+                        method: 'share',
+                        display: 'popup',
+                        href: 'https://facebook.com/',
+                    }, function(response){
+                        console.log(response);
+                    });
                 }
             }.bind(this),{scope: 'public_profile,email,user_friends,publish_actions'});
             this.setState({open: false});
