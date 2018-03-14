@@ -49,6 +49,9 @@ class Base extends React.Component{
               <Search/>              
             </div>
           </div>
+          <div style={{float:"right"}}>
+                 staging
+              </div>
           <div className="top-bar-right">
             <Link to="/logout">Log out</Link>
             {/* <Link to="/profile">Profile</Link> */}
