@@ -49,6 +49,9 @@ class Base extends React.Component{
               <Search/>              
             </div>
           </div>
+          <div style={{float:"right"}}>
+                 staging
+              </div>
           <div className="top-bar-right">
             <Link to="/logout">Log out</Link>
             {/* <Link to="/profile">Profile</Link> */}
@@ -59,6 +62,9 @@ class Base extends React.Component{
       <div className="top-bar-left">
         <IndexLink to="/">My App</IndexLink>
       </div>
+      <div style={{float:"right"}}>
+                 staging
+              </div>
         <div className="top-bar-right">
           <Link to="/login">Log in</Link>
           <Link to="/signup">Sign up</Link>
