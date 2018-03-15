@@ -50,7 +50,7 @@ class Base extends React.Component{
             </div>
           </div>
           <div style={{float:"right"}}>
-                 staging
+                 stagingcheck
               </div>
           <div className="top-bar-right">
             <Link to="/logout">Log out</Link>
@@ -63,7 +63,7 @@ class Base extends React.Component{
         <IndexLink to="/">My App</IndexLink>
       </div>
       <div style={{float:"right"}}>
-                 staging
+                 stagingcheck
               </div>
         <div className="top-bar-right">
           <Link to="/login">Log in</Link>
